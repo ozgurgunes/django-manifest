@@ -60,10 +60,10 @@ class Command(BaseCommand):
         
         if not args:
             # note: --help prints full path to manifest-admin
-            self.print_help("manifest-admin", "setup_project")
+            self.print_help("manifest-admin", "setup")
             sys.exit(0)
         
-        self.setup_project(args[0], options["base"], options)
+        self.setup(args[0], options["base"], options)
     
     def base_list(self):
         
@@ -88,7 +88,7 @@ class Command(BaseCommand):
         
         return projects
     
-    def setup_project(self, destination, base, options):
+    def setup(self, destination, base, options):
         
         user_project_name = os.path.basename(destination)
 
