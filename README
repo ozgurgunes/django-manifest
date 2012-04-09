@@ -1,0 +1,16 @@
+===========
+Django Manifest
+===========
+
+Django Manifest aimed to provide a starter package for Django projects.
+
+
+Quick Start
+===========
+
+Run in shell:
+
+    $ virtualenv my_env
+    (my_env)$ pip install django-manifest
+    (my_env)$ manifest-admin setup my_site
+    

@@ -1,0 +1,11 @@
+{% extends "profiles/profile_formset.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Your favorite websites' %}{% endblock %}
+
+
+{% block formset_title %}{% trans 'Your favorite websites' %}{% endblock %}
+
+{% block legend %}
+{% trans 'Personal links <small class="quiet">(Example: Your blog, you personal site, etc.)</small>' %}
+{% endblock %}

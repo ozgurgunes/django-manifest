@@ -1,0 +1,65 @@
+{% load tagging_tags %}
+    <section class="user">
+        <div class="avatar thumbnail pull-left">
+            {% thumbnail user.get_profile.avatar "64x64" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
+            {% endthumbnail %}
+        </div>
+        <header>
+        <h3><a class="user" href="{% url profiles_profile_detail user %}">{{ user }}</a></h3>
+        <p class="meta"><span class="date">{{ user.date_joined|timesince }} {% trans 'ago' %}</span></p>
+        <p class="meta">{{ user.topic_set.count }} {% trans 'topics' %}</p>
+        </header>
+        <ul class="nav nav-tabs nav-stacked">
+            {% ifnotequal user request.user%}
+            {% include 'profiles/_friend.html' %}
+            {% endifnotequal %}
+            <li class="{% block profile_menu_about %}{% endblock %} about"><a href="{% url profiles_profile_detail user %}">{% trans 'About' %}</a></li>
+            <li class="{% block profile_menu_friends %}{% endblock %} friends"><a href="{% url profiles_friends_list user %}">{% trans 'Friends' %}</a></li>
+        </ul>
+    </section>
+    <section id="aside_friends" class="aside">
+        <header class="friends"><h3>{% trans "Friends" %}</h3></header>
+        <ul class="friends">
+        {% for friend in user.relationships.friends  %}
+        <li class="user">
+            <figure class="avatar">
+            {% thumbnail friend.get_profile.avatar "32x32" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
+            {% endthumbnail %}
+            </figure>
+            <adress><a class="user" href="{% url profiles_profile_detail friend %}">{{ friend }}</a></adress>
+        </li>
+        {% endfor %}
+        </ul>
+    </section>
+    <section id="aside_following" class="aside">
+        <header class="following"><h3>{% trans "Following" %}</h3></header>
+        <ul class="following">
+        {% for followed in user.relationships.following  %}
+        <li class="user">
+            <figure class="avatar">
+            {% thumbnail followed.get_profile.avatar "32x32" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
+            {% endthumbnail %}
+            </figure>
+            <adress><a class="user" href="{% url profiles_profile_detail followed %}">{{ followed }}</a></adress>
+        </li>
+        {% endfor %}
+        </ul>
+    </section>
+    <section id="aside_followers" class="aside">
+        <header class="followers"><h3>{% trans "Followers" %}</h3></header>
+        <ul class="followers">
+        {% for follower in user.relationships.followers  %}
+        <li class="user">
+            <figure class="avatar">
+            {% thumbnail follower.get_profile.avatar "32x32" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
+            {% endthumbnail %}
+            </figure>
+            <adress><a class="user" href="{% url profiles_profile_detail follower %}">{{ follower }}</a></adress>
+        </li>
+        {% endfor %}
+        </ul>
+    </section>        

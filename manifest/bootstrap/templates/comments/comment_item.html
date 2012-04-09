@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<div class="item">
+			<h2><a href="/blogs/{{ object.blog.pk}}/{{ object.pk }}">{{ object.headline }}</a></h2>
+			<div class="summary">
+				{{ object.comment }}
+			</div>
+			<p class="meta">
+				<a href="/people/{{ object.user.pk }}">{{ object.user }}</a>
+			</p>
+			<p class="actions">
+				<a href="/comments/delete/{{ object.id }}">{% trans 'delete' %}</a>
+			</p>
+		</div>

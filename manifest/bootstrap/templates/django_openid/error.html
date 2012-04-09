@@ -1,0 +1,9 @@
+{% extends "theme_base.html" %}
+
+{% block title %}{% trans "Error using OpenID" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Error using OpenID" %}</h1>
+    
+    <p>{{ message }}</p>
+{% endblock %}

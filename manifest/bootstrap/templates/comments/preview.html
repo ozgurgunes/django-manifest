@@ -1,0 +1,33 @@
+{% extends "comments/base.html" %}
+{% load i18n comments %}
+
+
+{% block title %}Preview your comment{% endblock %}
+
+{% block content %}
+  <form action="{% comment_form_target %}" method="POST">{% csrf_token %}
+    <fieldset>
+      <legend>{{ form.comment.label }}</legend>
+
+    {% if not form.errors %}
+    <div class="block">
+      <h4>{% trans 'Önizleme' %}:</h4>
+      <blockquote>{{ comment|escape|linebreaks }}</blockquote>
+	    <p class="form-buttons"><input type="submit" name="node" value="{% trans 'Save' %}" /></p>
+    </div>
+      <h4>{% trans "Update" %}</h4>
+    {% endif %}
+    
+    <input type="hidden" name="name" value="{% firstof user.real_name user.username %}" id="id_name">
+    {{ form.content_type }}
+    {{ form.object_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
+    {% if form.comment.errors %}{{ form.comment.errors }}{% endif %}
+    <p>{{ form.comment }}</p>
+
+    <p class="buttons"><input type="submit" name="commit" class="submit button" value="{% trans 'Post comment' %}" /></p>
+    </fieldset>
+  </form>
+{% endblock %}
+

@@ -1,0 +1,18 @@
+{% extends pagebase %}
+{% load flatpages %}
+{% block about_menu_class %}menu-about current{% endblock %}
+
+
+{% block title %}
+{{ flatpage.title }}
+{% endblock %}
+
+{# maybe other stuff #}
+
+{% block content %}
+<h1 class="heading">{{ flatpage.title }}</h1>
+{# add more filters if you like #}
+<div>
+{{ flatpage.content|linebreaks }}
+</div>
+{% endblock %}

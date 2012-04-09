@@ -1,0 +1,205 @@
+from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.sites.models import Site
+from django.core import mail
+from django.conf import settings
+
+from manifest.accounts.models import Account, upload_to_mugshot
+from manifest.accounts import settings as accounts_settings
+from manifest.accounts.tests.profiles.test import ProfileTestCase
+from manifest.accounts.tests.profiles.models import Profile
+
+import datetime, hashlib, re
+
+MUGSHOT_RE = re.compile('^[a-f0-9]{40}$')
+
+class AccountModelTests(ProfileTestCase):
+    """ Test the model of Account """
+    user_info = {'username': 'alice',
+                 'password': 'swordfish',
+                 'email': 'alice@example.com'}
+
+    fixtures = ['users', 'profiles']
+
+    def test_upload_mugshot(self):
+        """
+        Test the uploaded path of mugshots
+
+        TODO: What if a image get's uploaded with no extension?
+
+        """
+        user = User.objects.get(pk=1)
+        filename = 'my_avatar.png'
+        path = upload_to_mugshot(user, filename)
+
+        # Path should be changed from the original
+        self.failIfEqual(filename, path)
+
+        # Check if the correct path is returned
+        MUGSHOT_RE = re.compile('^%(mugshot_path)s[a-f0-9]{10}.png$' %
+                                {'mugshot_path': accounts_settings.ACCOUNTS_MUGSHOT_PATH})
+
+        self.failUnless(MUGSHOT_RE.search(path))
+
+    def test_stringification(self):
+        """
+        Test the stringification of a ``Account`` object. A
+        "human-readable" representation of an ``Account`` object.
+
+        """
+        register = Account.objects.get(pk=1)
+        self.failUnlessEqual(register.__unicode__(),
+                             register.user.username)
+
+    def test_change_email(self):
+        """ TODO """
+        pass
+
+    def test_activation_expired_account(self):
+        """
+        ``Account.activation_key_expired()`` is ``True`` when the
+        ``activation_key_created`` is more days ago than defined in
+        ``ACCOUNTS_ACTIVATION_DAYS``.
+
+        """
+        user = Account.objects.create_user(**self.user_info)
+        user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
+        user.save()
+
+        user = User.objects.get(username='alice')
+        self.failUnless(user.account.activation_key_expired())
+
+    def test_activation_used_account(self):
+        """
+        An user cannot be activated anymore once the activation key is
+        already used.
+
+        """
+        user = Account.objects.create_user(**self.user_info)
+        activated_user = Account.objects.activate_user(user.username,
+                                                             user.account.activation_key)
+        self.failUnless(activated_user.account.activation_key_expired())
+
+    def test_activation_unexpired_account(self):
+        """
+        ``Account.activation_key_expired()`` is ``False`` when the
+        ``activation_key_created`` is within the defined timeframe.``
+
+        """
+        user = Account.objects.create_user(**self.user_info)
+        self.failIf(user.account.activation_key_expired())
+
+    def test_activation_email(self):
+        """
+        When a new account is created, a activation e-mail should be send out
+        by ``Account.send_activation_email``.
+
+        """
+        new_user = Account.objects.create_user(**self.user_info)
+        self.failUnlessEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [self.user_info['email']])
+
+
+class BaseProfileModelTest(ProfileTestCase):
+    """ Test the ``BaseProfile`` model """
+    fixtures = ['users', 'profiles']
+
+    def test_mugshot_url(self):
+        """ The user has uploaded it's own mugshot. This should be returned. """
+        profile = Profile.objects.get(pk=1)
+        profile.mugshot = 'fake_image.png'
+        profile.save()
+
+        profile = Profile.objects.get(pk=1)
+        self.failUnlessEqual(profile.get_mugshot_url(),
+                             settings.MEDIA_URL + 'fake_image.png')
+
+    def test_stringification(self):
+        """ Profile should return a human-readable name as an object """
+        profile = Profile.objects.get(pk=1)
+        self.failUnlessEqual(profile.__unicode__(),
+                             'Profile of %s' % profile.user.username)
+
+    def test_get_mugshot_url_without_gravatar(self):
+        """
+        Test if the correct mugshot is returned for the user when
+        ``ACCOUNTS_MUGSHOT_GRAVATAR`` is set to ``False``.
+
+        """
+        # This user has no mugshot, and gravatar is disabled. And to make
+        # matters worse, there isn't even a default image.
+        accounts_settings.ACCOUNTS_MUGSHOT_GRAVATAR = False
+        profile = Profile.objects.get(pk=1)
+        self.failUnlessEqual(profile.get_mugshot_url(), None)
+
+        # There _is_ a default image
+        accounts_settings.ACCOUNTS_MUGSHOT_DEFAULT = 'http://example.com'
+        profile = Profile.objects.get(pk=1)
+        self.failUnlessEqual(profile.get_mugshot_url(), 'http://example.com')
+
+        # Settings back to default
+        accounts_settings.ACCOUNTS_MUGSHOT_GRAVATAR = True
+
+    def test_get_mugshot_url_with_gravatar(self):
+        """
+        Test if the correct mugshot is returned when the user makes use of gravatar.
+
+        """
+        template = 'http://www.gravatar.com/avatar/%(hash)s?s=%(size)s&d=%(default)s'
+        profile = Profile.objects.get(pk=1)
+
+        gravatar_hash = hashlib.md5(profile.user.email).hexdigest()
+
+        # Test with the default settings
+        self.failUnlessEqual(profile.get_mugshot_url(),
+                             template % {'hash': gravatar_hash,
+                                         'size': accounts_settings.ACCOUNTS_MUGSHOT_SIZE,
+                                         'default': accounts_settings.ACCOUNTS_MUGSHOT_DEFAULT})
+
+        # Change accounts settings
+        accounts_settings.ACCOUNTS_MUGSHOT_SIZE = 180
+        accounts_settings.ACCOUNTS_MUGSHOT_DEFAULT = '404'
+
+        self.failUnlessEqual(profile.get_mugshot_url(),
+                             template % {'hash': gravatar_hash,
+                                         'size': accounts_settings.ACCOUNTS_MUGSHOT_SIZE,
+                                         'default': accounts_settings.ACCOUNTS_MUGSHOT_DEFAULT})
+
+        # Settings back to default
+        accounts_settings.ACCOUNTS_MUGSHOT_SIZE = 80
+        accounts_settings.ACCOUNTS_MUGSHOT_DEFAULT = 'identicon'
+
+    def test_get_full_name_or_username(self):
+        """ Test if the full name or username are returned correcly """
+        user = User.objects.get(pk=1)
+        profile = user.get_profile()
+
+        # Profile #1 has a first and last name
+        full_name = profile.get_full_name_or_username()
+        self.failUnlessEqual(full_name, "John Doe")
+
+        # Let's empty out his name, now we should get his username
+        user.first_name = ''
+        user.last_name = ''
+        user.save()
+
+        self.failUnlessEqual(profile.get_full_name_or_username(),
+                             "john")
+
+        # Finally, accounts doesn't use any usernames, so we should return the
+        # e-mail address.
+        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = True
+        self.failUnlessEqual(profile.get_full_name_or_username(),
+                             "john@example.com")
+        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = False
+
+    def test_can_view_profile(self):
+        """ Test if the user can see the profile with three type of users. """
+        anon_user = AnonymousUser()
+        super_user = User.objects.get(pk=1)
+        reg_user = User.objects.get(pk=2)
+
+        profile = Profile.objects.get(pk=1)
+
+        self.failIf(profile.can_view_profile(anon_user))
+        self.failUnless(profile.can_view_profile(super_user))
+        self.failUnless(profile.can_view_profile(reg_user))

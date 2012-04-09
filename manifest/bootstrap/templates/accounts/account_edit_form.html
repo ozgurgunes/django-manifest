@@ -1,0 +1,15 @@
+{% extends "accounts/base.html" %}
+{% block title %}{% trans "Edit account" %} - {{ block.super }}{% endblock %}
+
+{% block main %}
+<form action="" enctype="multipart/form-data" method="post" class="form form-horizontal">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Edit Account" %}</legend>
+    {{ form|as_bootstrap }}
+  </fieldset>
+  <div class="form-actions">
+    <input type="submit" value="{% trans "Save changes" %}" class="btn btn-primary" />
+  </div>
+</form>
+{% endblock %}

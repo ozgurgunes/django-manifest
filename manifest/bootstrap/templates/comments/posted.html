@@ -1,0 +1,8 @@
+{% load i18n %}
+
+{% block content %}
+<div class="success">
+  <h4>{% trans "Comment posted" %}:</h4>
+  <ul><li><a href="{{ comment.content_object.get_absolute_url }}" target="_top">{{ comment|escape|linebreaks }}</a></li></ul>
+</div>
+{% endblock %}

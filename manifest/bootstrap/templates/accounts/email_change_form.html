@@ -1,0 +1,15 @@
+{% extends "accounts/base.html" %}
+{% block title %}{% trans "Change e-mail address" %} - {{ block.super }}{% endblock %}
+
+{% block main %}
+<form action="" method="post" class="form form-horizontal">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Change e-mail address" %}</legend>
+    {{ form|as_bootstrap }}
+  </fieldset>
+  <div class="form-actions">
+      <input type="submit" value="{% trans "Change email" %}" class="btn btn-primary" />    
+  </div>
+</form>
+{% endblock %}

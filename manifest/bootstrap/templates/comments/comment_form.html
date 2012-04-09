@@ -1,0 +1,28 @@
+{% load comments %}
+
+    {% if created %}
+	<p class="success">{% trans 'Your comment succesfully posted' %}</p>
+    {% else %}
+    {% get_comment_form for object as comment_form %}
+    <form class="form well form-inline" action="{% comment_form_target %}" method="POST">
+        <fieldset>
+            <input type="hidden" name="name" value="{% firstof user.real_name user.username %}" id="id_name">{% csrf_token %}
+            {{ comment_form.content_type }}
+            {{ comment_form.object_pk }}
+            {{ comment_form.timestamp }}
+            {{ comment_form.security_hash }}
+
+		    {% thumbnail user.get_profile.avatar "32x32" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
+            {% endthumbnail %}
+            {{ comment_form.comment }}
+            {% for error in comment_form.comment.errors %}
+                <span class="help-inline">{{ error }}</span>
+            {% endfor %}
+            {% if comment_form.comment.help_text %}
+                <span class="help-block">{{ comment_form.comment.help_text|safe }}</span>
+            {% endif %}
+            <button type="submit" name="commit" class="btn btn-primary">{% trans 'Post comment' %}</button>
+        </fieldset>
+    </form>
+    {% endif %}

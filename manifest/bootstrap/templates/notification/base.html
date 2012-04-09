@@ -1,0 +1,15 @@
+{% extends "aside_base.html" %}
+
+{% block head %}
+    <link rel="alternate" type="application/atom+xml" title="Notices Feed" href="{% url notification_feed_for_user %}" />
+{% endblock %}
+
+{% block body_class %}notices{% endblock %}
+
+{% block aside %}
+    <h3>{% trans "Notices" %}</h3>
+    <ul class="nav nav-tabs nav-stacked">
+        <li><a href="{% url notification_notices %}">{% trans "Notices" %}</a></li>
+        <li><a href="{% url notification_notice_settings %}">{% trans "Settings" %}</a></li>
+    </ul>
+{% endblock %}

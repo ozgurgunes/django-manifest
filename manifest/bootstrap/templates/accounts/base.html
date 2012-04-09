@@ -1,0 +1,13 @@
+{% extends "aside_base.html" %}
+{% block body_class %}account{% endblock %}
+{% block aside %}
+    <h3>{% trans "Account" %}</h3>
+    <ul class="nav nav-tabs nav-stacked">
+    {% if user.is_authenticated %}
+        <li><a href="{% url accounts_profile_detail user.username %}"><span>{% trans 'View account' %}</span></a></li>
+        <li><a href="{% url accounts_account_edit %}">{% trans "Edit account" %}</a></li>
+        <li><a href="{% url accounts_password_change %}">{% trans "Change password" %}</a></li>
+        <li><a href="{% url accounts_email_change %}">{% trans "Change email" %}</a></li>            
+    {% endif %}
+    </ul>
+{% endblock %}

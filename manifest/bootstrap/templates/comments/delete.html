@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<h2 class="heading">{% trans 'Are you sure to delete this comment?' %}</h2>
+<blockquote>{{ comment|escape|linebreaks }}</blockquote>
+<form action="." method="POST">
+  <input type="hidden" name="next" value="{{ comment.content_object.get_absolute_url }}" id="next">
+  <p class="submit">
+    <input type="submit" name="submit" value="Remove"> or <a href="{{ comment.permalink }}">cancel</a>
+  </p>
+</form>{% endblock %}

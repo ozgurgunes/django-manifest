@@ -1,0 +1,103 @@
+[
+{
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": 
+    {
+        "username": "admin", 
+        "first_name": "Admin", 
+        "last_name": "User", 
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2012-01-01 00:00:00", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "sha1$e467e$508942f1c9be858fd46dc976c2496ba133ba4122", 
+        "email": "admin@example.com", 
+        "date_joined": "2012-01-01 00:00:00"
+    }
+}, 
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": 
+    {
+        "username": "test", 
+        "first_name": "Test", 
+        "last_name": "User", 
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": false, 
+        "last_login": "2012-01-01 00:00:00", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "sha1$3cb32$046d34b6eee347cb4ce099b266f1b9b3d066553a", 
+        "email": "test@example.com",
+        "date_joined": "2012-01-01 00:00:00"
+    }
+}, 
+{
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": 
+    {
+        "username": "demo", 
+        "first_name": "Demo", 
+        "last_name": "User", 
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2012-01-01 00:00:00", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "sha1$1e2d3$0fd3f38117e48024ad68058252c42e9b9d69ca43", 
+        "email": "demo@example.com",
+        "date_joined": "2012-01-01 00:00:00"
+    }
+}, 
+{
+    "pk": -1,
+    "model": "accounts.account",
+    "fields": 
+    {
+        "user": -1,
+        "activation_key": "ALREADY_ACTIVATED",
+        "last_active": "2012-01-01 00:00:00",
+        "activation_notification_send": false
+    }
+},
+{
+    "pk": 1,
+    "model": "accounts.account",
+    "fields": 
+    {
+        "user": 1,
+        "activation_key": "ALREADY_ACTIVATED",
+        "last_active": "2012-01-01 00:00:00",
+        "activation_notification_send": false
+    }
+},
+{
+    "pk": 2,
+    "model": "accounts.account",
+    "fields": 
+    {
+        "user": 2,
+         "activation_key": "ALREADY_ACTIVATED",
+         "last_active": "2012-01-01 00:00:00",
+         "activation_notification_send": false
+    }
+},
+{
+    "pk": 3,
+    "model": "accounts.account",
+    "fields": 
+    {
+        "user": 3,
+         "activation_key": "ALREADY_ACTIVATED",
+         "last_active": "2012-01-01 00:00:00",
+         "activation_notification_send": false
+     }
+}
+]

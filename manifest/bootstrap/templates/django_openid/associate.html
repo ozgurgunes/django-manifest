@@ -1,0 +1,24 @@
+{% extends "account/base.html" %}
+
+{% load account_tags %}
+
+{% block title %}{% trans "Verify this Association" %} - {{ block.super }}{% endblock %}
+
+{% block main %}
+<h1>{% trans "Verify this Association" %}</h1>
+<p>{% user_display user as user_display_user %}{% blocktrans %}You have begun to associate <strong>{{ specific_openid }}</strong> with your existing account.  This will allow you to sign in as <strong>{{ user_display_user }}</strong> using that OpenID.  Click below to verify that association.{% endblocktrans %}</p>
+
+<form class="uniForm" id="openid-verify-association" action="{{ action }}" method="POST">
+    {% csrf_token %}
+    <fieldset class="inlineLabels">
+        <div class="form_block">
+            <input type="hidden" name="openid_token" value="{{ openid_token }}" />
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+            <input class="btn primary" type="submit" value="{% trans "Verify Association" %}" />
+            <a class="btn" href="/openid/associations/">{% trans "Decline" %}</a>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}

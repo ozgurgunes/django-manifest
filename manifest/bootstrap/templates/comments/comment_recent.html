@@ -1,0 +1,12 @@
+{% load i18n %}
+<h3>{% blocktrans count object.comment_set.count as counter %}1 comment{% plural %}{{ counter }} comments{% endblocktrans %}</h3>
+<ul class="actions">
+	<li><a href="/blogs/comments/{{ object.id }}/">All comments</a></li>
+	<li><a href="/blogs/comments/add/{{ object.id }}/">Node comment</a></li>
+</ul>
+<ul>
+{% for object in comments %}
+	{% include 'comments/comment_item.html' %}
+{% endfor %}
+</ul>
+<div class="clear row">{% include "comments/comment_form.html" %}</div>

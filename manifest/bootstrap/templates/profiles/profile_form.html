@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Update profile{% endblock %}
+{% block content_title %}
+  <h2 class="heading">{% block formset_title %}{% trans 'Update your profile' %}{% endblock %}</h2>
+{% endblock %}
+
+
+{% block content %}
+  
+  <form action="." method="post" {% if form.is_multipart %}enctype="multipart/form-data" {% endif %}class="form form-horizontal">
+
+	{% csrf_token %}
+    <fieldset>
+      <legend>{% block legend %}{% trans 'Personal Information' %}{% endblock %}</legend>
+      {{ form|as_bootstrap }}
+    </fieldset>
+    
+    <p class="form-actions">
+        <input class="btn btn-primary" type="submit" value="{% trans 'Save profile' %}">
+    </p>
+  </form>
+{% block avatar %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "profiles/base_profile.html" %}
+{% load i18n pagination_tags %}
+
+{% block title %}Profiles{% endblock %}
+
+{% block article %}
+{% if object_list %}
+{% autopaginate object_list 10 %}
+    <header class="article">
+    <h2 class="page-header">{% trans "User Profiles" %}</h2>
+    <p>Page: <strong>{{ page_obj.number }}</strong> / {{ paginator.num_pages }}</p>
+    </header>
+  {% for object in object_list %}
+    <section class="profile row {% cycle odd,even %}">
+    {% include "profiles/_profile_list.html" %}
+    </section>
+  {% endfor %}
+  <footer>
+    {% paginate %}
+  </footer>
+{% else %}
+<p>{% trans 'Not found any record.' %}</p>
+{% endif %}
+{% endblock %}

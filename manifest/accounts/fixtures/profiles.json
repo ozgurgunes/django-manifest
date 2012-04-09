@@ -1,0 +1,17 @@
+[{"pk": 1,
+  "model": "profiles.profile",
+  "fields": {"gender": 1,
+             "user": 1,
+             "mugshot": "",
+             "location": "Amsterdam"
+    }
+  },
+  {
+  "pk": 2,
+  "model": "profiles.profile",
+  "fields": {"gender": 2,
+             "user": 2,
+             "mugshot": "",
+             "location": "New York"
+  }
+}]

@@ -1,0 +1,30 @@
+{% block content %}
+    {% for comment in comment_list %}
+	<article class="comments {% cycle odd,even %}" id="comment_{{ comment.id }}"><a name="comment_{{ comment.id }}"></a>
+		{% if perms.comments.can_change or comment.user == user.username %}
+        <div class="commands">
+            <a class="delete button" href="{% url apps.commenting.views.delete comment.id %}"
+                onclick="return confirm('{% blocktrans %}Will be deleted: {{ comment }}{% endblocktrans %}')">{% trans 'delete' %}</a>
+        </div>
+        {% endif %}
+        <div class="meta">
+	        <div class="avatar">
+	            <a href="{% url profiles_profile_detail comment.user %}">
+	            {% thumbnail comment.user.get_profile.avatar "32x32" as im %}
+		        <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ comment.user }}" />
+		        {% endthumbnail %}
+		        </a>
+		    </div>
+            <address class="user"><a href="{% url profiles_profile_detail comment.user %}">{{ comment.user }}</a></address>
+            <time datetime="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|timesince }} {% trans 'ago' %}</time>
+        </div>
+        
+		<div class="body">
+	    {{ comment.comment|escape|urlizetrunc:"40"|linebreaks }}
+		</div>
+
+    </article>
+    {% empty %}
+	<p class="comments empty">{% trans 'No comment yet.' %}</p>
+    {% endfor %}
+{% endblock %}

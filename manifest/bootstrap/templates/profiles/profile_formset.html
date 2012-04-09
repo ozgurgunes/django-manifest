@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Profile form{% endblock %}
+{% block content_title %}
+  <h2 class="heading">{% block formset_title %}{% trans 'Update your profile' %}{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+  <form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+    <fieldset>
+      <legend>{% block legend %}{% trans 'You can save multiple records at once' %}{% endblock %}</legend>
+      <p>{% trans 'To add more than displayed save and continue editing.' %}</p>
+      {{ form.management_form }}
+      
+      {% for form in form.forms %}
+      <ul class="fields">
+        {{ form.as_ul }}
+      </ul>
+      {% endfor %}      
+    </fieldset>
+    
+    <p class="form-buttons"><input class="button" type="submit" value="Save"></p>
+  </form>
+{% endblock %}

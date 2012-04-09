@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block body_class %}flatpage{% endblock %}
+{% block content_class %}column{% endblock %}
+{% block title %}{{ flatpage.title }} - {{ block.super}}{% endblock title %}
+{% block content %}
+<section id="breadcrumb" class="breadcrumb">
+        {{ flatpage.title|truncatewords:"5" }}
+</section>
+<header class="page-header">
+    <h1>{{ flatpage.title }}</h1>
+</header>
+<div>
+    {{ flatpage.content }}
+</div>
+{% endblock content %}

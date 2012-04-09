@@ -1,0 +1,18 @@
+{% extends "profiles/base.html" %}
+{% block body_class %}profiles{% endblock %}
+
+{% block main %}
+    <h2 class="page-header">{% trans "Profile Settings" %}</h2>
+    <h3><a href="{% url accounts_account_edit %}">{% trans 'Real Name' %}</a></h3>
+    <p>{% trans 'You can use this form if you need to change your real name.' %}</p>
+    <h3><a href="{% url accounts_email_change %}">{% trans 'E-mail address' %}</a></h3>
+    <p>{% trans 'You can change your email adress.' %} (<b>{{ user.email }}</b>)</p>
+    <h3><a href="{% url accounts_password_change %}">{% trans 'Password' %}</a></h3>
+    <p>{% trans 'Change your password here. Please do not share your password with others.' %}</p>
+    <h3><a href="{% url profiles_mugshot_edit %}">{% trans 'Profile Picture' %}</a></h3>
+    <p>{% trans 'You can use this form if you need to change your real name.' %}</p>
+    <h3><a href="{% url profiles_profile_edit %}">{% trans 'Personal Information' %}</a></h3>
+    <p>{% trans 'Update your personal information. Let others know more about you.' %}</p>
+    <h3><a href="{% url profiles_links_edit %}">{% trans 'Website' %}</a></h3>
+    <p>{% trans 'You can add your websites and blogs showed in your profile' %}</p>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "theme_base.html" %}
+
+{% load ifsetting_tag %}
+{% load account_tags %}
+
+{% block title %}{% trans "Login" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+    
+    <h1>{% trans "Log In to OpenID" %}</h1>
+    
+    <form action="{% url openid-register %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            {{ form|as_bootstrap }}
+        </fieldset>
+        <div class="actions">
+            <button type="submit" class="btn primary">{% trans "Log In" %}</button>
+        </div>
+    </form>
+    
+    {% if request.user.is_authenticated %}
+        <div><a href="{% url accounts_logout %}?next={{ request.path }}">logout</a></div>
+    {% endif %}
+    
+    <p>{% blocktrans %}If you have any trouble logging in to your account, contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.{% endblocktrans %}</p>
+{% endblock %}
+
+{% block tail %}
+<script>
+    $("#id_openid_url").focus();
+</script>
+{% endblock %}

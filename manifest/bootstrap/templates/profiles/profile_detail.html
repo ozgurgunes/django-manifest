@@ -1,0 +1,18 @@
+{% extends "profiles/base_profile.html" %}
+{% load pagination_tags %}
+
+{% block title %}{{ object.user.get_full_name }} - {{ block.super }}{% endblock %}
+{% block profiles %}
+<header>
+    <h1>{% firstof object.user.get_full_name object.user %}</h1>
+    <p>{% include "profiles/_profile_info.html" %}</p>
+</header>
+<section class="article">{{ object.about|linebreaks }}</section>
+{% endblock %}
+
+{% block aside %}
+    {% with object.user as user %}
+        {% include "profiles/_profile_panel.html" %}
+        {% include "profiles/_profile_services.html" %}
+    {% endwith %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% if user.get_profile.service_set.all %}
+<section class="user">
+    <heading><h3>Services</h3></heading>
+    <ul class="link_list">
+      {% for service in user.get_profile.service_set.all %}
+      <li><a href="{{ service.service_url }}">{{ service.title }}</a></li>
+      {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if user.get_profile.link_set.all %}
+<section class="user">
+    <heading><h3>Links</h3></heading>
+    <menu>
+      {% for link in user.get_profile.link_set.all %}
+      <li><p><a href="{{ link.url }}"><strong>{{ link.title }}</strong></a><br />{{ link.url }}</p></li>
+      {% endfor %}
+    </menu>
+</section>
+{% endif %}

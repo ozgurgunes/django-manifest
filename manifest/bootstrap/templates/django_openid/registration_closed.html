@@ -1,0 +1,9 @@
+{% extends "theme_base.html" %}
+
+{% block title %}{% trans "Signup closed" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Signup closed" %}</h1>
+    
+    <p>{% blocktrans %}Whoops, you can't register for an account now. This site is currently closed for sign-up.{% endblocktrans %}
+{% endblock %}

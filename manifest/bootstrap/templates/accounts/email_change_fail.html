@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}{% trans "E-mail verification failed" %} - {{ block.super }}{% endblock %}
+{% block content %}
+<h2>{% trans "Your e-mail address could not be verified..." %}</h2>
+<p>{% trans "You could try changing it again in your account settings." %}</p>
+{% endblock %}

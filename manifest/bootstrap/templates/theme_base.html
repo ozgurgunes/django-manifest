@@ -1,0 +1,93 @@
+{% load compress navigation %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8" />
+		<title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+		<meta name="keywords" content="{% block keywords %}{% endblock %}" />
+		<meta name="description" content="{% block description %}{% endblock %}" />
+		<meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0"/>
+		<link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico">
+		<meta name="robots" content="{% block robots %}NOINDEX,NOFOLLOW"{% endblock %} />
+        <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        {% block script %}
+    	{% compress js %}
+    	    {% block script_compress %}
+    		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+    		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+    		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    		{% endblock %}
+    	{% endcompress %}
+    	{% endblock %}
+	    {% block style %}
+    	{% compress css %}
+    	    {% block style_compress %}
+    	    <link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/jquery-ui-1.8.16.custom.css" />
+    		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/bootstrap.min.css" />
+    		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/base.css" />
+    		{% endblock %}
+    	{% endcompress %}
+    	{% endblock %}
+    	{% block head %}{% endblock %}
+    </head>
+    <body class="{% block body_class %}base{% endblock %}">
+    <div class="container">
+    <!-- Navigation //-->
+    {% block navbar_base %}
+	    <nav class="navbar navbar-fixed-top" role="navigation">
+            <div class="navbar-inner">
+                <div class="container">
+                {% block navbar %}
+                    {% block brand %}
+        				<h1 id="brand" class="logo pull-left"><a class="brand" href="/">{{ SITE_NAME }}</a></h1>
+        			{% endblock %}
+                    {% block account_navbar %}{% include "_account_navbar.html" %}{% endblock %}
+                    {% block menu_navbar %}
+                    <ul class="nav nav-pills">
+                        <li class="{% active request "^/$" %}"><a href="/">{% trans "Home" %}</a></li>
+                        <li class="{% active request "^/about" %}"><a href="/about/">{% trans "About" %}</a></li>
+                        <li class="{% active request "^/contact" %}"><a href="/contact/">{% trans "Contact" %}</a></li>
+                    </ul>
+                    {% endblock %}
+                    {% block search_navnar %}{% include "_search_navbar.html" %}{% endblock %}
+                {% endblock %}
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+    <!--// Messages -->
+    {% block messages_base %}
+        {% if messages %}
+        <section class="messages">
+            {% include "_messages.html" %}
+        </section>
+        {% endif %}
+    {% endblock %}
+    <!--// Content -->
+    {% block content_base %}
+        <div id="content">
+        {% block content %}{{ content }}{% endblock %}
+        </div>
+    {% endblock %}        
+    <!--// Footer -->
+    {% block footer_base %}
+        <footer role="contentinfo">
+        {% block footer %}
+            <menu class="nav nav-pills">
+                <li><a href="#">{% trans "Help" %}</a></li>
+                <li><a href="#">{% trans "Contact" %}</a></li>
+            </menu>
+            <p class="footer">Copyright &copy; 2012 {{ SITE_URL }}</p>
+        {% endblock %}
+        </footer>
+    {% endblock %}        
+    </div>
+    <!--// Tail -->
+    {% block tail_base %}
+        {% block tail %}{% endblock %}
+    {% endblock %}
+    </body>
+</html>

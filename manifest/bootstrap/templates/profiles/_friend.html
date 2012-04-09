@@ -1,0 +1,8 @@
+{% load i18n relationship_tags %}
+<li id="following" class="{% if_relationship request.user user "following" %}stop
+{% else %}start
+{% endif_relationship %}
+">
+<a href="{% url relationship_add user 'following' %}" class="start following">{% trans 'Follow' %}</a>
+<a href="{% url relationship_remove user 'following' %}" class="stop following">{% trans 'Stop following' %}</a>
+</li>

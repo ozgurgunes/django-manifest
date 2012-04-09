@@ -1,0 +1,58 @@
+{% extends "notification/base.html" %}
+
+{% block title %}{% trans "Notification Settings" %} - {{ block.super }}{% endblock %}
+
+{% block main %}
+    <h2 class="page-header">{% trans "Settings" %}</h2>
+    
+    <div class="notice_settings">
+        {% url account_email as email_url %}
+        {% if user.email %}
+            
+            <p class="well">
+                {% trans "Primary email" %}: <br/>
+                <b>{{ user.email }}</b> ({% blocktrans %}change under <a href="{{ email_url }}">Account</a>{% endblocktrans %})
+            </p>
+        {% else %}
+            <div class="alert-message warning">
+                {% blocktrans %}
+                You do not have a verified email address to which notices can be sent.
+                You can add one by going to <a href="{{ email_url }}">account settings</a>.
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+        
+        <form method="POST" action="" class="form">
+            {% csrf_token %}
+            <table class="notice_settings table">
+				<thead>
+			        <tr>
+			            <th>{% trans "Notification Type" %}</th>
+			            {% for header in notice_settings.column_headers %}
+			                <th>{{ header }}</th>
+			            {% endfor %}
+			        </tr>
+				</thead>
+				<tbody>
+	                {% for row in notice_settings.rows %}
+	                    <tr>
+	                        <td>{% trans row.notice_type.display %}<br/>
+	                            <span class="notice_type_description">{% trans row.notice_type.description %}</span>
+	                        </td>
+	                        {% for cell in row.cells %}
+	                            <td>
+	                                <input type="checkbox" name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %}/>
+	                            </td>
+	                        {% endfor %}
+	                    </tr>
+	                {% endfor %}
+				</tbody>
+				<tfoot class="form-actions">
+	                <tr>
+	                    <td colspan="2"><button type="submit" class="btn btn-primary pull-right">{% trans "Change" %}</button></td>
+	                </tr>
+				</tfoot>
+            </table>
+        </form>
+    </div>
+{% endblock %}

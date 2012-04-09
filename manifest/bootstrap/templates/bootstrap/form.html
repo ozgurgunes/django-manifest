@@ -1,0 +1,51 @@
+{% load bootstrap_tags %}
+{% if form.non_field_errors %}
+    <div class="alert-message block-message error">
+        <p>
+        	<strong>{{ form_error_title }}</strong>
+	        <ul>
+	        	{{ form.non_field_errors|unordered_list }}
+	        </ul>
+	    </p>
+    </div>
+{% endif %}
+{% for field in form %}
+    {% if field.is_hidden %}
+        {{ field }}
+    {% else %}
+        <div class="control-group clearfix{% if field.errors %} error{% endif %}">
+            {% if field|is_checkbox %}
+                        <div class="controls">
+                            <label class="checkbox">
+                                {{ field }} {{ field.label }}
+                            </label>
+
+                            {% for error in field.errors %}
+                                <p class="help-inline">{{ error }}</p>
+                            {% endfor %}
+
+                            {% if field.help_text %}
+                            <p class="help-block">
+                                {{ field.help_text }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            {% else %}
+                <label for="{{ field.auto_id }}" {% if field.field.required %}class="requiredField control-label"{% endif %}>
+                    {{ field.label|safe }}
+                </label>
+                <div class="input controls">
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <span class="help-inline">{{ error }}</span>
+                    {% endfor %}
+                    {% if field.help_text %}
+                        <span class="help-block">{{ field.help_text|safe }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endfor %}

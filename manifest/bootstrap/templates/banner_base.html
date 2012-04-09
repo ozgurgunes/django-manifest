@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content_base %}
+    {% block banner_base %}
+        <section id="banner" class="{% block banner_class %}well{% endblock %}">
+        {% block banner %}{% endblock %}
+        </section>
+    {% endblock %}
+    <div id="content" class="{% block content_class %}row{% endblock %}">
+    {% block content %}
+        {% block article_base %}
+            <div id="main" class="{% block main_class %}span8{% endblock %}">
+            {% block main %}{% endblock %}
+            </div>
+        {% endblock %}
+        {% block aside_base %}
+            <div id="side" class="{% block side_class %}span4{% endblock %}">
+            {% block side %}{% endblock %}
+            </div>
+        {% endblock %}
+    {% endblock %}
+    </div>
+{% endblock %}

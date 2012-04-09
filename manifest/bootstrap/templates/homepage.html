@@ -1,0 +1,62 @@
+{% extends "banner_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+{% block banner_class %}hero-unit{% endblock %}
+
+{% block banner %}
+    <h1>{% trans "Reuse Easily" %}</h1>
+    <p>
+        {% blocktrans %}
+        Lobortis nisl ut, aliquip ex ea commodo consequat duis autem vel eum. Dynamicus qui sequitur mutationem consuetudium lectorum mirum, est notare quam littera gothica quam nunc putamus parum. Nobis eleifend option, congue nihil imperdiet doming id quod mazim placerat facer possim assum typi non?
+        {% endblocktrans %}
+    </p>
+    {% if user.is_authenticated %}
+        {% url what_next as what_next_url %}
+        <p class="what_next">{% blocktrans %}Wondering <a href="{{ what_next_url }}" class="btn primary large">What Next</a>?{% endblocktrans %}</p>
+    {% else %}
+        {% url acct_login as login_url %}
+        {% ifsetting ACCOUNT_OPEN_SIGNUP %}
+            {% url acct_signup as signup_url %}
+            <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn">Log In</a> or <a href="{{ signup_url }}" class="btn primary">Sign Up</a> to try out the site.{% endblocktrans %}</p>
+        {% else %}
+            <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn primary large">Log In</a> to try out the site.{% endblocktrans %}</p>
+        {% endifsetting %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+            <div class="span3">
+            {% block column-1 %}
+                <h2>Heading</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
+                <p><a class="btn" href="#">View details &raquo;</a></p>
+            {% endblock %}
+            </div>
+            <div class="span3">
+            {% block column-2 %}
+                <h2>Heading</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
+                <p><a class="btn" href="#">View details &raquo;</a></p>
+            {% endblock %}
+            </div>
+            <div class="span3">
+            {% block column-3 %}
+                <h2>Heading</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
+                <p><a class="btn" href="#">View details &raquo;</a></p>
+            {% endblock %}
+            </div>
+            <div class="span3">
+            {% block column-4 %}
+                <h2>Heading</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
+                <p><a class="btn" href="#">View details &raquo;</a></p>
+            {% endblock %}
+            </div>
+        </div>
+{% endblock %}

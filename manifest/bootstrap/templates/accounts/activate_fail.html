@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{% trans "Account activation failed" %} - {{ block.super }}{% endblock %}
+{% block content %}
+<h2>{% trans "Your account could not be activated..." %}</h2>
+<p>{% trans "Your account could not be activated. This could be because your activation link has aged." %}</p>
+<p>{% trans "Please try registering again or contact us if you think something went wrong." %}</p>
+{% endblock %}

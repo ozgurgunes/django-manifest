@@ -1,0 +1,12 @@
+<figure class="avatar">
+    <a href="{% url profiles_profile_detail object.user %}">
+        {% thumbnail object.user.get_profile.avatar "48x48" as im %}
+        <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ object.user }}" />
+        {% endthumbnail %}                    
+    </a>                     
+</figure>
+<h3 class="user"><a href="{% url profiles_profile_detail object.user %}">{{ object.user }}</a></h3>
+<div class="meta">
+    <span class="friends-count"><a href="{% url profiles_friends_list user %}">{% trans 'Friends' %}</a></span>
+</div>
+<p>{% include "profiles/_profile_info.html" %}</p>

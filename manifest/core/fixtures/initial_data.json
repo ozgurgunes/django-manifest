@@ -1,0 +1,33 @@
+[
+{
+    "pk": 1, 
+    "model": "sites.site", 
+    "fields": 
+    {
+        "domain": "manifest.local", 
+        "name": "Django Manifest"
+    }
+},
+{
+    "pk": 1,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "About",
+        "url": "/about/",
+        "content": "Lorem ipsum dolor sit amet..."
+    }
+},
+{
+    "pk": 2,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "Contact",
+        "url": "/contact/",
+        "content": "Lorem ipsum dolor sit amet..."
+    }
+}
+]

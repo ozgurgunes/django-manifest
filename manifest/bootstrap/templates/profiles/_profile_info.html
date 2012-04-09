@@ -1,0 +1,5 @@
+{% load i18n %}
+
+{% if object.age %}<em>{{ object.age }}</em> years old{% endif %}{% if object.gender %} <em>{{ object.get_gender_display }}{% endif %} {% firstof object.occupation %}</em>
+{% if object.location %}{% trans 'from' %} <em>{{ object.location }}{% if object.country %} ({{ object.get_country_display }})</em>{% endif %}{% endif %}
+{% blocktrans with object.user.date_joined|date as date %}joined {{ SITE_NAME }} on <em>{{ date }}</em>{% endblocktrans %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{% trans "E-mail address changed!" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h2 class="page-header">{% trans 'New e-mail address' %}</h2>
+<p>{% blocktrans with site.name as site %}Your new e-mail address is saved. You can continue using {{ site }} with this e-mail address.{% endblocktrans %}</p>
+{% endblock %}

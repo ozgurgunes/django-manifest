@@ -1,0 +1,28 @@
+{% extends "profiles/base_profile.html" %}
+
+{% block profile_menu_favorites %}current{% endblock %}
+
+{% block content %}
+  {% if object_list %}
+  <p>
+    {% blocktrans count object_list.count as counter and object.user.first_name as user  %}
+      {{ user }} has only <strong>one</strong> favorite post.
+      {% plural %}
+      {{ user }} has <strong>{{ counter }}</strong> favorite posts.
+    {% endblocktrans %}
+  </p>
+    {% for object in object_list %}
+    <div class="node row {% cycle odd,even %}">
+      {% with object.node as object %}
+      {% include "nodes/_list.html" %}
+      {% endwith %}
+  	</div>
+    {% endfor %}
+  <!--// Paginator -->
+      {% load pagination %}{% pagination %}
+  <!-- Paginator //-->
+  {% else %}
+    <p>{% trans 'Not found any record.' %}</p>
+  {% endif %}
+
+{% endblock %}

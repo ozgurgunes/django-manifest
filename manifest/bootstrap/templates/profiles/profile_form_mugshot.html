@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Change mugshot{% endblock %}
+{% block content_title %}
+  <h2 class="heading">{% block formset_title %}{% trans 'Update your profile' %}{% endblock %}</h2>
+{% endblock %}
+
+
+{% block content %}
+  {% if form.is_multipart %}
+  <form action="." method="post" enctype="multipart/form-data" class="half">{% csrf_token %}
+  {% else %}
+  <form action="." method="post" class="half">
+  {% endif %}
+    <fieldset>
+      <legend>{% block legend %}{% trans 'Profile picture' %}{% endblock %}</legend>
+      {{ form.as_p }}
+    </fieldset>
+    
+    <p class="form-buttons"><input class="button" type="submit" value="{% trans 'Upload picture' %}"></p>
+  </form>
+{% block avatar %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "profiles/base_profile.html" %}
+
+{% block profile_menu_friends %}current{% endblock %}
+
+{% block content %}
+  {% if object_list %}
+  <p>
+    {% blocktrans count object_list.count as counter and object.user.first_name as user  %}
+      {{ user }} has only one friend.
+      {% plural %}
+      {{ user }} has <strong>{{ counter }}</strong> friends.
+    {% endblocktrans %}    
+  </p>
+  <div class="friend-list">
+    {% for object in object_list %}
+      <div class="user row">
+      <h3>
+        <a href="{% url profiles_profile_detail object.to_user %}">
+            {% thumbnail object.user.get_profile.avatar "48x48" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ object.user }}" />
+            {% endthumbnail %}
+            </a>
+        <a class="user" href="{% url profiles_profile_detail object.to_user %}">{{ object.to_user }}</a>
+      </h3>
+      <p class="quiet profile-info">{% with object.to_user.get_profile as object %}{% include 'profiles/_profile_info.html' %}{% endwith %}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <!--// Paginator -->
+      {% load pagination %}{% pagination %}
+  <!-- Paginator //-->
+  {% else %}
+  <p>{% trans 'Not found any record.' %}</p>
+  {% endif %}
+
+{% endblock %}

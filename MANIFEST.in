@@ -1,0 +1,5 @@
+include README
+include README
+include requirements.txt
+recursive-include docs *
+recursive-include manifest *

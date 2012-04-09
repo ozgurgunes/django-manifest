@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<form action="" method="post" class="form form-horizontal span-8">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Log in to your account" %}</legend>
+    {{ form|as_bootstrap }}
+  </fieldset>
+  {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+ <div class="form-actions">
+     <input type="submit" value="{% trans "Sign In" %}" class="btn btn-primary" />
+     <a href="{% url accounts_password_reset %}" title="{% trans "Forgot your password?" %}" class="btn">{% trans "Forgot your password?" %}</a>
+ </div>
+</form>
+<aside class="span-4 pull-right">
+    <ul>
+      <li>
+        <a href="{% url socialauth_begin 'facebook' %}">Enter using Facebook</a>
+      </li>
+    </ul>
+</div>
+{% endblock %}
