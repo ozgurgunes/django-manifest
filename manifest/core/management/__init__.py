@@ -86,7 +86,7 @@ class CommandRunner(object):
             argv.pop()
             command = "help"
             argv.extend(["help"])
-        if command in ["-v", "--v"]:
+        if command in ["-v", "--version"]:
             argv.pop()
             command = "help"
             argv.extend(["help", "--version"])

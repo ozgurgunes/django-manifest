@@ -37,15 +37,15 @@ class Command(BaseCommand):
         optparse.make_option("-b", "--base",
             dest = "base",
             default = "default",
-            help = "the starter project to use as a base (excluding _project, e.g., basic or social. see --list-bases)"
+            help = "the starter project to use as a base (see --list-bases)"
         ),
         optparse.make_option("--no-reqs",
             dest = "no_reqs",
             action = "store_true",
             help = "do not install requirements automatically"
         ),
-        optparse.make_option("--allow-no-virtualenv",
-            dest = "allow_no_virtualenv",
+        optparse.make_option("--no-virtualenv",
+            dest = "no_virtualenv",
             action = "store_true",
             default = False,
             help = "turn off the requirement pip must run inside a virtual environment"
@@ -135,7 +135,7 @@ class Command(BaseCommand):
         if not options["no_reqs"]:
             print "Installing project requirements..."
             try:
-                installer.install_reqs(not options["allow_no_virtualenv"])
+                installer.install_reqs(not options["no_virtualenv"])
             except InstallationError:
                 print ("Installation of requirements failed. The project %s "
                     "has been created though.") % user_project_name
