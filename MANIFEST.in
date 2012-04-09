@@ -1,5 +1,5 @@
+include AUTHORS
 include README
-include README
-include requirements.txt
+include LICENCE
 recursive-include docs *
 recursive-include manifest *
