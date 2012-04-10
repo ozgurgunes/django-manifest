@@ -123,11 +123,6 @@ TEMPLATE_DIRS = (
     os.path.join(PATH, 'templates/'),
 )
 
-# Project level static files
-STATICFILES_DIRS = (
-	os.path.join(PATH, 'staticfiles/'),
-)
-
 # Project level fixtures
 FIXTURE_DIRS = (
     os.path.join(PATH, "fixtures/"),
@@ -242,7 +237,7 @@ EMAIL_SUBJECT_PREFIX = '[Site Name] '
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
-    from settings_local import *
+    from local_settings import *
 except ImportError:
     pass
     

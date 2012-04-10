@@ -123,11 +123,6 @@ TEMPLATE_DIRS = (
     os.path.join(PATH, 'templates/'),
 )
 
-# Project level static files
-STATICFILES_DIRS = (
-	os.path.join(PATH, 'staticfiles/'),
-)
-
 # Project level fixtures
 FIXTURE_DIRS = (
     os.path.join(PATH, "fixtures/"),
