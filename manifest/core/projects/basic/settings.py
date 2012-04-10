@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-# Project settings
 import os
 
 PATH = os.path.dirname(__file__)
@@ -16,12 +14,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends',     # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                         # Or path to database file if using sqlite3.
+        'USER': '',                         # Not used with sqlite3.
+        'PASSWORD': '',                     # Not used with sqlite3.
+        'HOST': '',                         # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                         # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -123,11 +121,16 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PATH, 'templates/'),
-    os.path.join(PATH, 'core', 'bootstrap', 'templates/'),
 )
 
+# Project level static files
 STATICFILES_DIRS = (
 	os.path.join(PATH, 'staticfiles/'),
+)
+
+# Project level fixtures
+FIXTURE_DIRS = (
+    os.path.join(PATH, "fixtures/"),
 )
 
 STATICFILES_FINDERS = (
@@ -221,27 +224,19 @@ LOGGING = {
     }
 }
 
-# Project fixtures
-FIXTURE_DIRS = (
-    os.path.join(PATH, "fixtures"),
-)
-
 COMPRESS_URL = STATIC_URL
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_OUTPUT_DIR = 'cache'
-#COMPRESS_ENABLED = DEBUG
 
-EMAIL_BACKEND = 'mailer.backend.DbBackend' #'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'mailer.backend.DbBackend'      #'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 EMAIL_PORT = 25
-DEFAULT_FROM_EMAIL = ''
-EMAIL_SUBJECT_PREFIX = ''
 
-# DEFAULT_FROM_EMAIL = 'Site Name <site-name-noreply@site-domain.com>'
-# EMAIL_SUBJECT_PREFIX = '[Site Name] '
+DEFAULT_FROM_EMAIL = 'Site Name <no-reply@example.com>'
+EMAIL_SUBJECT_PREFIX = '[Site Name] '
 
 
 # local_settings.py can be used to override environment-specific settings

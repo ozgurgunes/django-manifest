@@ -29,15 +29,15 @@ class Command(BaseCommand):
     args = "[projectname]"
     
     option_list = BaseCommand.option_list + [
-        optparse.make_option("-l", "--list-bases",
+        optparse.make_option("-l", "--list",
             dest = "list_bases",
             action = "store_true",
             help = "lists the starter projects (bases) that are available"
         ),
         optparse.make_option("-b", "--base",
             dest = "base",
-            default = "default",
-            help = "the starter project to use as a base (see --list-bases)"
+            default = "basic",
+            help = "the starter project to use as a base (see --list)"
         ),
         optparse.make_option("--no-reqs",
             dest = "no_reqs",
@@ -202,7 +202,7 @@ class ProjectInstaller(object):
             PIP_CMD = "pip"
         
         pip_cmd = resolve_command(PIP_CMD)
-        requirements_file = os.path.join(os.path.dirname(os.path.dirname(self.source_dir)), "requirements", "%s.txt" % self.project_name)
+        requirements_file = os.path.join(self.project_dir, "requirements.txt")
         
         environ = {}
         if require_virtualenv:
