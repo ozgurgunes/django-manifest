@@ -3,6 +3,8 @@ import os
 
 PATH = os.path.dirname(__file__)
 
+SITE_URL = '/'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -60,7 +62,7 @@ MEDIA_ROOT = os.path.join(os.path.dirname(PATH), 'httpdocs', 'media/')
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/media/'
+MEDIA_URL = os.path.join(SITE_URL, 'media/')
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -70,7 +72,7 @@ STATIC_ROOT = os.path.join(os.path.dirname(PATH), 'httpdocs', 'static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = os.path.join(SITE_URL, 'static/')
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -179,6 +181,13 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+# Django Auth Settings
+LOGIN_URL   = os.path.join(SITE_URL, 'accounts/login/')
+LOGIN_REDIRECT_URL = os.path.join(SITE_URL, 'accounts/profile/')
+
+AUTH_PROFILE_MODULE = 'profiles.profile'
+ANONYMOUS_USER_ID = -1
+
 # Social Auth Secrets
 FACEBOOK_APP_ID              = ''
 FACEBOOK_API_SECRET          = ''
@@ -192,9 +201,6 @@ SOCIAL_AUTH_DEFAULT_USERNAME = 'my_awesome_username'
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 SOCIAL_AUTH_ERROR_KEY = 'social_account_errors'
 SOCIAL_AUTH_RAISE_EXCEPTIONS = DEBUG
-
-AUTH_PROFILE_MODULE = 'profiles.profile'
-ANONYMOUS_USER_ID = -1
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
