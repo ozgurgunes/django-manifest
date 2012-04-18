@@ -3,7 +3,7 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 
-from manifest.accounts.views import views as accounts_views
+from manifest.accounts import views as accounts_views
 from manifest.accounts import settings as accounts_settings
 
 urlpatterns = patterns('',

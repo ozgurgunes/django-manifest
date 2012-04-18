@@ -99,5 +99,73 @@
          "last_active": "2012-01-01 00:00:00",
          "activation_notification_send": false
      }
+},
+{
+    "pk": -1, 
+    "model": "profiles.profile", 
+    "fields": 
+    {
+        "user": -1, 
+        "status": null, 
+        "about": null, 
+        "mobile": null, 
+        "gender": null, 
+        "location": null, 
+        "mugshot": "", 
+        "country": "", 
+        "birth_date": null, 
+        "occupation": null
+    }
+},
+{
+    "pk": 1, 
+    "model": "profiles.profile", 
+    "fields": 
+    {
+        "user": 1, 
+        "status": null, 
+        "about": null, 
+        "mobile": null, 
+        "gender": null, 
+        "location": null, 
+        "mugshot": "", 
+        "country": "", 
+        "birth_date": null, 
+        "occupation": null
+    }
+},
+{
+    "pk": 2, 
+    "model": "profiles.profile", 
+    "fields": 
+    {
+        "user": 2, 
+        "status": null, 
+        "about": null, 
+        "mobile": null, 
+        "gender": null, 
+        "location": null, 
+        "mugshot": "", 
+        "country": "", 
+        "birth_date": null, 
+        "occupation": null
+    }
+},
+{
+    "pk": 3, 
+    "model": "profiles.profile", 
+    "fields": 
+    {
+        "user": 3, 
+        "status": null, 
+        "about": null, 
+        "mobile": null, 
+        "gender": null, 
+        "location": null, 
+        "mugshot": "", 
+        "country": "", 
+        "birth_date": null, 
+        "occupation": null
+    }
 }
 ]
