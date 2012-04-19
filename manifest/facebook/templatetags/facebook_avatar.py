@@ -10,7 +10,7 @@ class Avatar(template.Node):
         self.type = type
 
     def render(self, context):
-        uid = User.objects.get(username=self.user.resolve(context)).social_auth.get(provider='facebook').uid
+        uid = User.objects.select_related().get(username=self.user.resolve(context)).social_auth.get(provider='facebook').uid
         if self.type:
             return 'https://graph.facebook.com/%s/picture?type=%s' % (uid, self.type)
         return 'https://graph.facebook.com/%s/picture' % uid
