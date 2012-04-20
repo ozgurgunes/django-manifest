@@ -3,6 +3,8 @@ import os
 
 PATH = os.path.dirname(__file__)
 
+# Project specific configuration
+# SITE_URL needed because project will not be served at domain root
 SITE_URL = '/'
 
 DEBUG = True
@@ -113,10 +115,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'pagination.middleware.PaginationMiddleware',
 )
 
-ROOT_URLCONF = 'manifest.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -162,7 +163,6 @@ INSTALLED_APPS = (
 	'tagging',
 	'relationships',
 	'mailer',
-	'pagination',
 
     # Core
     'manifest.core',
@@ -197,10 +197,11 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/profiles/settings/'
 FACEBOOK_EXTENDED_PERMISSIONS = ['email',]
 
 # Social Auth Settings
-SOCIAL_AUTH_DEFAULT_USERNAME = 'my_awesome_username'
+SOCIAL_AUTH_DEFAULT_USERNAME = 'user_'
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 SOCIAL_AUTH_ERROR_KEY = 'social_account_errors'
 SOCIAL_AUTH_RAISE_EXCEPTIONS = DEBUG
+SOCIAL_AUTH_EXPIRATION = 'expires'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

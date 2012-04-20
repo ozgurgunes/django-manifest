@@ -15,8 +15,6 @@ django-filebrowser==3.3.0
 django-guardian==1.0.3
 django-mailer==0.1.0
 django-navigation==0.8.1
-django-notification==0.2
-django-pagination==1.0.7
 django-relationships==0.3.0
 django-selectable==0.4
 django-social-auth==0.6.6
