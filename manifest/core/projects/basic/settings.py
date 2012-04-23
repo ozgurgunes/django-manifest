@@ -153,7 +153,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     
-	'guardian',
 	'social_auth',
 	'sorl.thumbnail',
 	'compressor',
@@ -174,7 +173,6 @@ INSTALLED_APPS = (
 # User registration & authentication
 AUTHENTICATION_BACKENDS = (
     'manifest.accounts.backends.AuthenticationBackend',
-    'guardian.backends.ObjectPermissionBackend',
     # Social Auth
     'social_auth.backends.facebook.FacebookBackend',
     # Django Contrib

@@ -8,14 +8,16 @@
             {% endthumbnail %}
             {% if user.first_name %}{{ user.first_name|escape }}{% else %}{{ user.username }}{% endif %} <span class="caret"></span></a>
 		<ul class="dropdown-menu">
-            <li><a href="{% url profiles_profile_detail user.username %}">{% trans "Profile" %}</a></li>
+            <li><a href="{% url accounts_profile_detail user.username %}">{% trans "Profile" %}</a></li>
             <li class="divider"></li>
             {% if user.is_staff %}<li><a href="/admin/">{% trans "Admin" %}</a></li>{% endif %}
             <li><a href="{% url accounts_logout %}">{% trans "Logout" %}</a></li>
 		</ul>
 	</li>
+	{% if 'notification' in INSTALLED_APPS %}
     <li><a href="{% url notification_notices %}">{% trans "Notifications" %}{% if notice_unseen_count %} ({{ notice_unseen_count }}){% endif %}</a></li>
-    <li><a href="{% url profiles_profile_settings %}">{% trans "Settings" %}</a></li>
+	{% endif %}
+    <li><a href="{% url accounts_settings %}">{% trans "Settings" %}</a></li>
 {% else %}
 	<li>
 		<p class="navbar-text">

@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.forms.widgets import Input
-
+"""
+HTML5 Form Inputs
+"""
 class TextInput(Input):
     input_type = 'text'
 

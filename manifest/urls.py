@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
@@ -16,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('manifest.accounts.urls')),
     url(r'^profiles/', include('manifest.profiles.urls')),
 
-    url(r'^(?P<username>\w+)/$', 'manifest.profiles.views.profile_detail', name='profiles_profile_detail'),
+    url(r'^(?P<username>\w+)/$', 'manifest.profiles.views.profile_detail', name='accounts_profile_detail'),
     url(r'^(?P<username>\w+)/comments/$', 'manifest.profiles.views.comment_list', name='profiles_comments_list'),
     url(r'^(?P<username>\w+)/friends/$', 'manifest.profiles.views.friend_list', name='profiles_friends_list'),
 

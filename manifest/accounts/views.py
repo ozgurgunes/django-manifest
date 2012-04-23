@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
@@ -10,11 +11,10 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.views.generic import list_detail
 from django.http import HttpResponseForbidden, Http404
-
-from guardian.decorators import permission_required_or_403
+from django.db.transaction import commit_on_success
 
 from manifest.accounts.forms import (RegistrationForm, RegistrationFormOnlyEmail, AuthenticationForm,
-                           EmailForm, ProfileForm, AccountForm)
+                           EmailForm, ProfileForm)
 from manifest.accounts.models import Account
 from manifest.accounts.decorators import secure_required
 from manifest.accounts.utils import login_redirect, get_profile_model
@@ -104,6 +104,7 @@ def login(request, auth_form=AuthenticationForm,
                               extra_context=extra_context)
 
 @secure_required
+@commit_on_success()
 def register(request, registration_form=RegistrationForm,
            template_name='accounts/register.html', success_url=None,
            extra_context=None):
@@ -220,7 +221,15 @@ def activate(request, username, activation_key,
             extra_context = dict()
         return direct_to_template(request, template_name, extra_context=extra_context)
 
+@login_required
+def settings(request, template_name='profiles/profile_settings.html'):
+    return direct_to_template(request, template_name, extra_context = { 
+                                'user': request.user, 
+                                'object': request.user.get_profile() 
+                                })
+
 @secure_required
+@commit_on_success()
 def email_change(request, email_form=EmailForm,
                  template_name='accounts/email_change_form.html', success_url=None,
                  extra_context=None):
@@ -253,11 +262,6 @@ def email_change(request, email_form=EmailForm,
 
     ``account``
         Instance of the ``Account`` whose email address is about to be changed.
-
-    **Todo**
-
-    Need to have per-object permissions, which enables users with the correct
-    permissions to alter the email address of others.
 
     """
     user = get_object_or_404(User, username__iexact=request.user.username)
@@ -392,81 +396,9 @@ def password_change(request, template_name='accounts/password_change_form.html',
                               extra_context=extra_context)
 
 @secure_required
-def account_edit(request, account_form=AccountForm,
-                 template_name='accounts/account_edit_form.html', success_url=None,
-                 extra_context=None, **kwargs):
-    """
-    Edit account.
-
-    Edits an account selected by the supplied username. First checks
-    permissions if the user is allowed to edit this account, if denied will
-    show a 404. When the account is succesfully edited will redirect to
-    ``success_url``.
-
-    :param account_form:
-
-        Form that is used to edit the account. The :func:`AccountForm.save`
-        method of this form will be called when the form
-        :func:`AccountForm.is_valid`.  Defaults to :class:`AccountForm`
-        from manifest.accounts.
-
-    :param template_name:
-        String of the template that is used to render this view. Defaults to
-        ``accounts/account_form.html``.
-
-    :param success_url:
-        Named URL which be passed on to a django ``reverse`` function after the
-        form is successfully saved. Defaults to the ``accounts_detail`` url.
-
-    :param extra_context:
-        Dictionary containing variables that are passed on to the
-        ``template_name`` template.  ``form`` key will always be the form used
-        to edit the account, and the ``account`` key is always the edited
-        account.
-
-    **Context**
-
-    ``form``
-        Form that is used to alter the account.
-
-    ``account``
-        Instance of the ``Account`` that is edited.
-
-    """
-    user = get_object_or_404(User, username__iexact=request.user.username)
-
-    account = user.account
-
-    user_initial = {'first_name': user.first_name,
-                    'last_name': user.last_name}
-
-    form = account_form(instance=account, initial=user_initial)
-
-    if request.method == 'POST':
-        form = account_form(request.POST, request.FILES, instance=account,
-                                 initial=user_initial)
-        if form.is_valid():
-            account = form.save()
-
-            if accounts_settings.ACCOUNTS_USE_MESSAGES:
-                messages.success(request, _('Your account has been updated.'),
-                                 fail_silently=True)
-
-            if success_url: redirect_to = success_url
-            else: redirect_to = reverse('accounts_profile_detail', kwargs={'username': request.user.username})
-            return redirect(redirect_to)
-
-    if not extra_context: extra_context = dict()
-    extra_context['form'] = form
-    extra_context['account'] = account
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context,
-                              **kwargs)
-
-@secure_required
+@commit_on_success()
 def profile_edit(request, profile_form=ProfileForm,
-                 template_name='accounts/profile_edit_form.html', success_url=None,
+                 template_name='accounts/profile_form.html', success_url=None,
                  extra_context=None, **kwargs):
     """
     Edit profile.
@@ -527,7 +459,7 @@ def profile_edit(request, profile_form=ProfileForm,
                                  fail_silently=True)
 
             if success_url: redirect_to = success_url
-            else: redirect_to = reverse('accounts_profile_detail', kwargs={'username': username})
+            else: redirect_to = reverse('accounts_settings')
             return redirect(redirect_to)
 
     if not extra_context: extra_context = dict()
@@ -603,7 +535,7 @@ def profile_list(request, page=1, template_name='accounts/profile_list.html',
 
 def profile_detail(
     request, username,
-    template_name=accounts_settings.ACCOUNTS_PROFILE_DETAIL_TEMPLATE,
+    template_name='accounts/profile_detail.html',
     extra_context=None, **kwargs):
     """
     Detailed view of an user.

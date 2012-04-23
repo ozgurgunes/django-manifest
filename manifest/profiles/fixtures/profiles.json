@@ -10,7 +10,7 @@
         "mobile": null, 
         "gender": null, 
         "location": null, 
-        "mugshot": "", 
+        "picture": "", 
         "country": "", 
         "birth_date": null, 
         "occupation": null
@@ -27,7 +27,7 @@
         "mobile": null, 
         "gender": null, 
         "location": null, 
-        "mugshot": "", 
+        "picture": "", 
         "country": "", 
         "birth_date": null, 
         "occupation": null
@@ -44,7 +44,7 @@
         "mobile": null, 
         "gender": null, 
         "location": null, 
-        "mugshot": "", 
+        "picture": "", 
         "country": "", 
         "birth_date": null, 
         "occupation": null
@@ -61,7 +61,7 @@
         "mobile": null, 
         "gender": null, 
         "location": null, 
-        "mugshot": "", 
+        "picture": "", 
         "country": "", 
         "birth_date": null, 
         "occupation": null

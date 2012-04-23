@@ -1,0 +1,12 @@
+{% extends "accounts/base.html" %}
+{% block body_class %}accounts{% endblock %}
+
+{% block main %}
+    <h2 class="page-header">{% trans "Settings" %}</h2>
+    <h3><a href="{% url accounts_profile_edit %}">{% trans 'Personal Information' %}</a></h3>
+    <p>{% trans 'Update your personal information. Let others know more about you.' %}</p>
+    <h3><a href="{% url accounts_email_change %}">{% trans 'E-mail address' %}</a></h3>
+    <p>{% trans 'You can change your email adress.' %} (<b>{{ user.email }}</b>)</p>
+    <h3><a href="{% url accounts_password_change %}">{% trans 'Password' %}</a></h3>
+    <p>{% trans 'Change your password here. Please do not share your password with others.' %}</p>
+{% endblock %}

@@ -1,14 +1,19 @@
+# -*- coding: utf8 -*-
+import random
+from datetime import datetime
+from StringIO import StringIO  
+from PIL import Image
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.utils.hashcompat import sha_constructor
+from django.forms.extras.widgets import SelectDateWidget
+from django.db.transaction import commit_on_success
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import settings
 from manifest.accounts.models import Account
 from manifest.accounts.utils import get_profile_model
-
-import random
 
 attrs_dict = {'class': 'required'}
 
@@ -48,7 +53,7 @@ class RegistrationForm(forms.Form):
             pass
         else:
             raise forms.ValidationError(_('This username is already taken.'))
-        if self.cleaned_data['username'].lower() in accounts_settings.ACCOUNTS_FORBIDDEN_USERNAMES:
+        if self.cleaned_data['username'].lower() in settings.ACCOUNTS_FORBIDDEN_USERNAMES:
             raise forms.ValidationError(_('This username is not allowed.'))
         return self.cleaned_data['username']
 
@@ -79,8 +84,8 @@ class RegistrationForm(forms.Form):
         new_user = Account.objects.create_user(username,
                                                      email, 
                                                      password,
-                                                     not accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED,
-                                                     accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED)
+                                                     not settings.ACCOUNTS_ACTIVATION_REQUIRED,
+                                                     settings.ACCOUNTS_ACTIVATION_REQUIRED)
         return new_user
 
 class RegistrationFormOnlyEmail(RegistrationForm):
@@ -141,12 +146,12 @@ class AuthenticationForm(forms.Form):
                                widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
     remember_me = forms.BooleanField(widget=forms.CheckboxInput(),
                                      required=False,
-                                     label=_(u'Remember me for %(days)s') % {'days': _(accounts_settings.ACCOUNTS_REMEMBER_ME_DAYS[0])})
+                                     label=_(u'Remember me for %(days)s') % {'days': _(settings.ACCOUNTS_REMEMBER_ME_DAYS[0])})
 
     def __init__(self, *args, **kwargs):
         """ A custom init because we need to change the label if no usernames is used """
         super(AuthenticationForm, self).__init__(*args, **kwargs)
-        if accounts_settings.ACCOUNTS_WITHOUT_USERNAMES:
+        if settings.ACCOUNTS_WITHOUT_USERNAMES:
             self.fields['identification'] = identification_field_factory(_(u"Email"),
                                                                          _(u"Please supply your email."))
 
@@ -251,45 +256,23 @@ class PasswordForm(NewPasswordForm):
         return old_password
 PasswordForm.base_fields.keyOrder = ['old_password', 'new_password1', 'new_password2']
 
-class AccountForm(forms.ModelForm):
-    """ Base form used for fields that are always required """
-    first_name = forms.CharField(label=_(u'First name'),
-                                 max_length=30,
-                                 required=False)
-    last_name = forms.CharField(label=_(u'Last name'),
-                                max_length=30,
-                                required=False)
-
-    def __init__(self, *args, **kw):
-        super(AccountForm, self).__init__(*args, **kw)
-        # Put the first and last name at the top
-        new_order = self.fields.keyOrder[:-2]
-        new_order.insert(0, 'first_name')
-        new_order.insert(1, 'last_name')
-        self.fields.keyOrder = new_order
-
-    class Meta:
-        model = Account
-        fields = ['timezone', 'language']
-
-    def save(self, force_insert=False, force_update=False, commit=True):
-        account = super(AccountForm, self).save(commit=commit)
-        # Save first and last name
-        user = account.user
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.save()
-
-        return account
-
 class ProfileForm(forms.ModelForm):
     """ Base form used for fields that are always required """
+
+    GENDER_CHOICES = (
+        ('F', _('Female')),
+        ('M', _('Male')),
+    )
+
     first_name = forms.CharField(label=_(u'First name'),
                                  max_length=30,
                                  required=False)
     last_name = forms.CharField(label=_(u'Last name'),
                                 max_length=30,
                                 required=False)
+
+    gender              = forms.ChoiceField(required=False, choices=GENDER_CHOICES, widget=forms.RadioSelect())
+    birth_date          = forms.DateField(required=False, widget=SelectDateWidget(years=range(datetime.today().year-99, datetime.today().year-10)))
 
     def __init__(self, *args, **kw):
         super(ProfileForm, self).__init__(*args, **kw)
@@ -303,6 +286,28 @@ class ProfileForm(forms.ModelForm):
         model = get_profile_model()
         exclude = ['user']
 
+    def clean_picture(self):
+        """
+        Validates format and file size of uploaded profile picture.
+        
+        """
+        if self.cleaned_data.get('picture'):
+            picture_data = self.cleaned_data['picture']
+            if 'error' in picture_data:
+                raise forms.ValidationError(_('Upload a valid image.',
+                'The file you uploaded was either not an image or a corrupted image.'))
+                
+            content_type = picture_data.content_type
+            if content_type:
+                main, sub = content_type.split('/')
+                if not (main == 'image' and sub in settings.ACCOUNTS_PICTURE_FORMATS):
+                    raise forms.ValidationError(_('%s only.' % settings.ACCOUNTS_PICTURE_FORMATS))
+        
+        if picture_data.size > int(settings.ACCOUNTS_PICTURE_MAX_FILE):
+            raise forms.ValidationError(_('Image size too big'))
+        return self.cleaned_data['picture']
+
+    @commit_on_success()
     def save(self, force_insert=False, force_update=False, commit=True):
         profile = super(ProfileForm, self).save(commit=commit)
         # Save first and last name
@@ -312,3 +317,4 @@ class ProfileForm(forms.ModelForm):
         user.save()
 
         return profile
+

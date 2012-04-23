@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.dispatch import Signal
 
 registration_complete = Signal(providing_args=['user', 'request',])

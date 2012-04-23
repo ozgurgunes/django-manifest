@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.utils.hashcompat import sha_constructor
 from django.contrib.auth.models import SiteProfileNotAvailable
@@ -41,7 +42,7 @@ def get_gravatar(email, size=80, default='identicon'):
     :return: The URI pointing to the Gravatar.
 
     """
-    if accounts_settings.ACCOUNTS_MUGSHOT_GRAVATAR_SECURE:
+    if accounts_settings.ACCOUNTS_GRAVATAR_SECURE:
         base_url = 'https://secure.gravatar.com/avatar/'
     else: base_url = 'http://www.gravatar.com/avatar/'
 
@@ -111,10 +112,10 @@ def get_profile_model():
            (not settings.AUTH_PROFILE_MODULE):
         raise SiteProfileNotAvailable
 
-    profile_mod = get_model(*settings.AUTH_PROFILE_MODULE.split('.'))
-    if profile_mod is None:
+    profile_model = get_model(*settings.AUTH_PROFILE_MODULE.split('.'))
+    if profile_model is None:
         raise SiteProfileNotAvailable
-    return profile_mod
+    return profile_model
 
 def get_protocol():
     """

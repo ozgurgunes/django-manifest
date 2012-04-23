@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.files.uploadhandler import FileUploadHandler
 from django.core.cache import cache
 

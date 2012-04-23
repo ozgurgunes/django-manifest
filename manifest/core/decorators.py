@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from functools import wraps
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse, HttpResponseRedirect

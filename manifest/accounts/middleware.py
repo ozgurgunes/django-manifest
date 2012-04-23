@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.utils import translation
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
@@ -24,7 +25,7 @@ class LocaleMiddleware(object):
 
                 if profile:
                     try:
-                        lang = getattr(profile, accounts_settings.ACCOUNTS_LANGUAGE_FIELD)
+                        lang = getattr(profile, accounts_settings.ACCOUNTS_LOCALE_FIELD)
                         translation.activate(lang)
                         request.LANGUAGE_CODE = translation.get_language()
                     except AttributeError: pass

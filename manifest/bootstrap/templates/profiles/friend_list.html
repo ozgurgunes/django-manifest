@@ -15,12 +15,12 @@
     {% for object in object_list %}
       <div class="user row">
       <h3>
-        <a href="{% url profiles_profile_detail object.to_user %}">
+        <a href="{% url accounts_profile_detail object.to_user %}">
             {% thumbnail object.user.get_profile.avatar "48x48" as im %}
             <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ object.user }}" />
             {% endthumbnail %}
             </a>
-        <a class="user" href="{% url profiles_profile_detail object.to_user %}">{{ object.to_user }}</a>
+        <a class="user" href="{% url accounts_profile_detail object.to_user %}">{{ object.to_user }}</a>
       </h3>
       <p class="quiet profile-info">{% with object.to_user.get_profile as object %}{% include 'profiles/_profile_info.html' %}{% endwith %}</p>
     </div>

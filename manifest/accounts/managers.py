@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re, datetime
 from django.db import models
 from django.db.models import Q
@@ -5,23 +6,11 @@ from django.contrib.auth.models import User, UserManager, Permission, AnonymousU
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 
-from guardian.shortcuts import assign, get_perms
-
 from manifest.accounts import settings as accounts_settings
 from manifest.accounts import signals as accounts_signals
 from manifest.accounts.utils import generate_sha1, get_profile_model
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
-
-ASSIGNED_PERMISSIONS = {
-    'profile':
-        (('view_profile', 'Can view profile'),
-         ('change_profile', 'Can change profile'),
-         ('delete_profile', 'Can delete profile')),
-    'user':
-        (('change_user', 'Can change user'),
-         ('delete_user', 'Can delete user'))
-}
 
 class AccountsManager(UserManager):
     """ Extra functionality for the Accounts model. """
@@ -100,14 +89,6 @@ class AccountsManager(UserManager):
         except profile_model.DoesNotExist:
             new_profile = profile_model(user=user)
             new_profile.save(using=self._db)
-
-        # Give permissions to view and change profile
-        for perm in ASSIGNED_PERMISSIONS['profile']:
-            assign(perm[0], user, new_profile)
-
-        # Give permissions to view and change itself
-        for perm in ASSIGNED_PERMISSIONS['user']:
-            assign(perm[0], user, user)
         return new_profile
 
     def activate_user(self, username, activation_key):

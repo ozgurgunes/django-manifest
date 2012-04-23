@@ -12,7 +12,6 @@ django-debug-toolbar==0.9.4
 django-extensions==0.4
 django-facebook==3.6.4
 django-filebrowser==3.3.0
-django-guardian==1.0.3
 django-mailer==0.1.0
 django-navigation==0.8.1
 django-relationships==0.3.0

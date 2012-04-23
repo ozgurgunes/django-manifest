@@ -2,16 +2,20 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
 
-site = Site.objects.get_current()
 
 def site_url(request):
-    return {'SITE_URL': 'http://' + site.domain}
+    return {'SITE_URL': getattr(settings, 'SITE_URL', None)}
+
+def site_domain(request):
+    site = Site.objects.get_current()
+    return {'SITE_DOMAIN': site.domain}
 
 def site_name(request):
+    site = Site.objects.get_current()
     return {'SITE_NAME': site.name}
 
 def remote_addr(request):
     return {'REMOTE_ADDR': request.META['REMOTE_ADDR']}
-        
-def gmap(request):
-    return {'GMAPS_API_KEY': settings.GMAPS_API_KEY }
+
+def installed_apps(request):
+    return {'INSTALLED_APPS': getattr(settings, 'INSTALLED_APPS', None)}

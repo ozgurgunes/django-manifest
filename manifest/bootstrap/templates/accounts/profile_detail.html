@@ -5,7 +5,7 @@
   <div class="white-box">
     <div id="details">
       {% block profile_details %}
-      {% thumbnail profile.get_mugshot_url "128x128" as im %}
+      {% thumbnail profile.get_picture_url "128x128" as im %}
       <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
       {% endthumbnail %}
       

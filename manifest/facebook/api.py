@@ -16,7 +16,8 @@ class Graph(object):
     """
     
     def __init__(self, user):
-        self.access_token = user.social_auth.get(provider='facebook').extra_data['access_token']
+        # self.access_token = user.social_auth.get(provider='facebook').extra_data['access_token']
+        self.access_token = user.get_profile().facebook_token
 
     @property
     def access_status(self):

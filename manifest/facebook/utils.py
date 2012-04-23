@@ -2,10 +2,14 @@
 import base64
 import hmac
 import hashlib
+from datetime import datetime
 from django.utils import simplejson
 from django.conf import settings
 from django.http import HttpResponseRedirect
 
+def iso_time(time, format='%Y-%m-%dT%H:%M:%S+0000'):
+    return datetime.strptime(time, format)
+    
 def facebook_required(function):
     """
     facebook_required decorator for views.

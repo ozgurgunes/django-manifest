@@ -6,7 +6,7 @@
             {% endthumbnail %}
         </div>
         <header>
-        <h3><a class="user" href="{% url profiles_profile_detail user %}">{{ user }}</a></h3>
+        <h3><a class="user" href="{% url accounts_profile_detail user %}">{{ user }}</a></h3>
         <p class="meta"><span class="date">{{ user.date_joined|timesince }} {% trans 'ago' %}</span></p>
         <p class="meta">{{ user.topic_set.count }} {% trans 'topics' %}</p>
         </header>
@@ -14,7 +14,7 @@
             {% ifnotequal user request.user%}
             {% include 'profiles/_friend.html' %}
             {% endifnotequal %}
-            <li class="{% block profile_menu_about %}{% endblock %} about"><a href="{% url profiles_profile_detail user %}">{% trans 'About' %}</a></li>
+            <li class="{% block profile_menu_about %}{% endblock %} about"><a href="{% url accounts_profile_detail user %}">{% trans 'About' %}</a></li>
             <li class="{% block profile_menu_friends %}{% endblock %} friends"><a href="{% url profiles_friends_list user %}">{% trans 'Friends' %}</a></li>
         </ul>
     </section>
@@ -28,7 +28,7 @@
             <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
             {% endthumbnail %}
             </figure>
-            <adress><a class="user" href="{% url profiles_profile_detail friend %}">{{ friend }}</a></adress>
+            <adress><a class="user" href="{% url accounts_profile_detail friend %}">{{ friend }}</a></adress>
         </li>
         {% endfor %}
         </ul>
@@ -43,7 +43,7 @@
             <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
             {% endthumbnail %}
             </figure>
-            <adress><a class="user" href="{% url profiles_profile_detail followed %}">{{ followed }}</a></adress>
+            <adress><a class="user" href="{% url accounts_profile_detail followed %}">{{ followed }}</a></adress>
         </li>
         {% endfor %}
         </ul>
@@ -58,7 +58,7 @@
             <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
             {% endthumbnail %}
             </figure>
-            <adress><a class="user" href="{% url profiles_profile_detail follower %}">{{ follower }}</a></adress>
+            <adress><a class="user" href="{% url accounts_profile_detail follower %}">{{ follower }}</a></adress>
         </li>
         {% endfor %}
         </ul>

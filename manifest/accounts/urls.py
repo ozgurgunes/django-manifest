@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
@@ -26,6 +27,15 @@ urlpatterns = patterns('',
     url(r'^activate/(?P<username>\w+)/(?P<activation_key>\w+)/$', accounts_views.activate,
                                     name='accounts_activate'),
 
+    # Disabled
+    url(r'^disabled/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
+                            'template_name': 'accounts/disabled.html'},
+                                    name='accounts_disabled'),
+
+    # Settings
+    url(r'settings/$', accounts_views.settings, dict(template_name='accounts/settings.html'), 
+                                    name='accounts_settings'),
+
     # Reset password
     url(r'^password/reset/$', auth_views.password_reset, {
                             'template_name': 'accounts/password_reset_form.html',
@@ -53,11 +63,6 @@ urlpatterns = patterns('',
     url(r'^email/change/complete/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
                             'template_name': 'accounts/email_change_complete.html'},
                                     name='accounts_email_change_complete'),
-    # Disabled account
-    url(r'^disabled/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
-                            'template_name': 'accounts/disabled.html'},
-                                    name='accounts_disabled'),
-
     # Change password
     url(r'^password/change/$', accounts_views.password_change,
                                     name='accounts_password_change'),
@@ -65,19 +70,15 @@ urlpatterns = patterns('',
                             'template_name': 'accounts/password_change_complete.html'},
                                     name='accounts_password_change_done'),
 
-    # Edit account
-    url(r'^account/edit$', accounts_views.account_edit,
-                                    name='accounts_account_edit'),
-
     # Edit profile
-    url(r'^profile/edit$', accounts_views.profile_edit,
+    url(r'^edit/$', accounts_views.profile_edit,
                                     name='accounts_profile_edit'),
 
     # View profiles
     url(r'^(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', accounts_views.profile_detail,
                                     name='accounts_profile_detail'),
-    url(r'^page/(?P<page>[0-9]+)/$', accounts_views.profile_list,
+    url(r'^profiles/page/(?P<page>[0-9]+)/$', accounts_views.profile_list,
                                     name='accounts_profile_list_paginated'),
-    url(r'^$', accounts_views.profile_list,
+    url(r'^profiles/$', accounts_views.profile_list,
                                     name='accounts_profile_list'),
 )
