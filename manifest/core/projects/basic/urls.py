@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
 
@@ -22,11 +21,10 @@ urlpatterns = patterns('',
     url(r'^announces/', include('announcements.urls')),
     url(r'^relations/', include('relationships.urls')),
     url(r'^accounts/', include('social_auth.urls')),
+    url(r'^accounts/', include('manifest.facebook.urls')),
     url(r'^accounts/', include('manifest.accounts.urls')),
     url(r'^profiles/', include('manifest.profiles.urls')),
 
-    url(r'^(?P<username>\w+)/$', 'manifest.profiles.views.profile_detail', name='accounts_profile_detail'),
-    url(r'^(?P<username>\w+)/comments/$', 'manifest.profiles.views.comment_list', name='profiles_comments_list'),
-    url(r'^(?P<username>\w+)/friends/$', 'manifest.profiles.views.friend_list', name='profiles_friends_list'),
+    url(r'^(?P<username>\w+)/$', 'manifest.accounts.views.profile_detail', name='accounts_profile_detail'),
 
 )

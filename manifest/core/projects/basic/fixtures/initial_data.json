@@ -66,25 +66,12 @@
     }
 }, 
 {
-    "pk": -1,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": -1,
-        "activation_key": "ALREADY_ACTIVATED",
-        "last_active": "2012-01-01 00:00:00",
-        "activation_notification_send": false
-    }
-},
-{
     "pk": 1,
     "model": "accounts.account",
     "fields": 
     {
         "user": 1,
-        "activation_key": "ALREADY_ACTIVATED",
-        "last_active": "2012-01-01 00:00:00",
-        "activation_notification_send": false
+        "activation_key": "ALREADY_ACTIVATED"
     }
 },
 {
@@ -93,9 +80,7 @@
     "fields": 
     {
         "user": 2,
-         "activation_key": "ALREADY_ACTIVATED",
-         "last_active": "2012-01-01 00:00:00",
-         "activation_notification_send": false
+         "activation_key": "ALREADY_ACTIVATED"
     }
 },
 {
@@ -104,27 +89,8 @@
     "fields": 
     {
         "user": 3,
-         "activation_key": "ALREADY_ACTIVATED",
-         "last_active": "2012-01-01 00:00:00",
-         "activation_notification_send": false
+         "activation_key": "ALREADY_ACTIVATED"
      }
-},
-{
-    "pk": -1, 
-    "model": "profiles.profile", 
-    "fields": 
-    {
-        "user": -1, 
-        "status": null, 
-        "about": null, 
-        "mobile": null, 
-        "gender": null, 
-        "location": null, 
-        "picture": "", 
-        "country": "", 
-        "birth_date": null, 
-        "occupation": null
-    }
 },
 {
     "pk": 1, 
@@ -132,7 +98,6 @@
     "fields": 
     {
         "user": 1, 
-        "status": null, 
         "about": null, 
         "mobile": null, 
         "gender": null, 
@@ -149,7 +114,6 @@
     "fields": 
     {
         "user": 2, 
-        "status": null, 
         "about": null, 
         "mobile": null, 
         "gender": null, 
@@ -166,7 +130,6 @@
     "fields": 
     {
         "user": 3, 
-        "status": null, 
         "about": null, 
         "mobile": null, 
         "gender": null, 

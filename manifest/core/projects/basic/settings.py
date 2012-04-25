@@ -101,10 +101,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.core.context_processors.csrf',
 	'django.contrib.messages.context_processors.messages',
     'social_auth.context_processors.social_auth_by_name_backends',
-    'social_auth.context_processors.social_auth_backends',
-    'social_auth.context_processors.social_auth_by_type_backends',
     'manifest.core.context_processors.site_url',
-    'manifest.core.context_processors.site_name',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,6 +112,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'manifest.facebook.middleware.FacebookMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -129,6 +127,11 @@ TEMPLATE_DIRS = (
 # Project level fixtures
 FIXTURE_DIRS = (
     os.path.join(PATH, "fixtures/"),
+)
+
+# Project level static files
+STATICFILES_DIRS = (
+    os.path.join(PATH, "static/"),
 )
 
 STATICFILES_FINDERS = (
@@ -156,7 +159,6 @@ INSTALLED_APPS = (
 	'social_auth',
 	'sorl.thumbnail',
 	'compressor',
-	'notification',
 	'announcements',
 	'timezones',
 	'tagging',
@@ -168,6 +170,7 @@ INSTALLED_APPS = (
     'manifest.accounts',
 	'manifest.profiles',
     'manifest.bootstrap',
+    'manifest.facebook',
 )
 
 # User registration & authentication
@@ -181,25 +184,16 @@ AUTHENTICATION_BACKENDS = (
 
 # Django Auth Settings
 LOGIN_URL   = os.path.join(SITE_URL, 'accounts/login/')
-LOGIN_REDIRECT_URL = os.path.join(SITE_URL, 'accounts/profile/')
-
+LOGIN_REDIRECT_URL = SITE_URL
 AUTH_PROFILE_MODULE = 'profiles.profile'
-ANONYMOUS_USER_ID = -1
 
 # Social Auth Secrets
 FACEBOOK_APP_ID              = ''
 FACEBOOK_API_SECRET          = ''
 
-# Social Auth URLs
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/profiles/settings/'
-FACEBOOK_EXTENDED_PERMISSIONS = ['email',]
-
 # Social Auth Settings
-SOCIAL_AUTH_DEFAULT_USERNAME = 'user_'
-SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
-SOCIAL_AUTH_ERROR_KEY = 'social_account_errors'
-SOCIAL_AUTH_RAISE_EXCEPTIONS = DEBUG
 SOCIAL_AUTH_EXPIRATION = 'expires'
+FACEBOOK_EXTENDED_PERMISSIONS = ['email', 'user_likes',]
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -228,7 +222,7 @@ COMPRESS_URL = STATIC_URL
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_OUTPUT_DIR = 'cache'
 
-EMAIL_BACKEND = 'mailer.backend.DbBackend'      #'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'mailer.backend.DbBackend'  #'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''

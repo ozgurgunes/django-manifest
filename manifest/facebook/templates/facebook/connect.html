@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="tr/TR">
+<head>
+    <meta charset="utf-8">
+    <title>{% trans "Connecting to Facebook" %} </title>
+    <script>
+        function getQueryParams(qs) {
+            qs = qs.split("+").join(" ");
+            var params = {},
+                tokens,
+                re = /[?&]?([^=]+)=([^&]*)/g;
+
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])]
+                    = decodeURIComponent(tokens[2]);
+            }
+
+            return params;
+        }
+        var $_GET = getQueryParams(document.location.search);
+        {% if request.user.is_authenticated %}
+            window.opener.location=$_GET['next'];
+            window.close();
+        {% else %}
+            var url = '{% url socialauth_begin "facebook" %}?next={% url facebook_connect %}?next='+$_GET['next'];
+            document.location = url;
+        {% endif %}
+    </script>
+</head>
+<body>
+</body>
+</html>

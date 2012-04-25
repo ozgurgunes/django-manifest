@@ -14,8 +14,9 @@ def site_name(request):
     site = Site.objects.get_current()
     return {'SITE_NAME': site.name}
 
+def installed_apps(request):
+    return {'INSTALLED_APPS': getattr(settings, 'INSTALLED_APPS', None)}
+
 def remote_addr(request):
     return {'REMOTE_ADDR': request.META['REMOTE_ADDR']}
 
-def installed_apps(request):
-    return {'INSTALLED_APPS': getattr(settings, 'INSTALLED_APPS', None)}

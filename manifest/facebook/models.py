@@ -18,6 +18,7 @@ class ProfileBase(models.Model):
     facebook_expires    = models.IntegerField(_('facebook expires'), blank=True, null=True)
     facebook_username   = models.CharField(_('facebook username'), max_length=255, blank=True)
     facebook_verified   = models.BooleanField(_('facebook verified'), default=False, blank=True)
+    facebook_link       = models.URLField(_('facebook link'), blank=True, null=True)
 
     class Meta:
         abstract        = True
@@ -45,11 +46,12 @@ class ProfileBase(models.Model):
             Updated profile
 
         """
-        self.facebook_id         = response.get('id')
-        self.facebook_token      = response.get('access_token')
-        self.facebook_expires    = response.get('expires')
-        self.facebook_username   = response.get('username')
-        self.facebook_verified   = response.get('verified')        
+        self.facebook_id        = response.get('id')
+        self.facebook_token     = response.get('access_token')
+        self.facebook_expires   = response.get('expires')
+        self.facebook_username  = response.get('username')
+        self.facebook_verified  = response.get('verified')        
+        self.facebook_link      = response.get('link')        
         
         # self.birth_date = response.get('birthday')
         # self.gender = response.get('gender').upper()[0]
