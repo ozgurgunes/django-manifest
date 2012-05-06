@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-
-{% load i18n %}
-
-{% block head_title %}{% trans "Not Found" %}{% endblock %}
-
+{% block title %}{% trans "Not Found" %}{% endblock %}
 {% block content %}
-    <p>{% trans "We're sorry but that page could not be found." %}</p>
+    <p>{% trans "We're sorry but that page could not found." %}</p>
 {% endblock %}

@@ -3,7 +3,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
         <meta charset="utf-8" />
-		<title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+		<title>{% block title %}Django Manifest{% endblock %}</title>
 		<meta name="keywords" content="{% block keywords %}{% endblock %}" />
 		<meta name="description" content="{% block description %}{% endblock %}" />
 		<meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0"/>
@@ -42,7 +42,7 @@
                 <div class="container">
                 {% block navbar %}
                     {% block brand %}
-        				<h1 id="brand" class="logo pull-left"><a class="brand" href="/">{{ SITE_NAME }}</a></h1>
+        				<h1 id="brand" class="logo pull-left"><a class="brand" href="/">Django Manifest</a></h1>
         			{% endblock %}
                     {% block account_navbar %}{% include "_account_navbar.html" %}{% endblock %}
                     {% block menu_navbar %}
@@ -80,7 +80,7 @@
                 <li><a href="#">{% trans "Help" %}</a></li>
                 <li><a href="#">{% trans "Contact" %}</a></li>
             </menu>
-            <p class="footer">Copyright &copy; 2012 {{ SITE_URL }}</p>
+            <p class="footer">Copyright 2012 &copy; Django Manifest</p>
         {% endblock %}
         </footer>
     {% endblock %}        

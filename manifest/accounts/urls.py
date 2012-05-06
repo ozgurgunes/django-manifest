@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 
@@ -15,12 +14,13 @@ urlpatterns = patterns('',
                             'template_name': 'accounts/logout.html'},
                                     name='accounts_logout'),                                    
     url(r'^register/$', accounts_views.register, name='accounts_register'),
-    url(r'^register/complete/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
-                            'template_name': 'accounts/register_complete.html',
-                            'extra_context': {
-                                    'accounts_activation_required': accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED,
-                                    'accounts_activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS }
-                                    },
+    url(r'^register/complete/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
+                                        template_name='accounts/register_complete.html',
+                                        extra_context={
+                                                'accounts_activation_required': accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED,
+                                                'accounts_activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS
+                                                }
+                                        ),
                                     name='accounts_register_complete'),
 
     # Activate
@@ -28,8 +28,7 @@ urlpatterns = patterns('',
                                     name='accounts_activate'),
 
     # Disabled
-    url(r'^disabled/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
-                            'template_name': 'accounts/disabled.html'},
+    url(r'^disabled/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(template_name='accounts/disabled.html'), 
                                     name='accounts_disabled'),
 
     # Settings
@@ -55,19 +54,19 @@ urlpatterns = patterns('',
     url(r'^email/change/$', accounts_views.email_change, {
                             'template_name': 'accounts/email_change_form.html'},
                                     name='accounts_email_change'),
-    url(r'^email/change/done/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
-                            'template_name': 'accounts/email_change_done.html'},
+    url(r'^email/change/done/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
+                                        template_name='accounts/email_change_done.html'),
                                     name='accounts_email_change_done'),
     url(r'^email/change/confirm/(?P<confirmation_key>\w+)/$', accounts_views.email_confirm,
                                     name='accounts_email_confirm'),
-    url(r'^email/change/complete/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
-                            'template_name': 'accounts/email_change_complete.html'},
+    url(r'^email/change/complete/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
+                                        template_name='accounts/email_change_complete.html'),
                                     name='accounts_email_change_complete'),
     # Change password
     url(r'^password/change/$', accounts_views.password_change,
                                     name='accounts_password_change'),
-    url(r'^password/change/done/(?P<username>\w+)/$', accounts_views.direct_to_user_template, {
-                            'template_name': 'accounts/password_change_complete.html'},
+    url(r'^password/change/done/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
+                                        template_name='accounts/password_change_complete.html'),
                                     name='accounts_password_change_done'),
 
     # Edit profile
@@ -75,10 +74,8 @@ urlpatterns = patterns('',
                                     name='accounts_profile_edit'),
 
     # View profiles
-    url(r'^(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', accounts_views.profile_detail,
+    url(r'^(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', accounts_views.ProfileDetail.as_view(),
                                     name='accounts_profile_detail'),
-    url(r'^profiles/page/(?P<page>[0-9]+)/$', accounts_views.profile_list,
-                                    name='accounts_profile_list_paginated'),
-    url(r'^profiles/$', accounts_views.profile_list,
+    url(r'^profiles/$', accounts_views.ProfileList.as_view(),
                                     name='accounts_profile_list'),
 )

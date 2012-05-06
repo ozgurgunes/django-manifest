@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-from django.views.generic.simple import direct_to_template
+from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, render_to_response, get_object_or_404
+from django.template import RequestContext
 from django.contrib.auth import authenticate, login as auth_login, logout, REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.views.generic import list_detail
 from django.http import HttpResponseForbidden, Http404
 from django.db.transaction import commit_on_success
+from django.views.generic import ListView, DetailView
 
 from manifest.accounts.forms import (RegistrationForm, RegistrationFormOnlyEmail, AuthenticationForm,
                            EmailForm, ProfileForm)
@@ -99,12 +99,10 @@ def login(request, auth_form=AuthenticationForm,
         'form': form,
         'next': request.REQUEST.get(redirect_field_name),
     })
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context)
+    return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
 @secure_required
-@commit_on_success()
+@commit_on_success
 def register(request, registration_form=RegistrationForm,
            template_name='accounts/register.html', success_url=None,
            extra_context=None):
@@ -166,7 +164,7 @@ def register(request, registration_form=RegistrationForm,
 
     if not extra_context: extra_context = dict()
     extra_context['form'] = form
-    return direct_to_template(request, template_name, extra_context=extra_context)
+    return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
 @secure_required
 def activate(request, username, activation_key,
@@ -219,14 +217,14 @@ def activate(request, username, activation_key,
     else:
         if not extra_context: 
             extra_context = dict()
-        return direct_to_template(request, template_name, extra_context=extra_context)
+        return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
 @login_required
 def settings(request, template_name='profiles/profile_settings.html'):
-    return direct_to_template(request, template_name, extra_context = { 
+    return render_to_response(template_name, { 
                                 'user': request.user, 
                                 'object': request.user.get_profile() 
-                                })
+                                }, context_instance=RequestContext(request))
 
 @secure_required
 @commit_on_success()
@@ -284,9 +282,7 @@ def email_change(request, email_form=EmailForm,
     if not extra_context: extra_context = dict()
     extra_context['form'] = form
     extra_context['profile'] = user.get_profile()
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context)
+    return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
 @secure_required
 def email_confirm(request, confirmation_key,
@@ -331,9 +327,7 @@ def email_confirm(request, confirmation_key,
         return redirect(redirect_to)
     else:
         if not extra_context: extra_context = dict()
-        return direct_to_template(request,
-                                  template_name,
-                                  extra_context=extra_context)
+        return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
 @secure_required
 def password_change(request, template_name='accounts/password_change_form.html',
@@ -384,16 +378,14 @@ def password_change(request, template_name='accounts/password_change_form.html',
                                                    user=user)
 
             if success_url: redirect_to = success_url
-            else: redirect_to = reverse('accounts_password_change_complete',
+            else: redirect_to = reverse('accounts_password_change_done',
                                         kwargs={'username': user.username})
             return redirect(redirect_to)
 
     if not extra_context: extra_context = dict()
     extra_context['form'] = form
     extra_context['profile'] = user.get_profile()
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context)
+    return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
 @secure_required
 @commit_on_success()
@@ -465,140 +457,32 @@ def profile_edit(request, profile_form=ProfileForm,
     if not extra_context: extra_context = dict()
     extra_context['form'] = form
     extra_context['profile'] = profile
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context,
-                              **kwargs)
+    return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
-def profile_list(request, page=1, template_name='accounts/profile_list.html',
-                 paginate_by=50, extra_context=None, **kwargs):
-    """
-    Returns a list of all profiles that are public.
+class ProfileList(ListView):
 
-    It's possible to disable this by changing ``ACCOUNTS_DISABLE_PROFILE_LIST``
-    to ``True`` in your settings.
+    queryset = get_profile_model().objects.select_related().all()
+    template_name = "accounts/profile_list.html"
+    
+    def dispatch(self, request, *args, **kwargs):
+        if accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST \
+           and not request.user.is_superuser:
+            raise Http404
+        return super(ProfileList, self).dispatch(request, *args, **kwargs)
+        
+class ProfileDetail(DetailView):
 
-    :param page:
-        Integer of the active page used for pagination. Defaults to the first
-        page.
+    queryset = get_profile_model().objects.select_related().all()
+    template_name = "accounts/profile_detail.html"
+    slug_field = 'user__username'
+    slug_url_kwarg = 'username'
+    
+class UserTemplate(ProfileDetail):
+    
+    extra_context = {}
 
-    :param template_name:
-        String defining the name of the template that is used to render the
-        list of all users. Defaults to ``accounts/list.html``.
-
-    :param paginate_by:
-        Integer defining the amount of displayed profiles per page. Defaults to
-        50 profiles per page.
-
-    :param extra_context:
-        Dictionary of variables that are passed on to the ``template_name``
-        template.
-
-    **Context**
-
-    ``profile_list``
-        A list of profiles.
-
-    ``is_paginated``
-        A boolean representing whether the results are paginated.
-
-    If the result is paginated. It will also contain the following variables.
-
-    ``paginator``
-        An instance of ``django.core.paginator.Paginator``.
-
-    ``page_obj``
-        An instance of ``django.core.paginator.Page``.
-
-    """
-    try:
-        page = int(request.GET.get('page', None))
-    except (TypeError, ValueError):
-        page = page
-
-    if accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST \
-       and not request.user.is_staff:
-        raise Http404
-
-    profile_model = get_profile_model()
-    queryset = profile_model.objects.all()
-
-    if not extra_context: extra_context = dict()
-    return list_detail.object_list(request,
-                                   queryset=queryset,
-                                   paginate_by=paginate_by,
-                                   page=page,
-                                   template_name=template_name,
-                                   extra_context=extra_context,
-                                   template_object_name='profile',
-                                   **kwargs)
-
-def profile_detail(
-    request, username,
-    template_name='accounts/profile_detail.html',
-    extra_context=None, **kwargs):
-    """
-    Detailed view of an user.
-
-    :param username:
-        String of the username of which the profile should be viewed.
-
-    :param template_name:
-        String representing the template name that should be used to display
-        the profile.
-
-    :param extra_context:
-        Dictionary of variables which should be supplied to the template. The
-        ``profile`` key is always the current profile.
-
-    **Context**
-
-    ``profile``
-        Instance of the currently viewed ``Profile``.
-
-    """
-    user = get_object_or_404(User, username__iexact=username)
-    profile = user.get_profile()
-    if not extra_context: extra_context = dict()
-    extra_context['profile'] = user.get_profile()
-    extra_context['hide_email'] = accounts_settings.ACCOUNTS_HIDE_EMAIL
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context,
-                              **kwargs)
-
-def direct_to_user_template(request, username, template_name,
-                            extra_context=None):
-    """
-    Simple wrapper for Django's :func:`direct_to_template` view.
-
-    This view is used when you want to show a template to a specific user. A
-    wrapper for :func:`direct_to_template` where the template also has access to
-    the user that is found with ``username``. For ex. used after register,
-    activation and confirmation of a new e-mail.
-
-    :param template_name:
-        String defining the name of the template to use. Defaults to
-        ``accounts/register_complete.html``.
-
-    **Keyword arguments**
-
-    ``extra_context``
-        A dictionary containing extra variables that should be passed to the
-        rendered template. The ``account`` key is always the ``User``
-        that completed the action.
-
-    **Extra context**
-
-    ``viewed_user``
-        The currently :class:`User` that is viewed.
-
-    """
-    user = get_object_or_404(User, username__iexact=username)
-
-    if not extra_context: extra_context = dict()
-    extra_context['viewed_user'] = user
-    extra_context['profile'] = user.get_profile()
-    return direct_to_template(request,
-                              template_name,
-                              extra_context=extra_context)
+    def get_context_data(self, **kwargs):
+        context = super(UserTemplate, self).get_context_data(**kwargs)
+        context.update(self.extra_context)
+        return context
+        

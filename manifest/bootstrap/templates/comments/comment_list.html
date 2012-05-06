@@ -17,12 +17,10 @@
 		    </div>
             <address class="user"><a href="{% url accounts_profile_detail comment.user %}">{{ comment.user }}</a></address>
             <time datetime="{{ comment.submit_date|date:"c" }}">{{ comment.submit_date|timesince }} {% trans 'ago' %}</time>
-        </div>
-        
+        </div>        
 		<div class="body">
 	    {{ comment.comment|escape|urlizetrunc:"40"|linebreaks }}
 		</div>
-
     </article>
     {% empty %}
 	<p class="comments empty">{% trans 'No comment yet.' %}</p>

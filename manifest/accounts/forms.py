@@ -303,9 +303,9 @@ class ProfileForm(forms.ModelForm):
                 if not (main == 'image' and sub in settings.ACCOUNTS_PICTURE_FORMATS):
                     raise forms.ValidationError(_('%s only.' % settings.ACCOUNTS_PICTURE_FORMATS))
         
-        if picture_data.size > int(settings.ACCOUNTS_PICTURE_MAX_FILE):
-            raise forms.ValidationError(_('Image size too big'))
-        return self.cleaned_data['picture']
+            if picture_data.size > int(settings.ACCOUNTS_PICTURE_MAX_FILE):
+                raise forms.ValidationError(_('Image size too big'))
+            return self.cleaned_data['picture']
 
     @commit_on_success()
     def save(self, force_insert=False, force_update=False, commit=True):
