@@ -47,9 +47,9 @@
                     {% block account_navbar %}{% include "_account_navbar.html" %}{% endblock %}
                     {% block menu_navbar %}
                     <ul class="nav nav-pills">
-                        <li class="{% active request "^/$" %}"><a href="/">{% trans "Home" %}</a></li>
-                        <li class="{% active request "^/about" %}"><a href="/about/">{% trans "About" %}</a></li>
-                        <li class="{% active request "^/contact" %}"><a href="/contact/">{% trans "Contact" %}</a></li>
+                        <li class="{% active_path request "^/$" %}"><a href="/">{% trans "Home" %}</a></li>
+                        <li class="{% active_path request "^/about" %}"><a href="/about/">{% trans "About" %}</a></li>
+                        <li class="{% active_path request "^/contact" %}"><a href="/contact/">{% trans "Contact" %}</a></li>
                     </ul>
                     {% endblock %}
                     {% block search_navnar %}{% include "_search_navbar.html" %}{% endblock %}
