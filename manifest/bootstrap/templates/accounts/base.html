@@ -7,7 +7,7 @@
         <li><a href="{% url accounts_profile_detail user.username %}"><span>{% trans 'View account' %}</span></a></li>
         <li><a href="{% url accounts_profile_edit %}">{% trans "Edit profile" %}</a></li>
         <li><a href="{% url accounts_password_change %}">{% trans "Change password" %}</a></li>
-        <li><a href="{% url accounts_email_change %}">{% trans "Change e-mail address" %}</a></li>            
+        <li><a href="{% url accounts_email_change %}">{% trans "Change email address" %}</a></li>            
     {% endif %}
     </ul>
 {% endblock %}

@@ -31,7 +31,7 @@ class AccountsManager(UserManager):
 
         :param active:
             Boolean that defines if the user requires activation by clicking 
-            on a link in an e-mail. Defauts to ``True``.
+            on a link in an email. Defauts to ``True``.
 
         :param send_email:
             Boolean that defines if the user should be send an email. You could
@@ -126,8 +126,8 @@ class AccountsManager(UserManager):
         """
         Confirm an email address by checking a ``confirmation_key``.
 
-        A valid ``confirmation_key`` will set the newly wanted e-mail address
-        as the current e-mail address. Returns the user after success or
+        A valid ``confirmation_key`` will set the newly wanted email address
+        as the current email address. Returns the user after success or
         ``False`` when the confirmation key is invalid.
 
         :param confirmation_key:
@@ -203,7 +203,7 @@ class AccountsManager(UserManager):
                 try:
                     user_profile = user.get_profile()
                 except get_profile_model().DoesNotExist:
-                    warnings.append(_("No profile found for %(username)s") \
+                    warnings.append(_(u"No profile found for %(username)s") \
                                         % {'username': user.username})
                 else:
                     all_permissions = get_perms(user, user_profile) + get_perms(user, user)

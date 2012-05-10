@@ -1,5 +1,4 @@
-{% autoescape off %}
-{% blocktrans with user.get_full_name as user %}Dear {{ user }},{% endblocktrans %}
+{% autoescape off %}{% blocktrans with user.get_full_name as user %}Dear {{ user }},{% endblocktrans %}
 
 {% blocktrans with site.name as site %}Welcome to {{ site }} Website.{% endblocktrans %}
 
@@ -9,7 +8,6 @@
 
 {% trans "Thank you for registering at our website." %}
 
-{% trans "Sincerely" %},
+{% trans "Sincerely" %}
 
-{{ protocol }}://{{ site.domain }}
-{% endautoescape %}
+{{ protocol }}://{{ site.domain }}{% endautoescape %}

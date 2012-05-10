@@ -1,1 +1,1 @@
-{% trans "Request to change your e-mail address" %}
+{% trans "Request to change your email address" %}

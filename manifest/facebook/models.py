@@ -89,7 +89,7 @@ class FacebookLike(models.Model):
 
     user = models.ForeignKey(User, verbose_name=_(u'User'))
 
-    facebook_id = models.BigIntegerField(_(u'facebook id'))    
+    facebook_id = models.BigIntegerField(_(u'Facebook id'))    
     name = models.CharField(_(u'Name'), max_length=128, blank=True, null=True)
     category = models.CharField(_(u'Category'), max_length=128, blank=True, null=True)
     created_time =  models.DateTimeField(_(u'Created time'), blank=True, null=True)

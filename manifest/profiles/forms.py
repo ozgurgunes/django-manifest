@@ -6,7 +6,7 @@ from django.forms.models import inlineformset_factory
 from django_countries import countries
 from manifest.accounts.forms import ProfileForm as BaseProfileForm
 from manifest.accounts.utils import get_profile_model
-from manifest.profiles.models import *
+from manifest.profiles.models import Profile
 from manifest.facebook.forms import FacebookProfileForm
 
 class ProfileForm(FacebookProfileForm):

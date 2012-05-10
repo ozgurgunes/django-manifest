@@ -1,11 +1,11 @@
 {% extends "accounts/base.html" %}
-{% block title %}{% trans "Change e-mail address" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Change email address" %} - {{ block.super }}{% endblock %}
 
 {% block main %}
 <form action="" method="post" class="form form-horizontal">
   {% csrf_token %}
   <fieldset>
-    <legend>{% trans "Change e-mail address" %}</legend>
+    <legend>{% trans "Change email address" %}</legend>
     {{ form|as_bootstrap }}
   </fieldset>
   <div class="form-actions">

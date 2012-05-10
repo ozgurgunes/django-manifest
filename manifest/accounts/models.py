@@ -31,10 +31,10 @@ class Account(models.Model):
     email_unconfirmed = models.EmailField(_(u'Unconfirmed email address'), blank=True,
                             help_text=_(u'Temporary email address when the user requests an email change.'))
 
-    email_confirmation_key = models.CharField(_(u'Unconfirmed e-mail verification key'), 
+    email_confirmation_key = models.CharField(_(u'Unconfirmed email verification key'), 
                                         max_length=40, blank=True)
 
-    email_confirmation_key_created = models.DateTimeField(_(u'Creation date of e-mail confirmation key'),
+    email_confirmation_key_created = models.DateTimeField(_(u'Creation date of email confirmation key'),
                                         blank=True, null=True)
 
     objects = AccountsManager()
@@ -206,8 +206,8 @@ class ProfileBase(models.Model):
     birth_date = models.DateField(_(u'Birth date'), blank=True, null=True)
     gender = models.CharField(_(u'Gender'), choices=GENDER_CHOICES, max_length=1, blank=True, null=True)
     picture = models.ImageField(_(u'Picture'), blank=True, upload_to=upload_to_picture)
-    timezone = TimeZoneField(_("Timezone"))
-    locale = models.CharField(_("Locale"), max_length = 10,
+    timezone = TimeZoneField(_(u"Timezone"))
+    locale = models.CharField(_(u"Locale"), max_length = 10,
                                     choices = settings.LANGUAGES,
                                     default = settings.LANGUAGE_CODE)
 
@@ -306,7 +306,7 @@ class ProfileBase(models.Model):
         if user.first_name or user.last_name:
             # We will return this as translated string. Maybe there are some
             # countries that first display the last name.
-            name = _("%(first_name)s %(last_name)s") % \
+            name = _(u"%(first_name)s %(last_name)s") % \
                 {'first_name': user.first_name,
                  'last_name': user.last_name}
         else:

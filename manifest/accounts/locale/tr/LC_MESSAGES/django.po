@@ -1,0 +1,236 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-10 11:31+0300\n"
+"PO-Revision-Date: 2012-05-10 13:37+0200\n"
+"Last-Translator: Hakan Yörük <hakan.yoruk@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: forms.py:32
+msgid "Username"
+msgstr "Kullanıcı adı"
+
+#: forms.py:33
+msgid "Username must contain only letters, numbers and underscores."
+msgstr "Kullanıcı adında sadece harfler, rakamlar ve alt çizgi bulunabilir."
+
+#: forms.py:36
+#: forms.py:155
+msgid "Email address"
+msgstr "E-posta adresi"
+
+#: forms.py:39
+#: forms.py:145
+msgid "Password"
+msgstr "Şifre"
+
+#: forms.py:42
+msgid "Repeat password"
+msgstr "Şifreyi tekrar gir"
+
+#: forms.py:55
+msgid "This username is already taken."
+msgstr "Kullanıcı adı başkası tarafından kullanılıyor."
+
+#: forms.py:57
+msgid "This username is not allowed."
+msgstr "Bu kullanıcı adı kullanılamaz."
+
+#: forms.py:63
+msgid "This email address is already in use. Please supply a different email."
+msgstr "Bu e-posta adresi kullanımdadır. Lütfen farklı bir e-posta adresi girin."
+
+#: forms.py:75
+#: forms.py:233
+msgid "The two password fields didn't match."
+msgstr "İki şifre birbiriyle uyuşmuyor."
+
+#: forms.py:119
+msgid "I have read and agree to the Terms of Service."
+msgstr "Hizmet Şartlarını okudum ve kabul ediyorum."
+
+#: forms.py:120
+msgid "You must agree to the terms to register."
+msgstr "Kayıt şartlarını kabul etmek zorundasınız."
+
+#: forms.py:133
+#, python-format
+msgid "%(label)s"
+msgstr "%(label)s"
+
+#: forms.py:136
+#, python-format
+msgid "%(error)s"
+msgstr "%(error)s"
+
+#: forms.py:143
+msgid "Email"
+msgstr "E-posta"
+
+#: forms.py:144
+msgid "Either supply us with your email or username."
+msgstr "E-posta adresinizi veya kullanıcı adınızı girmelisiniz."
+
+#: forms.py:149
+#, python-format
+msgid "Remember me for %(days)s"
+msgstr "Beni %(days)s boyunca hatırla"
+
+#: forms.py:156
+msgid "Please supply your email address."
+msgstr "Lütfen e-posta adresinizi girin."
+
+#: forms.py:171
+msgid "Please enter a correct username or email address and password. Note that both fields are case-sensitive."
+msgstr "Kullanıcı adı, e-posta adresi veya şifrenizi lütfen doğru bir şekilde giriniz. Her iki alan da büyük-küçük harf kullanımına duyarlıdır."
+
+#: forms.py:177
+msgid "New email"
+msgstr "Yeni e-posta adresi"
+
+#: forms.py:195
+msgid "You're already known under this email address."
+msgstr "Zaten bu e-posta adresi ile kayıtlı görünüyorsunuz."
+
+#: forms.py:197
+msgid "This email address is already in use. Please supply a different email address."
+msgstr "Bu e-posta adresi kullanımda. Lütfen farklı bir e-posta adresi girin."
+
+#: forms.py:221
+msgid "New password"
+msgstr "Yeni şifre"
+
+#: forms.py:222
+msgid "New password confirmation"
+msgstr "Yeni şifre doğrulama"
+
+#: forms.py:247
+msgid "Old password"
+msgstr "Eski şifre"
+
+#: forms.py:255
+msgid "Your old password was entered incorrectly. Please enter it again."
+msgstr "Eski şifrenizi yanlış girdiniz. Lütfen tekrar deneyin."
+
+#: forms.py:263
+#: models.py:200
+msgid "Female"
+msgstr "Kadın"
+
+#: forms.py:264
+#: models.py:201
+msgid "Male"
+msgstr "Erkek"
+
+#: forms.py:267
+msgid "First name"
+msgstr "Ad"
+
+#: forms.py:270
+msgid "Last name"
+msgstr "Soyad"
+
+#: forms.py:297
+msgid "Upload a valid image."
+msgstr "Geçerli bir görsel yükleyin."
+
+#: forms.py:304
+#, python-format
+msgid "%s only."
+msgstr "Sadece %s"
+
+#: forms.py:307
+msgid "Image size is too big."
+msgstr "Görsel boyutu izin verilenden büyük."
+
+#: managers.py:206
+#, python-format
+msgid "No profile found for %(username)s"
+msgstr "%(username)s için bir profil bulunamadı."
+
+#: models.py:27
+#: models.py:204
+msgid "User"
+msgstr "Kullanıcı"
+
+#: models.py:29
+msgid "Activation key"
+msgstr "Aktivasyon kodu"
+
+#: models.py:31
+msgid "Unconfirmed email address"
+msgstr "Doğrulanmamış e-posta adresi"
+
+#: models.py:32
+msgid "Temporary email address when the user requests an email change."
+msgstr "Kullanıcı e-posta adresini değiştirmek istediğinde sağlanan geçici e-posta adresi."
+
+#: models.py:34
+msgid "Unconfirmed email verification key"
+msgstr "Doğrulanmamış e-posta aktivasyon kodu"
+
+#: models.py:37
+msgid "Creation date of email confirmation key"
+msgstr "E-posta aktivasyon kodu yaratılış tarihi"
+
+#: models.py:43
+msgid "Account"
+msgstr "Hesap"
+
+#: models.py:44
+msgid "Accounts"
+msgstr "Hesaplar"
+
+#: models.py:206
+msgid "Birth date"
+msgstr "Doğum tarihi"
+
+#: models.py:207
+msgid "Gender"
+msgstr "Cinsiyet"
+
+#: models.py:208
+msgid "Picture"
+msgstr "Resim"
+
+#: models.py:209
+msgid "Timezone"
+msgstr "Zaman dilimi"
+
+#: models.py:210
+msgid "Locale"
+msgstr "Yer"
+
+#: models.py:229
+#, python-format
+msgid "Profile of %(username)s"
+msgstr "%(username)s için profil bilgileri"
+
+#: models.py:309
+#, python-format
+msgid "%(first_name)s %(last_name)s"
+msgstr "%(first_name)s %(last_name)s"
+
+#: settings.py:32
+msgid "a month"
+msgstr "bir ay"
+
+#: views.py:86
+msgid "You have been logged in."
+msgstr "Giriş yaptınız."
+
+#: views.py:450
+msgid "Your profile has been updated."
+msgstr "Profiliniz güncellendi."
+

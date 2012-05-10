@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}{% trans "Confirm your e-mail address" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Confirm your email address" %} - {{ block.super }}{% endblock %}
 {% block content %}
-<h2>{% trans 'Confirm your e-mail address' %}</h2>
-<p>{% blocktrans with request.user.account.email_unconfirmed as email %}We have sent an e-mail to {{ email }} address.{% endblocktrans %}</p>
-<p>{% trans "Please click on the link provided in that e-mail to associate this e-mail address with your account." %}</p>
+<h2>{% trans 'Confirm your email address' %}</h2>
+<p>{% blocktrans with request.user.account.email_unconfirmed as email %}We have sent an email to {{ email }} address.{% endblocktrans %}</p>
+<p>{% trans "Please click on the link provided in that email to associate this email address with your account." %}</p>
 {% endblock %}

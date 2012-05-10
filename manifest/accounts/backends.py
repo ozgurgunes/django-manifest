@@ -18,7 +18,7 @@ class AuthenticationBackend(ModelBackend):
         password.
 
         :param identification:
-            A string containing the username or e-mail of the user that is
+            A string containing the username or email of the user that is
             trying to authenticate.
 
         :password:

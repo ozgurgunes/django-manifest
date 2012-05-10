@@ -6,7 +6,7 @@
 <h2 class="page-header">{% trans "Thank you for registering" %}</h2>
 
 {% if accounts_activation_required %}
-<p>{% trans "You have to click on the link provided in the activation e-mail which we have sent you." %}</p>
+<p>{% trans "You have to click on the link provided in the activation email which we have sent you." %}</p>
 <p>{% blocktrans %}We will store your account information for <strong>{{ accounts_activation_days }} days.</strong> {% endblocktrans %}</p>
 {% else  %}
 <p>{% trans "You can now use the supplied credentials to sign in." %}</p>

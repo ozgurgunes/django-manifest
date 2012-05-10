@@ -293,7 +293,7 @@ def email_confirm(request, confirmation_key,
 
     Confirms a new email address by running :func:`User.objects.confirm_email`
     method. If the method returns an :class:`User` the user will have his new
-    e-mail address set and redirected to ``success_url``. If no ``User`` is
+    email address set and redirected to ``success_url``. If no ``User`` is
     returned the user will be represented with a fail message from
     ``template_name``.
 

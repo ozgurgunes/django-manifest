@@ -21,7 +21,7 @@ class RegistrationForm(forms.Form):
     """
     Form for creating a new user account.
 
-    Validates that the requested username and e-mail is not already in use.
+    Validates that the requested username and email is not already in use.
     Also requires the password to be entered twice and the Terms of Service to
     be accepted.
 
@@ -29,17 +29,17 @@ class RegistrationForm(forms.Form):
     username = forms.RegexField(regex=r'^\w+$',
                                 max_length=30,
                                 widget=forms.TextInput(attrs=attrs_dict),
-                                label=_("Username"),
+                                label=_(u"Username"),
                                 error_messages={'invalid': _(u'Username must contain only letters, numbers and underscores.')})
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=75)),
-                             label=_("E-mail address"))
+                             label=_(u"Email address"))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
                                                            render_value=False),
-                                label=_("Password"))
+                                label=_(u"Password"))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
                                                            render_value=False),
-                                label=_("Repeat password"))
+                                label=_(u"Repeat password"))
 
     def clean_username(self):
         """
@@ -58,9 +58,9 @@ class RegistrationForm(forms.Form):
         return self.cleaned_data['username']
 
     def clean_email(self):
-        """ Validate that the e-mail address is unique. """
+        """ Validate that the email address is unique. """
         if User.objects.filter(email__iexact=self.cleaned_data['email']):
-            raise forms.ValidationError(_(u'This e-mail address is already in use. Please supply a different email.'))
+            raise forms.ValidationError(_(u'This email address is already in use. Please supply a different email.'))
         return self.cleaned_data['email']
 
     def clean(self):
@@ -130,19 +130,19 @@ def identification_field_factory(label, error_required):
         String containing the error message if the field is left empty.
 
     """
-    return forms.CharField(label=_("%(label)s") % {'label': label},
+    return forms.CharField(label=_(u"%(label)s") % {'label': label},
                            widget=forms.TextInput(attrs=attrs_dict),
                            max_length=75,
-                           error_messages={'required': _("%(error)s") % {'error': error_required}})
+                           error_messages={'required': _(u"%(error)s") % {'error': error_required}})
 
 class AuthenticationForm(forms.Form):
     """
-    A custom form where the identification can be a e-mail address or username.
+    A custom form where the identification can be a email address or username.
 
     """
-    identification = identification_field_factory(_("E-mail address or username"),
-                                                  _("Either supply us with your e-mail address or username."))
-    password = forms.CharField(label=_("Password"),
+    identification = identification_field_factory(_(u"Email"),
+                                                  _(u"Either supply us with your email or username."))
+    password = forms.CharField(label=_(u"Password"),
                                widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
     remember_me = forms.BooleanField(widget=forms.CheckboxInput(),
                                      required=False,
@@ -152,8 +152,8 @@ class AuthenticationForm(forms.Form):
         """ A custom init because we need to change the label if no usernames is used """
         super(AuthenticationForm, self).__init__(*args, **kwargs)
         if settings.ACCOUNTS_WITHOUT_USERNAMES:
-            self.fields['identification'] = identification_field_factory(_(u"E-mail address"),
-                                                                         _(u"Please supply your e-mail address."))
+            self.fields['identification'] = identification_field_factory(_(u"Email address"),
+                                                                         _(u"Please supply your email address."))
 
     def clean(self):
         """
@@ -168,7 +168,7 @@ class AuthenticationForm(forms.Form):
         if identification and password:
             user = authenticate(identification=identification, password=password)
             if user is None:
-                raise forms.ValidationError(_(u"Please enter a correct username or e-mail address and password. Note that both fields are case-sensitive."))
+                raise forms.ValidationError(_(u"Please enter a correct username or email address and password. Note that both fields are case-sensitive."))
         return self.cleaned_data
 
 class EmailForm(forms.Form):
@@ -180,7 +180,7 @@ class EmailForm(forms.Form):
         """
         The current ``user`` is needed for initialisation of this form so
         that we can check if the email address is still free and not always
-        returning ``True`` for this query because it's the users own e-mail
+        returning ``True`` for this query because it's the users own email
         address.
 
         """
@@ -192,9 +192,9 @@ class EmailForm(forms.Form):
     def clean_email(self):
         """ Validate that the email is not already registered with another user """
         if self.cleaned_data['email'].lower() == self.user.email:
-            raise forms.ValidationError(_(u"You're already known under this e-mail address."))
+            raise forms.ValidationError(_(u"You're already known under this email address."))
         if User.objects.filter(email__iexact=self.cleaned_data['email']).exclude(email__iexact=self.user.email):
-            raise forms.ValidationError(_(u'This e-mail address is already in use. Please supply a different e-mail address.'))
+            raise forms.ValidationError(_(u'This email address is already in use. Please supply a different email address.'))
         return self.cleaned_data['email']
 
     def save(self):
@@ -218,8 +218,8 @@ class NewPasswordForm(forms.Form):
     A form that lets a user change set his/her password without
     entering the old password
     """
-    new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
-    new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
+    new_password1 = forms.CharField(label=_(u"New password"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
+    new_password2 = forms.CharField(label=_(u"New password confirmation"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
@@ -230,7 +230,7 @@ class NewPasswordForm(forms.Form):
         password2 = self.cleaned_data.get('new_password2')
         if password1 and password2:
             if password1 != password2:
-                raise forms.ValidationError(_("The two password fields didn't match."))
+                raise forms.ValidationError(_(u"The two password fields didn't match."))
         return password2
 
     def save(self, commit=True):
@@ -244,7 +244,7 @@ class PasswordForm(NewPasswordForm):
     A form that lets a user change his/her password by entering
     their old password.
     """
-    old_password = forms.CharField(label=_("Old password"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
+    old_password = forms.CharField(label=_(u"Old password"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
 
     def clean_old_password(self):
         """
@@ -252,7 +252,7 @@ class PasswordForm(NewPasswordForm):
         """
         old_password = self.cleaned_data["old_password"]
         if not self.user.check_password(old_password):
-            raise forms.ValidationError(_("Your old password was entered incorrectly. Please enter it again."))
+            raise forms.ValidationError(_(u"Your old password was entered incorrectly. Please enter it again."))
         return old_password
 PasswordForm.base_fields.keyOrder = ['old_password', 'new_password1', 'new_password2']
 

@@ -1,0 +1,555 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-10 11:31+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: templates/404.html:2
+msgid "Page not found"
+msgstr ""
+
+#: templates/404.html:4
+msgid "We're sorry but that page could not found."
+msgstr ""
+
+#: templates/500.html:2
+msgid "Internal server error"
+msgstr ""
+
+#: templates/500.html:4
+msgid ""
+"We're sorry but a server error has occurred. We've been notified and will "
+"look into it as soon as possible."
+msgstr ""
+
+#: templates/_account_navbar.html:10
+msgid "Profile"
+msgstr ""
+
+#: templates/_account_navbar.html:12
+msgid "Admin"
+msgstr ""
+
+#: templates/_account_navbar.html:13
+msgid "Logout"
+msgstr ""
+
+#: templates/_account_navbar.html:17
+msgid "Notifications"
+msgstr ""
+
+#: templates/_account_navbar.html:19 templates/accounts/settings.html:5
+msgid "Settings"
+msgstr ""
+
+#: templates/_account_navbar.html:23
+msgid "Log In"
+msgstr ""
+
+#: templates/_account_navbar.html:24 templates/comments/delete.html:8
+msgid "or"
+msgstr ""
+
+#: templates/_account_navbar.html:25 templates/accounts/register.html:3
+#: templates/accounts/register.html.py:9 templates/accounts/register.html:13
+msgid "Register"
+msgstr ""
+
+#: templates/_search_navbar.html:2
+msgid "Search"
+msgstr ""
+
+#: templates/theme_base.html:50
+msgid "Home"
+msgstr ""
+
+#: templates/theme_base.html:51
+msgid "About"
+msgstr ""
+
+#: templates/theme_base.html:52 templates/theme_base.html.py:81
+msgid "Contact"
+msgstr ""
+
+#: templates/theme_base.html:80
+msgid "Help"
+msgstr ""
+
+#: templates/accounts/account_edit_form.html:2
+msgid "Edit account"
+msgstr ""
+
+#: templates/accounts/account_edit_form.html:8
+msgid "Edit Account"
+msgstr ""
+
+#: templates/accounts/account_edit_form.html:12
+#: templates/accounts/profile_form.html:13
+msgid "Save changes"
+msgstr ""
+
+#: templates/accounts/activate_fail.html:2
+#: templates/accounts/activate_fail.html:4
+msgid "Account activation failed"
+msgstr ""
+
+#: templates/accounts/activate_fail.html:5
+#, python-format
+msgid ""
+"Your %(SITE_NAME)s website account could not be activated. This could be "
+"because your activation link has aged. Please try registering again."
+msgstr ""
+
+#: templates/accounts/activate_fail.html:6 templates/accounts/disabled.html:6
+#: templates/accounts/email_change_fail.html:6
+msgid "Feel free to contact us if you think something went wrong."
+msgstr ""
+
+#: templates/accounts/base.html:4
+msgid "Account"
+msgstr ""
+
+#: templates/accounts/base.html:7
+msgid "View account"
+msgstr ""
+
+#: templates/accounts/base.html:8 templates/accounts/profile_form.html:3
+#: templates/accounts/profile_form.html:9
+msgid "Edit profile"
+msgstr ""
+
+#: templates/accounts/base.html:9
+#: templates/accounts/password_change_form.html:2
+#: templates/accounts/password_change_form.html:12
+msgid "Change password"
+msgstr ""
+
+#: templates/accounts/base.html:10 templates/accounts/email_change_form.html:2
+#: templates/accounts/email_change_form.html:8
+#: templates/accounts/email_form.html:2 templates/accounts/email_form.html:8
+msgid "Change email address"
+msgstr ""
+
+#: templates/accounts/disabled.html:2 templates/accounts/disabled.html.py:4
+msgid "Account not activated"
+msgstr ""
+
+#: templates/accounts/disabled.html:5
+#, python-format
+msgid ""
+"It seems your %(SITE_NAME)s website account has not been activated. You have "
+"to click on the link provided in the activation email which we have sent you."
+msgstr ""
+
+#: templates/accounts/email_change_complete.html:2
+#: templates/accounts/email_change_complete.html:5
+msgid "Email address changed!"
+msgstr ""
+
+#: templates/accounts/email_change_complete.html:6
+#, python-format
+msgid ""
+"Your new email address is saved. You can continue using %(SITE_NAME)s "
+"website with this email address."
+msgstr ""
+
+#: templates/accounts/email_change_done.html:2
+#: templates/accounts/email_change_done.html:4
+msgid "Confirm your email address"
+msgstr ""
+
+#: templates/accounts/email_change_done.html:5
+#, python-format
+msgid "We have sent an email to %(email)s address."
+msgstr ""
+
+#: templates/accounts/email_change_done.html:6
+msgid ""
+"Please click on the link provided in that email to associate this email "
+"address with your account."
+msgstr ""
+
+#: templates/accounts/email_change_fail.html:2
+#: templates/accounts/email_change_fail.html:4
+msgid "Email verification failed"
+msgstr ""
+
+#: templates/accounts/email_change_fail.html:5
+msgid "You could try changing it again in your account settings."
+msgstr ""
+
+#: templates/accounts/email_change_form.html:12
+#: templates/accounts/email_form.html:12
+msgid "Change email"
+msgstr ""
+
+#: templates/accounts/login.html:4 templates/accounts/login.html.py:15
+msgid "Sign In"
+msgstr ""
+
+#: templates/accounts/login.html:10
+msgid "Log in to your account"
+msgstr ""
+
+#: templates/accounts/login.html:16
+msgid "Forgot your password?"
+msgstr ""
+
+#: templates/accounts/login.html:22
+msgid "Connect with Facebook"
+msgstr ""
+
+#: templates/accounts/logout.html:3
+msgid "Logged out"
+msgstr ""
+
+#: templates/accounts/logout.html:6
+msgid "You have been logged out"
+msgstr ""
+
+#: templates/accounts/logout.html:8
+#, python-format
+msgid "Click <a href=\"%(login_url)s\">here</a> to log in back."
+msgstr ""
+
+#: templates/accounts/password_change_complete.html:2
+#: templates/accounts/password_change_complete.html:4
+msgid "Password changed"
+msgstr ""
+
+#: templates/accounts/password_change_complete.html:5
+msgid ""
+"Your password has been changed. From now on you can use your new password to "
+"login."
+msgstr ""
+
+#: templates/accounts/password_change_form.html:8
+msgid "Change Password"
+msgstr ""
+
+#: templates/accounts/password_reset_complete.html:2
+#: templates/accounts/password_reset_complete.html:4
+msgid "Password has been set"
+msgstr ""
+
+#: templates/accounts/password_reset_complete.html:6
+#, python-format
+msgid ""
+"Your password has been set. You can now <a href=\"%(login_url)s\">login</a> "
+"with your new password."
+msgstr ""
+
+#: templates/accounts/password_reset_confirm.html:4
+#: templates/accounts/password_reset_confirm.html:10
+#: templates/accounts/password_reset_form.html:3
+#: templates/accounts/password_reset_form.html:9
+msgid "Password reset"
+msgstr ""
+
+#: templates/accounts/password_reset_confirm.html:14
+msgid "Reset password"
+msgstr ""
+
+#: templates/accounts/password_reset_done.html:4
+#: templates/accounts/password_reset_done.html:6
+msgid "Password reset email sent"
+msgstr ""
+
+#: templates/accounts/password_reset_done.html:7
+msgid ""
+"An email has been sent to you which explains how to reset your password."
+msgstr ""
+
+#: templates/accounts/password_reset_form.html:13
+msgid "Send password"
+msgstr ""
+
+#: templates/accounts/profile_detail.html:2
+#, python-format
+msgid "%(username)s's profile."
+msgstr ""
+
+#: templates/accounts/profile_detail.html:15
+msgid "Name"
+msgstr ""
+
+#: templates/accounts/profile_detail.html:19
+msgid "Age"
+msgstr ""
+
+#: templates/accounts/profile_detail.html:23
+msgid "Website"
+msgstr ""
+
+#: templates/accounts/profile_detail.html:27
+msgid "Location"
+msgstr ""
+
+#: templates/accounts/profile_detail.html:31
+msgid "About me"
+msgstr ""
+
+#: templates/accounts/profile_list.html:3
+msgid "User Profiles"
+msgstr ""
+
+#: templates/accounts/profile_list.html:20
+msgid "previous"
+msgstr ""
+
+#: templates/accounts/profile_list.html:24
+#, python-format
+msgid ""
+"\n"
+"      Page %(page)s of %(num_pages)s\n"
+"      "
+msgstr ""
+
+#: templates/accounts/profile_list.html:30
+msgid "next"
+msgstr ""
+
+#: templates/accounts/register_complete.html:3
+#: templates/accounts/register_complete.html:6
+msgid "Thank you for registering"
+msgstr ""
+
+#: templates/accounts/register_complete.html:9
+msgid ""
+"You have to click on the link provided in the activation email which we have "
+"sent you."
+msgstr ""
+
+#: templates/accounts/register_complete.html:10
+#, python-format
+msgid ""
+"We will store your account information for <strong>"
+"%(accounts_activation_days)s days.</strong> "
+msgstr ""
+
+#: templates/accounts/register_complete.html:12
+msgid "You can now use the supplied credentials to sign in."
+msgstr ""
+
+#: templates/accounts/settings.html:6
+msgid "Personal Information"
+msgstr ""
+
+#: templates/accounts/settings.html:7
+msgid "Update your personal information. Let others know more about you."
+msgstr ""
+
+#: templates/accounts/settings.html:8
+msgid "Email address"
+msgstr ""
+
+#: templates/accounts/settings.html:9
+msgid "You can change your email adress."
+msgstr ""
+
+#: templates/accounts/settings.html:10
+msgid "Password"
+msgstr ""
+
+#: templates/accounts/settings.html:11
+msgid ""
+"Change your password here. Please do not share your password with others."
+msgstr ""
+
+#: templates/accounts/emails/activation_email_message.txt:1
+#: templates/accounts/emails/confirmation_email_message_new.txt:1
+#: templates/accounts/emails/confirmation_email_message_old.txt:1
+#: templates/accounts/emails/password_reset_message.txt:1
+#, python-format
+msgid "Dear %(user)s,"
+msgstr ""
+
+#: templates/accounts/emails/activation_email_message.txt:3
+#, python-format
+msgid "Welcome to %(site)s Website."
+msgstr ""
+
+#: templates/accounts/emails/activation_email_message.txt:5
+msgid "Please click on the link below to activate your account."
+msgstr ""
+
+#: templates/accounts/emails/activation_email_message.txt:9
+msgid "Thank you for registering at our website."
+msgstr ""
+
+#: templates/accounts/emails/activation_email_message.txt:11
+#: templates/accounts/emails/confirmation_email_message_new.txt:11
+#: templates/accounts/emails/confirmation_email_message_old.txt:9
+#: templates/accounts/emails/password_reset_message.txt:11
+msgid "Sincerely"
+msgstr ""
+
+#: templates/accounts/emails/activation_email_subject.txt:1
+#, python-format
+msgid "You have registered at %(site)s website"
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_message_new.txt:3
+#: templates/accounts/emails/confirmation_email_message_old.txt:3
+#, python-format
+msgid "You have requested to change your email address at %(site)s Website."
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_message_new.txt:5
+msgid "Please click on the link below to verify this email address."
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_message_new.txt:9
+msgid "Thank you for using our website."
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_message_old.txt:5
+#, python-format
+msgid ""
+"We have sent an email to %(new_email)s address which provides a verification "
+"link. Click on the link provided in that email to activate your new email "
+"address."
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_message_old.txt:7
+msgid "Thank you for using our site!"
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_subject_new.txt:1
+#, python-format
+msgid "Email verification for %(site)s Website"
+msgstr ""
+
+#: templates/accounts/emails/confirmation_email_subject_old.txt:1
+msgid "Request to change your email address"
+msgstr ""
+
+#: templates/accounts/emails/password_reset_message.txt:3
+#, python-format
+msgid ""
+"We are sending this email because you have requested a password resetfor "
+"your account at %(site)s Website."
+msgstr ""
+
+#: templates/accounts/emails/password_reset_message.txt:5
+msgid "Please click on the link below to set a new password."
+msgstr ""
+
+#: templates/accounts/emails/password_reset_message.txt:9
+msgid "Thank you for using our site."
+msgstr ""
+
+#: templates/accounts/emails/password_reset_subject.txt:1
+msgid "Request to reset your password"
+msgstr ""
+
+#: templates/comments/comment_confirm_delete.html:3
+#: templates/comments/delete_verify.html:3
+msgid "Comment will be deleted"
+msgstr ""
+
+#: templates/comments/comment_confirm_delete.html:4
+#: templates/comments/delete.html:3 templates/comments/delete_verify.html:4
+msgid "Are you sure to delete this comment?"
+msgstr ""
+
+#: templates/comments/comment_confirm_delete.html:6
+msgid "Delete blog"
+msgstr ""
+
+#: templates/comments/comment_form.html:2
+msgid "Your comment succesfully posted"
+msgstr ""
+
+#: templates/comments/comment_form.html:22 templates/comments/preview.html:22
+msgid "Post comment"
+msgstr ""
+
+#: templates/comments/comment_item.html:10
+#: templates/comments/comment_list.html:7
+msgid "delete"
+msgstr ""
+
+#: templates/comments/comment_list.html:7
+#, python-format
+msgid "Will be deleted: %(comment)s"
+msgstr ""
+
+#: templates/comments/comment_list.html:19
+msgid "ago"
+msgstr ""
+
+#: templates/comments/comment_list.html:26
+msgid "No comment yet."
+msgstr ""
+
+#: templates/comments/comments_block.html:4
+msgid "No comment"
+msgstr ""
+
+#: templates/comments/comments_block.html:4
+#, python-format
+msgid "Only <strong>one</strong> comment"
+msgid_plural "%(counter)s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/comments/comments_block.html:8
+msgid "Write comment"
+msgstr ""
+
+#: templates/comments/delete.html:8
+msgid "cancel"
+msgstr ""
+
+#: templates/comments/delete_done.html:3 templates/comments/delete_done.html:4
+msgid "Comment deleted"
+msgstr ""
+
+#: templates/comments/delete_verify.html:6
+msgid "Delete comment"
+msgstr ""
+
+#: templates/comments/posted.html:3
+msgid "Comment posted"
+msgstr ""
+
+#: templates/comments/preview.html:2
+msgid "Preview your comment"
+msgstr ""
+
+#: templates/comments/preview.html:9
+msgid "Önizleme"
+msgstr ""
+
+#: templates/comments/preview.html:11
+msgid "Save"
+msgstr ""
+
+#: templates/comments/preview.html:13
+msgid "Update"
+msgstr ""
+
+#: templates/pagination/pagination.html:6
+#: templates/pagination/pagination.html:9
+msgid "Previous"
+msgstr ""
+
+#: templates/pagination/pagination.html:19
+#: templates/pagination/pagination.html:21
+msgid "Next"
+msgstr ""

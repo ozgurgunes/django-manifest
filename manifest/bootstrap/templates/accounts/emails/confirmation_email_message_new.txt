@@ -1,15 +1,13 @@
-{% autoescape off %}
-{% blocktrans with user.get_full_name as user %}Dear {{ user }},{% endblocktrans %}
+{% autoescape off %}{% blocktrans with user.get_full_name as user %}Dear {{ user }},{% endblocktrans %}
 
-{% blocktrans with site.name as site %}You have requested to change your e-mail address at {{ site }} Website.{% endblocktrans %}
+{% blocktrans with site.name as site %}You have requested to change your email address at {{ site }} Website.{% endblocktrans %}
 
-{% trans "Please click on the link below to verify this e-mail address." %}
+{% trans "Please click on the link below to verify this email address." %}
 
 {{ protocol }}://{{ site.domain }}{% url accounts_email_confirm confirmation_key %}
 
 {% trans "Thank you for using our website." %}
 
-{% trans "Sincerely" %},
+{% trans "Sincerely" %}
 
-{{ protocol }}://{{ site.domain }}
-{% endautoescape %}
+{{ protocol }}://{{ site.domain }}{% endautoescape %}
