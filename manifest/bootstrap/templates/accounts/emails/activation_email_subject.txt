@@ -1,2 +1,1 @@
-{% load i18n %}
-{% blocktrans with site.name as site %}Your register at {{ site }}.{% endblocktrans %}
+{% blocktrans with site.name as site %}You have registered at {{ site }} website{% endblocktrans %}

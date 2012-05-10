@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -12,7 +12,7 @@ from manifest.facebook.forms import FacebookProfileForm
 class ProfileForm(FacebookProfileForm):
     about               = forms.CharField(widget=forms.Textarea(attrs={'class': 'textarea', 'rows': 5}), required=False)
     occupation          = forms.CharField(max_length=24, required=False, widget=forms.TextInput(attrs={'class':'text'}))
-    location            = forms.CharField(label=_('location'), required=False, max_length=64, widget=forms.TextInput(attrs={'class':'text'}))
+    location            = forms.CharField(required=False, max_length=64, widget=forms.TextInput(attrs={'class':'text'}))
     country             = forms.ChoiceField(choices=list([('','')] + list(countries.COUNTRIES_PLUS)))
     
 class ProfilePictureForm(FacebookProfileForm):

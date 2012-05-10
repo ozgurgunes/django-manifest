@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}{% trans "Disabled account" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Account not activated" %} - {{ block.super }}{% endblock %}
 {% block content %}
-<h2>{% trans "Your account has been disabled" %}</h2>
-<p>{% trans "It seems your account has been disabled." %}</p>
-<p>{% trans "If you feel that injustice has been done to you, feel free to contact the administrators to find out why" %}</p>
+<h2>{% trans "Account not activated" %}</h2>
+<p>{% blocktrans %}It seems your {{ SITE_NAME }} website account has not been activated. You have to click on the link provided in the activation e-mail which we have sent you.{% endblocktrans %}</p>
+<p>{% trans "Feel free to contact us if you think something went wrong." %}</p>
 {% endblock %} 

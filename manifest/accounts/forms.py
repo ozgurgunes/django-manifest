@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 import random
 from datetime import datetime
 from StringIO import StringIO  
@@ -30,10 +30,10 @@ class RegistrationForm(forms.Form):
                                 max_length=30,
                                 widget=forms.TextInput(attrs=attrs_dict),
                                 label=_("Username"),
-                                error_messages={'invalid': _('Username must contain only letters, numbers and underscores.')})
+                                error_messages={'invalid': _(u'Username must contain only letters, numbers and underscores.')})
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=75)),
-                             label=_("Email"))
+                             label=_("E-mail address"))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
                                                            render_value=False),
                                 label=_("Password"))
@@ -52,15 +52,15 @@ class RegistrationForm(forms.Form):
         except User.DoesNotExist:
             pass
         else:
-            raise forms.ValidationError(_('This username is already taken.'))
+            raise forms.ValidationError(_(u'This username is already taken.'))
         if self.cleaned_data['username'].lower() in settings.ACCOUNTS_FORBIDDEN_USERNAMES:
-            raise forms.ValidationError(_('This username is not allowed.'))
+            raise forms.ValidationError(_(u'This username is not allowed.'))
         return self.cleaned_data['username']
 
     def clean_email(self):
         """ Validate that the e-mail address is unique. """
         if User.objects.filter(email__iexact=self.cleaned_data['email']):
-            raise forms.ValidationError(_('This email is already in use. Please supply a different email.'))
+            raise forms.ValidationError(_(u'This e-mail address is already in use. Please supply a different email.'))
         return self.cleaned_data['email']
 
     def clean(self):
@@ -72,7 +72,7 @@ class RegistrationForm(forms.Form):
         """
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-                raise forms.ValidationError(_('The two password fields didn\'t match.'))
+                raise forms.ValidationError(_(u"The two password fields didn't match."))
         return self.cleaned_data
 
     def save(self):
@@ -116,8 +116,8 @@ class RegistrationFormOnlyEmail(RegistrationForm):
 class RegistrationFormToS(RegistrationForm):
     """ Add a Terms of Service button to the ``RegistrationForm``. """
     tos = forms.BooleanField(widget=forms.CheckboxInput(attrs=attrs_dict),
-                             label=_(u'I have read and agree to the Terms of Service'),
-                             error_messages={'required': _('You must agree to the terms to register.')})
+                             label=_(u'I have read and agree to the Terms of Service.'),
+                             error_messages={'required': _(u'You must agree to the terms to register.')})
 
 def identification_field_factory(label, error_required):
     """
@@ -140,8 +140,8 @@ class AuthenticationForm(forms.Form):
     A custom form where the identification can be a e-mail address or username.
 
     """
-    identification = identification_field_factory(_(u"Email or username"),
-                                                  _(u"Either supply us with your email or username."))
+    identification = identification_field_factory(_("E-mail address or username"),
+                                                  _("Either supply us with your e-mail address or username."))
     password = forms.CharField(label=_("Password"),
                                widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
     remember_me = forms.BooleanField(widget=forms.CheckboxInput(),
@@ -152,8 +152,8 @@ class AuthenticationForm(forms.Form):
         """ A custom init because we need to change the label if no usernames is used """
         super(AuthenticationForm, self).__init__(*args, **kwargs)
         if settings.ACCOUNTS_WITHOUT_USERNAMES:
-            self.fields['identification'] = identification_field_factory(_(u"Email"),
-                                                                         _(u"Please supply your email."))
+            self.fields['identification'] = identification_field_factory(_(u"E-mail address"),
+                                                                         _(u"Please supply your e-mail address."))
 
     def clean(self):
         """
@@ -168,7 +168,7 @@ class AuthenticationForm(forms.Form):
         if identification and password:
             user = authenticate(identification=identification, password=password)
             if user is None:
-                raise forms.ValidationError(_(u"Please enter a correct username or email and password. Note that both fields are case-sensitive."))
+                raise forms.ValidationError(_(u"Please enter a correct username or e-mail address and password. Note that both fields are case-sensitive."))
         return self.cleaned_data
 
 class EmailForm(forms.Form):
@@ -192,9 +192,9 @@ class EmailForm(forms.Form):
     def clean_email(self):
         """ Validate that the email is not already registered with another user """
         if self.cleaned_data['email'].lower() == self.user.email:
-            raise forms.ValidationError(_(u'You\'re already known under this email.'))
+            raise forms.ValidationError(_(u"You're already known under this e-mail address."))
         if User.objects.filter(email__iexact=self.cleaned_data['email']).exclude(email__iexact=self.user.email):
-            raise forms.ValidationError(_(u'This email is already in use. Please supply a different email.'))
+            raise forms.ValidationError(_(u'This e-mail address is already in use. Please supply a different e-mail address.'))
         return self.cleaned_data['email']
 
     def save(self):
@@ -260,8 +260,8 @@ class ProfileForm(forms.ModelForm):
     """ Base form used for fields that are always required """
 
     GENDER_CHOICES = (
-        ('F', _('Female')),
-        ('M', _('Male')),
+        ('F', _(u'Female')),
+        ('M', _(u'Male')),
     )
 
     first_name = forms.CharField(label=_(u'First name'),
@@ -294,17 +294,17 @@ class ProfileForm(forms.ModelForm):
         if self.cleaned_data.get('picture'):
             picture_data = self.cleaned_data['picture']
             if 'error' in picture_data:
-                raise forms.ValidationError(_('Upload a valid image.',
+                raise forms.ValidationError(_(u'Upload a valid image.',
                 'The file you uploaded was either not an image or a corrupted image.'))
                 
             content_type = picture_data.content_type
             if content_type:
                 main, sub = content_type.split('/')
                 if not (main == 'image' and sub in settings.ACCOUNTS_PICTURE_FORMATS):
-                    raise forms.ValidationError(_('%s only.' % settings.ACCOUNTS_PICTURE_FORMATS))
+                    raise forms.ValidationError(_(u'%s only.' % settings.ACCOUNTS_PICTURE_FORMATS))
         
             if picture_data.size > int(settings.ACCOUNTS_PICTURE_MAX_FILE):
-                raise forms.ValidationError(_('Image size too big'))
+                raise forms.ValidationError(_(u'Image size is too big.'))
             return self.cleaned_data['picture']
 
     @commit_on_success()

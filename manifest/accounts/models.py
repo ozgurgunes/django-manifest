@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 import datetime
 
 from django.db import models
@@ -24,27 +24,27 @@ class Account(models.Model):
 
     """
 
-    user = models.OneToOneField(User, verbose_name=_('user'), related_name='account')
+    user = models.OneToOneField(User, verbose_name=_(u'User'), related_name='account')
 
-    activation_key = models.CharField(_('activation key'), max_length=40, blank=True)
+    activation_key = models.CharField(_(u'Activation key'), max_length=40, blank=True)
 
-    email_unconfirmed = models.EmailField(_('unconfirmed email address'), blank=True,
-                            help_text=_('Temporary email address when the user requests an email change.'))
+    email_unconfirmed = models.EmailField(_(u'Unconfirmed email address'), blank=True,
+                            help_text=_(u'Temporary email address when the user requests an email change.'))
 
-    email_confirmation_key = models.CharField(_('unconfirmed email verification key'), 
+    email_confirmation_key = models.CharField(_(u'Unconfirmed e-mail verification key'), 
                                         max_length=40, blank=True)
 
-    email_confirmation_key_created = models.DateTimeField(_('creation date of email confirmation key'),
+    email_confirmation_key_created = models.DateTimeField(_(u'Creation date of e-mail confirmation key'),
                                         blank=True, null=True)
 
     objects = AccountsManager()
 
     class Meta:
-        verbose_name = _('account')
-        verbose_name_plural = _('accounts')
+        verbose_name = _(u'Account')
+        verbose_name_plural = _(u'Accounts')
 
     def __unicode__(self):
-        return 'account of %s' % self.user.username
+        return 'Account of %s' % self.user.username
 
     def change_email(self, email):
         """
@@ -83,7 +83,6 @@ class Account(models.Model):
 
         """
         context= {'user': self.user,
-                  'without_usernames': accounts_settings.ACCOUNTS_WITHOUT_USERNAMES,
                   'new_email': self.email_unconfirmed,
                   'protocol': get_protocol(),
                   'confirmation_key': self.email_confirmation_key,
@@ -145,7 +144,6 @@ class Account(models.Model):
 
         """
         context= {'user': self.user,
-                  'without_usernames': accounts_settings.ACCOUNTS_WITHOUT_USERNAMES,
                   'protocol': get_protocol(),
                   'activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS,
                   'activation_key': self.activation_key,
@@ -199,17 +197,17 @@ class ProfileBase(models.Model):
     """ Base model needed for extra profile functionality """
 
     GENDER_CHOICES = (
-        ('F', _('Female')),
-        ('M', _('Male')),
+        ('F', _(u'Female')),
+        ('M', _(u'Male')),
     )
     
-    user = models.OneToOneField(User, unique=True, verbose_name=_('user'), related_name='profile')
+    user = models.OneToOneField(User, unique=True, verbose_name=_(u'User'), related_name='profile')
 
-    birth_date = models.DateField(_('birth date'), blank=True, null=True)
-    gender = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=1, blank=True, null=True)
-    picture = models.ImageField(_('picture'), blank=True, upload_to=upload_to_picture)
-    timezone = TimeZoneField(_("timezone"))
-    locale = models.CharField(_("locale"), max_length = 10,
+    birth_date = models.DateField(_(u'Birth date'), blank=True, null=True)
+    gender = models.CharField(_(u'Gender'), choices=GENDER_CHOICES, max_length=1, blank=True, null=True)
+    picture = models.ImageField(_(u'Picture'), blank=True, upload_to=upload_to_picture)
+    timezone = TimeZoneField(_("Timezone"))
+    locale = models.CharField(_("Locale"), max_length = 10,
                                     choices = settings.LANGUAGES,
                                     default = settings.LANGUAGE_CODE)
 
@@ -228,7 +226,7 @@ class ProfileBase(models.Model):
         abstract = True
 
     def __unicode__(self):
-        return 'Profile of %(username)s' % {'username': self.user.username}
+        return _(u'Profile of %(username)s') % {'username': self.user.username}
 
     @models.permalink
     def get_absolute_url(self):

@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 # Accounts settings file.
 #
 # Please consult the docs for more information about each setting.

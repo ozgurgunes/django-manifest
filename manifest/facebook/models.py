@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -13,12 +13,12 @@ from manifest.facebook.utils import iso_time
 class ProfileBase(models.Model):
     """Abstract base class for Facebook user profile"""
 
-    facebook_id         = models.BigIntegerField(_('facebook id'), unique=True, blank=True, null=True)
-    facebook_token      = models.TextField(_('facebook token'), blank=True, null=True)
-    facebook_expires    = models.IntegerField(_('facebook expires'), blank=True, null=True)
-    facebook_username   = models.CharField(_('facebook username'), max_length=255, blank=True)
-    facebook_verified   = models.BooleanField(_('facebook verified'), default=False, blank=True)
-    facebook_link       = models.URLField(_('facebook link'), blank=True, null=True)
+    facebook_id         = models.BigIntegerField(_(u'Facebook id'), unique=True, blank=True, null=True)
+    facebook_token      = models.TextField(_(u'Facebook token'), blank=True, null=True)
+    facebook_expires    = models.IntegerField(_(u'Facebook expires'), blank=True, null=True)
+    facebook_username   = models.CharField(_(u'Facebook username'), max_length=255, blank=True)
+    facebook_verified   = models.BooleanField(_(u'Facebook verified'), default=False, blank=True)
+    facebook_link       = models.URLField(_(u'Facebook link'), blank=True, null=True)
 
     class Meta:
         abstract        = True
@@ -87,12 +87,12 @@ class ProfileBase(models.Model):
 class FacebookLike(models.Model):
     """Abstract base class for Facebook user profile"""
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, verbose_name=_(u'User'))
 
-    facebook_id = models.BigIntegerField(_('facebook id'))    
-    name = models.CharField(_('name'), max_length=128, blank=True, null=True)
-    category = models.CharField(_('category'), max_length=128, blank=True, null=True)
-    created_time =  models.DateTimeField(_('created time'), blank=True, null=True)
+    facebook_id = models.BigIntegerField(_(u'facebook id'))    
+    name = models.CharField(_(u'Name'), max_length=128, blank=True, null=True)
+    category = models.CharField(_(u'Category'), max_length=128, blank=True, null=True)
+    created_time =  models.DateTimeField(_(u'Created time'), blank=True, null=True)
     
     class Meta:
         db_table = 'facebook_likes'
@@ -104,10 +104,10 @@ class FacebookLike(models.Model):
 class FacebookFriend(models.Model):
     """Abstract base class for Facebook user profile"""
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, verbose_name=_(u'User'))
 
-    facebook_id = models.BigIntegerField(_('facebook id'))    
-    name = models.CharField(_('name'), max_length=128, blank=True, null=True)
+    facebook_id = models.BigIntegerField(_(u'Facebook id'))    
+    name = models.CharField(_(u'Name'), max_length=128, blank=True, null=True)
     
     class Meta:
         db_table = 'facebook_friends'

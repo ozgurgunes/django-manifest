@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 import re
 import datetime
 from dateutil import relativedelta
@@ -19,20 +19,20 @@ class Profile(ProfileBase, FacebookProfileBase):
     
     """
         
-    about               = models.TextField(_('about'), blank=True, null=True)
-    education           = models.CharField(_('education'), max_length=128, blank=True, null=True)
-    occupation          = models.CharField(_('occupation'), max_length=64, blank=True, null=True)
-    location            = models.CharField(_('location'), blank=True, null=True, max_length=64)
-    website             = models.URLField(_('website'), blank=True, null=True)
-    mobile              = PhoneNumberField(_('mobile'), blank=True, null=True)
-    country             = CountryField(_('country'), blank=True, null=True)
+    about               = models.TextField(_(u'About'), blank=True, null=True)
+    education           = models.CharField(_(u'Education'), max_length=128, blank=True, null=True)
+    occupation          = models.CharField(_(u'Occupation'), max_length=64, blank=True, null=True)
+    location            = models.CharField(_(u'Location'), blank=True, null=True, max_length=64)
+    website             = models.URLField(_(u'Website'), blank=True, null=True)
+    mobile              = PhoneNumberField(_(u'Mobile'), blank=True, null=True)
+    country             = CountryField(_(u'Country'), blank=True, null=True)
         
     class Meta:
-        verbose_name = _('profile')
-        verbose_name_plural = _('profiles')
+        verbose_name = _(u'Profile')
+        verbose_name_plural = _(u'Profiles')
     
     def __unicode__(self):
-        return u"Profile of %s" % self.user
+        return _(u"Profile of %s") % self.user
   
     def copy_facebook(self, response):
         """

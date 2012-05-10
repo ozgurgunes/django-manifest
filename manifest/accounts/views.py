@@ -83,7 +83,7 @@ def login(request, auth_form=AuthenticationForm,
                 else: request.session.set_expiry(0)
 
                 if accounts_settings.ACCOUNTS_USE_MESSAGES:
-                    messages.success(request, _('You have been logged in.'),
+                    messages.success(request, _(u'You have been logged in.'),
                                      fail_silently=True)
 
                 # Whereto now?
@@ -447,7 +447,7 @@ def profile_edit(request, profile_form=ProfileForm,
             profile = form.save()
 
             if accounts_settings.ACCOUNTS_USE_MESSAGES:
-                messages.success(request, _('Your profile has been updated.'),
+                messages.success(request, _(u'Your profile has been updated.'),
                                  fail_silently=True)
 
             if success_url: redirect_to = success_url
@@ -483,6 +483,10 @@ class UserTemplate(ProfileDetail):
 
     def get_context_data(self, **kwargs):
         context = super(UserTemplate, self).get_context_data(**kwargs)
+        try: 
+            self.extra_context['account'] = Account.objects.get(user=self.request.user)
+        except:
+            pass        
         context.update(self.extra_context)
         return context
         

@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 from manifest.accounts.forms import ProfileForm
 
 class FacebookProfileForm(ProfileForm):
