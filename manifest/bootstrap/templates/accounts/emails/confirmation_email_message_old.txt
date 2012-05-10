@@ -1,11 +1,11 @@
 {% autoescape off %}{% blocktrans with user.get_full_name as user %}Dear {{ user }},{% endblocktrans %}
 
-{% blocktrans with site.name as site %}You have requested to change your email address at {{ site }} Website.{% endblocktrans %}
+{% blocktrans with site.name as site %}You have requested to change your email address at {{ site }} website.{% endblocktrans %}
 
 {% blocktrans %}We have sent an email to {{ new_email }} address which provides a verification link. Click on the link provided in that email to activate your new email address.{% endblocktrans %}
 
 {% trans "Thank you for using our site!" %}
 
-{% trans "Sincerely" %}
+{% trans "Sincerely," %}
 
 {{ protocol }}://{{ site.domain }}{% endautoescape %}

@@ -1,1 +1,1 @@
-{% blocktrans with site.name as site %}Email verification for {{ site }} Website{% endblocktrans %}
+{% blocktrans with site.name as site %}Email verification for {{ site }} website{% endblocktrans %}

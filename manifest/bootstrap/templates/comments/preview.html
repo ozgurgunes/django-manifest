@@ -6,7 +6,7 @@
             <legend>{{ form.comment.label }}</legend>
             {% if not form.errors %}
             <div class="block">
-                <h4>{% trans 'Önizleme' %}:</h4>
+                <h4>{% trans 'Preview' %}:</h4>
                 <blockquote>{{ comment|escape|linebreaks }}</blockquote>
                 <p class="form-buttons"><input type="submit" name="node" value="{% trans 'Save' %}" /></p>
             </div>
