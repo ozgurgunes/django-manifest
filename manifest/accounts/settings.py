@@ -7,13 +7,13 @@ from django.conf import settings
 gettext = lambda s: s
 
 
-ACCOUNTS_REDIRECT_ON_SIGNOUT = getattr(settings,
-                                      'ACCOUNTS_REDIRECT_ON_SIGNOUT',
+ACCOUNTS_REDIRECT_ON_LOGOUT = getattr(settings,
+                                      'ACCOUNTS_REDIRECT_ON_LOGOUT',
                                       None)
 
-ACCOUNTS_SIGNIN_REDIRECT_URL = getattr(settings,
-                                      'ACCOUNTS_SIGNIN_REDIRECT_URL',
-                                      '/accounts/%(username)s/')
+ACCOUNTS_LOGIN_REDIRECT_URL = getattr(settings,
+                                      'ACCOUNTS_LOGIN_REDIRECT_URL',
+                                      getattr(settings, 'LOGIN_REDIRECT_URL', '/accounts/%(username)s/'))
 
 ACCOUNTS_ACTIVATION_REQUIRED = getattr(settings,
                                       'ACCOUNTS_ACTIVATION_REQUIRED',

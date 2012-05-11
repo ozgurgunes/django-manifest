@@ -137,6 +137,10 @@ def register(request, registration_form=RegistrationForm,
         Form supplied by ``registration_form``.
 
     """
+    # Redirect to homepage if user already registered.
+    if request.user.is_authenticated():
+        return redirect('/')
+
     # If no usernames are wanted and the default form is used, fallback to the
     # default form that doesn't display to enter the username.
     if accounts_settings.ACCOUNTS_WITHOUT_USERNAMES and (registration_form == RegistrationForm):
@@ -156,11 +160,6 @@ def register(request, registration_form=RegistrationForm,
                 redirect_to = success_url
             else: 
                 redirect_to = reverse('accounts_register_complete', kwargs={'username': user.username})
-
-            # A new logged user should logout the old one.
-            if request.user.is_authenticated():
-                logout(request)
-            return redirect(redirect_to)
 
     if not extra_context: extra_context = dict()
     extra_context['form'] = form

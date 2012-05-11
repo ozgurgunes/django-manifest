@@ -186,7 +186,7 @@ msgid ""
 "Please click on the link provided in that email to associate this email "
 "address with your account."
 msgstr ""
-"Adres değişikliğinin tamamlanabilmesi için {{ new_email }} e-posta adresine "
+"Adres değişikliğinin tamamlanabilmesi için bu e-posta adresinize "
 "gönderilen linke tıklayarak yeni e-posta adresinizi onaylamanız gerekiyor."
 
 #: templates/accounts/email_change_fail.html:2

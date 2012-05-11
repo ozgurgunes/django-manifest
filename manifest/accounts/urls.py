@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     # Signup, login and logout
     url(r'^login/$', accounts_views.login, name='accounts_login'),
     url(r'^logout/$', auth_views.logout, {
-                            'next_page': accounts_settings.ACCOUNTS_REDIRECT_ON_SIGNOUT,
+                            'next_page': accounts_settings.ACCOUNTS_REDIRECT_ON_LOGOUT,
                             'template_name': 'accounts/logout.html'},
                                     name='accounts_logout'),                                    
     url(r'^register/$', accounts_views.register, name='accounts_register'),
@@ -34,6 +34,9 @@ urlpatterns = patterns('',
     # Settings
     url(r'settings/$', accounts_views.settings, dict(template_name='accounts/settings.html'), 
                                     name='accounts_settings'),
+
+    # Edit profile
+    url(r'^settings/update/$', accounts_views.profile_edit,    name='accounts_update'),
 
     # Reset password
     url(r'^password/reset/$', auth_views.password_reset, {
@@ -69,12 +72,8 @@ urlpatterns = patterns('',
                                         template_name='accounts/password_change_complete.html'),
                                     name='accounts_password_change_done'),
 
-    # Edit profile
-    url(r'^edit/$', accounts_views.profile_edit,
-                                    name='accounts_profile_edit'),
-
     # View profiles
-    url(r'^(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', accounts_views.ProfileDetail.as_view(),
+    url(r'^profiles/(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', accounts_views.ProfileDetail.as_view(),
                                     name='accounts_profile_detail'),
     url(r'^profiles/$', accounts_views.ProfileList.as_view(),
                                     name='accounts_profile_list'),

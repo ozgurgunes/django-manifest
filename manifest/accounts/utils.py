@@ -75,7 +75,7 @@ def login_redirect(redirect=None, user=None):
     """
     if redirect: return redirect
     elif user is not None:
-        return accounts_settings.ACCOUNTS_SIGNIN_REDIRECT_URL % \
+        return accounts_settings.ACCOUNTS_LOGIN_REDIRECT_URL % \
                 {'username': user.username}
     else: return settings.LOGIN_REDIRECT_URL
 
