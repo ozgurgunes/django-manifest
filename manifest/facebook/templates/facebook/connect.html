@@ -3,30 +3,47 @@
 <head>
     <meta charset="utf-8">
     <title>{% trans "Connecting to Facebook" %} </title>
-    <script>
-        function getQueryParams(qs) {
-            qs = qs.split("+").join(" ");
-            var params = {},
-                tokens,
-                re = /[?&]?([^=]+)=([^&]*)/g;
-
-            while (tokens = re.exec(qs)) {
-                params[decodeURIComponent(tokens[1])]
-                    = decodeURIComponent(tokens[2]);
-            }
-
-            return params;
+    <style type="text/css">
+        body {
+            background: #e7ebf2;
+            color: #97a4c2;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 1em;
         }
-        var $_GET = getQueryParams(document.location.search);
-        {% if request.user.is_authenticated %}
-            window.opener.location=$_GET['next'];
-            window.close();
-        {% else %}
-            var url = '{% url socialauth_begin "facebook" %}?next={% url facebook_connect %}?next='+$_GET['next'];
-            document.location = url;
-        {% endif %}
-    </script>
+        center {
+            width: 240px;
+            height: 20px;
+            padding-bottom: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -25px;
+            margin-left: -120px;
+            background: url('{{ STATIC_URL }}img/facebook_loader.gif') no-repeat center bottom;
+        }
+    </style>
 </head>
 <body>
+    <center>{% trans "Connecting to Facebook" %}</center>
+    <script type="text/javascript">
+        function getQueryParams(qs) {
+            qs = qs.split("+").join(" ");
+            var params = {}, tokens, re = /[?&]?([^=]+)=([^&]*)/g;
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+            }
+            return params;
+        }
+        var GET = getQueryParams(document.location.search);
+        {% if request.user.is_authenticated %}
+            window.opener.location=GET['next'];
+            window.close();
+        {% else %}
+            var loader = new Image();
+            loader.src = '{{ STATIC_URL }}img/facebook_loader.gif';
+            var url = '{% url socialauth_begin "facebook" %}?next={% url facebook_connect %}?next='+GET['next'];
+            loader.onload = setTimeout(document.location = url, 1000);
+        {% endif %}
+    </script>
 </body>
 </html>

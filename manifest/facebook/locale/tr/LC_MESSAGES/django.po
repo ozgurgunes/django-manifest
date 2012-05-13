@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-10 14:08+0300\n"
+"POT-Creation-Date: 2012-05-13 03:00+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "Facebook kullanıcı adı"
 
 #: models.py:20
 msgid "Facebook verified"
-msgstr "Facebook doğrulandı"
+msgstr "Facebook doğrulanmış"
 
 #: models.py:21
 msgid "Facebook link"
@@ -58,11 +58,11 @@ msgstr "Kategori"
 msgid "Created time"
 msgstr "Oluşturulma tarihi"
 
-#: templates/facebook/connect.html:5
+#: templates/facebook/connect.html:5 templates/facebook/connect.html.py:27
 msgid "Connecting to Facebook"
-msgstr "Facebook'a bağlanıyor"
+msgstr "Facebook bağlantısı yapılıyor"
 
-#: templates/facebook/iframe_liked.html:2
+#: templates/facebook/iframe.html:2
 msgid "Liked"
 msgstr "Beğenildi"
 
