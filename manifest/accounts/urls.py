@@ -8,12 +8,12 @@ from manifest.accounts import settings as accounts_settings
 
 urlpatterns = patterns('',
     # Signup, login and logout
-    url(r'^login/$', accounts_views.login, name='accounts_login'),
+    url(r'^login/$', accounts_views.Login.as_view(), name='accounts_login'),
     url(r'^logout/$', auth_views.logout, {
                             'next_page': accounts_settings.ACCOUNTS_REDIRECT_ON_LOGOUT,
                             'template_name': 'accounts/logout.html'},
                                     name='accounts_logout'),                                    
-    url(r'^register/$', accounts_views.register, name='accounts_register'),
+    url(r'^register/$', accounts_views.Register.as_view(), name='accounts_register'),
     url(r'^register/complete/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
                                         template_name='accounts/register_complete.html',
                                         extra_context={
@@ -24,21 +24,20 @@ urlpatterns = patterns('',
                                     name='accounts_register_complete'),
 
     # Activate
-    url(r'^activate/(?P<username>\w+)/(?P<activation_key>\w+)/$', accounts_views.activate,
-                                    name='accounts_activate'),
+    #url(r'^activate/(?P<username>\w+)/(?P<activation_key>\w+)/$', accounts_views.activate, name='accounts_activate'),
+    url(r'^activate/(?P<username>\w+)/(?P<activation_key>\w+)/$', accounts_views.Activate.as_view(), name='accounts_activate'),
 
     # Disabled
     url(r'^disabled/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(template_name='accounts/disabled.html'), 
                                     name='accounts_disabled'),
 
     # Settings
-    url(r'settings/$', accounts_views.settings, dict(template_name='accounts/settings.html'), 
-                                    name='accounts_settings'),
+    url(r'settings/$', accounts_views.settings, dict(template_name='accounts/settings.html'), name='accounts_settings'),
 
     # Edit profile
-    url(r'^settings/update/$', accounts_views.profile_edit,    name='accounts_update'),
+    url(r'^settings/update/$', accounts_views.ProfileUpdate.as_view(),    name='accounts_update'),
 
-    # Reset password
+    # Reset password using django.contrib.auth.views
     url(r'^password/reset/$', auth_views.password_reset, {
                             'template_name': 'accounts/password_reset_form.html',
                             'email_template_name': 'accounts/emails/password_reset_message.txt'},
@@ -54,8 +53,7 @@ urlpatterns = patterns('',
                                     name='accounts_password_reset_complete'),
 
     # Change email and confirm it
-    url(r'^email/change/$', accounts_views.email_change, {
-                            'template_name': 'accounts/email_change_form.html'},
+    url(r'^email/change/$', accounts_views.EmailChange.as_view(),
                                     name='accounts_email_change'),
     url(r'^email/change/done/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
                                         template_name='accounts/email_change_done.html'),
@@ -66,7 +64,7 @@ urlpatterns = patterns('',
                                         template_name='accounts/email_change_complete.html'),
                                     name='accounts_email_change_complete'),
     # Change password
-    url(r'^password/change/$', accounts_views.password_change,
+    url(r'^password/change/$', accounts_views.PasswordChange.as_view(),
                                     name='accounts_password_change'),
     url(r'^password/change/done/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
                                         template_name='accounts/password_change_complete.html'),

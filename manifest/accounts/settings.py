@@ -11,9 +11,7 @@ ACCOUNTS_REDIRECT_ON_LOGOUT = getattr(settings,
                                       'ACCOUNTS_REDIRECT_ON_LOGOUT',
                                       None)
 
-ACCOUNTS_LOGIN_REDIRECT_URL = getattr(settings,
-                                      'ACCOUNTS_LOGIN_REDIRECT_URL',
-                                      getattr(settings, 'LOGIN_REDIRECT_URL', '/accounts/%(username)s/'))
+ACCOUNTS_LOGIN_REDIRECT_URL = getattr(settings, 'LOGIN_REDIRECT_URL', '/profiles/%(username)s/')
 
 ACCOUNTS_ACTIVATION_REQUIRED = getattr(settings,
                                       'ACCOUNTS_ACTIVATION_REQUIRED',

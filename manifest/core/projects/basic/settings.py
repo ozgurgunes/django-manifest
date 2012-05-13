@@ -93,23 +93,24 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
+	'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
 	'django.core.context_processors.csrf',
-	'django.contrib.messages.context_processors.messages',
+    'manifest.core.context_processors.site',
     'social_auth.context_processors.social_auth_by_name_backends',
-    'manifest.core.context_processors.site_url',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Enable to use browsers locale settings
+    # 'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'manifest.facebook.middleware.FacebookMiddleware',
@@ -159,11 +160,6 @@ INSTALLED_APPS = (
 	'social_auth',
 	'sorl.thumbnail',
 	'compressor',
-	'announcements',
-	'timezones',
-	'tagging',
-	'relationships',
-	'mailer',
 
     # Core
     'manifest.core',
@@ -183,7 +179,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Django Auth Settings
-LOGIN_URL   = os.path.join(SITE_URL, 'accounts/login/')
+LOGIN_URL   = os.path.join(SITE_URL, 'login/')
 LOGIN_REDIRECT_URL = SITE_URL
 AUTH_PROFILE_MODULE = 'profiles.profile'
 
@@ -228,7 +224,7 @@ COMPRESS_URL = STATIC_URL
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_OUTPUT_DIR = 'cache'
 
-EMAIL_BACKEND = 'mailer.backend.DbBackend'  #'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''

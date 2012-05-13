@@ -5,13 +5,14 @@ from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login as auth_login, logout, REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseForbidden, Http404
 from django.db.transaction import commit_on_success
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, TemplateView
 
 from manifest.accounts.forms import (RegistrationForm, RegistrationFormOnlyEmail, AuthenticationForm,
                            EmailForm, ProfileForm)
@@ -373,8 +374,7 @@ def password_change(request, template_name='accounts/password_change_form.html',
             form.save()
 
             # Send a signal that the password has changed
-            accounts_signals.password_complete.send(sender=None,
-                                                   user=user)
+            accounts_signals.password_complete.send(sender=None, user=user)
 
             if success_url: redirect_to = success_url
             else: redirect_to = reverse('accounts_password_change_done',
@@ -477,15 +477,161 @@ class ProfileDetail(DetailView):
     slug_url_kwarg = 'username'
     
 class UserTemplate(ProfileDetail):
-    
+
     extra_context = {}
 
     def get_context_data(self, **kwargs):
         context = super(UserTemplate, self).get_context_data(**kwargs)
-        try: 
-            self.extra_context['account'] = Account.objects.get(user=self.request.user)
-        except:
-            pass        
-        context.update(self.extra_context)
+        try: context.update({'account': Account.objects.get(user=self.request.user)})
+        except: pass        
         return context
+
+class Register(CreateView):
+
+    model = User
+    template_name = 'accounts/register.html'
+    success_url = None
+    success_message = _(u'You have been registered.')
+    
+    def get_form_class(self):
+        if self.form_class: return self.form_class
+        elif accounts_settings.ACCOUNTS_WITHOUT_USERNAMES:
+            return RegistrationFormOnlyEmail
+        else: return RegistrationForm
+    
+    @method_decorator(secure_required)
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated(): return redirect(reverse('accounts_settings'))
+        return super(Register, self).dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        user = form.save()
+        accounts_signals.registration_complete.send(sender=None, user=user, request=self.request)
+        if accounts_settings.ACCOUNTS_USE_MESSAGES:
+            messages.success(self.request, self.success_message, fail_silently=True)
+        if self.success_url: return redirect(self.success_url)
+        else: return redirect(reverse('accounts_register_complete', kwargs={'username': user.username}))
+
+class Login(FormView):
+
+    form_class = AuthenticationForm
+    template_name = 'accounts/login.html'
+    success_message = _(u'You have been logged in.')
+    
+    def form_valid(self, form):
+        identification, password, remember_me = (form.cleaned_data['identification'],
+                                                 form.cleaned_data['password'],
+                                                 form.cleaned_data['remember_me'])
+        user = authenticate(identification=identification, password=password)
+        if user.is_active:
+            auth_login(self.request, user)
+            if remember_me:
+                self.request.session.set_expiry(accounts_settings.ACCOUNTS_REMEMBER_ME_DAYS[1] * 86400)
+            else: self.request.session.set_expiry(0)
+            if accounts_settings.ACCOUNTS_USE_MESSAGES:
+                messages.success(self.request, self.success_message, fail_silently=True)
+            if self.success_url: return redirect(self.success_url)
+            else: return redirect(login_redirect(self.request.REQUEST.get(REDIRECT_FIELD_NAME), user))
+        else: return redirect(reverse('accounts_disabled', kwargs={'username': user.username}))
+
+class Activate(TemplateView):
+    
+    template_name = 'accounts/activate_fail.html'
+    success_url = None
+
+    def get_success_url(self, **kwargs):
+        if self.success_url: return self.success_url % kwargs
+        else: return reverse('accounts_profile_detail', kwargs={'username': self.kwargs['username']})
         
+    @method_decorator(secure_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Activate, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, username, activation_key, *args, **kwargs):
+        user = Account.objects.activate_user(username, activation_key)
+        if user:
+            # Sign the user in.
+            auth_login(request, authenticate(identification=user.email, check_password=False))
+            return redirect(self.get_success_url(**kwargs))
+        return super(Activate, self).get(request, *args, **kwargs)            
+
+class ProfileUpdate(UpdateView):
+    
+    model = get_profile_model()
+    profile_form = ProfileForm
+    template_name = 'accounts/profile_form.html'
+    success_message = _(u'Your profile has been updated.')
+    
+    def get_object(self):
+        return self.request.user.get_profile()
+
+    @method_decorator(secure_required)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProfileUpdate, self).dispatch(request, *args, **kwargs)
+        
+    def get_initial(self):
+        return {'first_name': self.request.user.first_name, 'last_name': self.request.user.last_name}
+
+    def form_valid(self, form):
+        profile = form.save()
+        if accounts_settings.ACCOUNTS_USE_MESSAGES:
+            messages.success(self.request, self.success_message, fail_silently=True)
+        if self.success_url: return redirect(self.success_url)
+        else: return redirect(reverse('accounts_settings'))
+
+class EmailChange(FormView):
+
+    form_class = EmailForm
+    template_name = 'accounts/email_change_form.html'
+    
+    def get_form(self, form_class):
+        return form_class(self.request.user)
+            
+    @method_decorator(secure_required)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EmailChange, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        if self.success_url: return redirect(self.success_url)
+        else: return redirect(reverse('accounts_email_change_done', kwargs={'username': self.request.user.username}))
+
+class PasswordChange(FormView):
+    
+    form_class = PasswordChangeForm
+    template_name = 'accounts/password_change_form.html'
+    
+    def get_form(self, form_class, *args, **kwargs):
+        user = User.objects.get(id=self.request.user.id)
+        return form_class(user, self.request.POST, self.request.FILES, *args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(self.request.user)
+        return super(PasswordChange, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.user, request.POST, request.FILES)
+        return super(PasswordChange, self).post(request, *args, **kwargs)
+        
+    def form_valid(self, form):
+        user = form.save()
+        accounts_signals.password_complete.send(sender=None, user=user)
+        if self.success_url: return redirect(self.success_url)
+        else: return redirect(reverse('accounts_password_change_done', kwargs={'username': user.username}))
+                    
+class EmailConfirm(Activate):
+    
+    template_name = 'accounts/email_change_fail.html'
+    
+    def get_success_url(self, **kwargs):
+        if self.success_url: return self.success_url % kwargs
+        else: return reverse('accounts_email_change_complete', kwargs={'username': self.kwargs['username']})
+
+    def get(self, request, username, activation_key, *args, **kwargs):
+        user = Account.objects.confirm_email(username, activation_key)
+        if user:
+            return redirect(self.get_success_url(**kwargs))
+        return super(EmailConfirm, self).get(request, *args, **kwargs)            
+

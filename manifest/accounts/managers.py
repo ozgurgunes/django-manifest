@@ -122,7 +122,7 @@ class AccountsManager(UserManager):
                 return user
         return False
 
-    def confirm_email(self, confirmation_key):
+    def confirm_email(self, username, confirmation_key):
         """
         Confirm an email address by checking a ``confirmation_key``.
 
@@ -139,8 +139,9 @@ class AccountsManager(UserManager):
         """
         if SHA1_RE.search(confirmation_key):
             try:
-                account = self.get(email_confirmation_key=confirmation_key,
-                                   email_unconfirmed__isnull=False)
+                account = self.select_related().get(user__username=username,
+                                    email_confirmation_key=confirmation_key,
+                                    email_unconfirmed__isnull=False)
             except self.model.DoesNotExist:
                 return False
             else:
