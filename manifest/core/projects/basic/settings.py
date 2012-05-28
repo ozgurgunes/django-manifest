@@ -4,7 +4,7 @@ import os
 PATH = os.path.dirname(__file__)
 
 # Project specific configuration
-# SITE_URL needed because project will not be served at domain root
+# SITE_URL needed if project will not be served at domain root
 SITE_URL = '/'
 
 DEBUG = True
@@ -76,6 +76,11 @@ STATIC_ROOT = os.path.join(os.path.dirname(PATH), 'httpdocs', 'static/')
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = os.path.join(SITE_URL, 'static/')
 
+# Django Compressor configuration
+COMPRESS_URL = STATIC_URL
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_OUTPUT_DIR = 'cache'
+
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
@@ -101,17 +106,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.core.context_processors.csrf',
 	'django.contrib.messages.context_processors.messages',
     'social_auth.context_processors.social_auth_by_name_backends',
-    'manifest.core.context_processors.site_url',
+    'manifest.core.context_processors.site',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'manifest.facebook.middleware.FacebookMiddleware',
 )
 
@@ -223,21 +228,6 @@ LOGGING = {
         },
     }
 }
-
-COMPRESS_URL = STATIC_URL
-COMPRESS_ROOT = STATIC_ROOT
-COMPRESS_OUTPUT_DIR = 'cache'
-
-EMAIL_BACKEND = 'mailer.backend.DbBackend'  #'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = ''
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-EMAIL_PORT = 25
-
-DEFAULT_FROM_EMAIL = 'Site Name <no-reply@example.com>'
-EMAIL_SUBJECT_PREFIX = '[Site Name] '
-
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

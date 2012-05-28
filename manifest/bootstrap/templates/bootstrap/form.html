@@ -1,11 +1,8 @@
 {% if form.non_field_errors %}
-    <div class="alert-message block-message error">
-        <p>
-        	<strong>{{ form_error_title }}</strong>
-	        <ul>
-	        	{{ form.non_field_errors|unordered_list }}
-	        </ul>
-	    </p>
+    <div class="alert alert-error">
+        {% for error in form.non_field_errors %}
+	    <div>{{ error }}</div>
+	    {% endfor %}
     </div>
 {% endif %}
 {% for field in form %}
@@ -32,16 +29,16 @@
                     </li>
                 </ul>
             {% else %}
-                <label for="{{ field.auto_id }}" {% if field.field.required %}class="requiredField control-label"{% endif %}>
+                <label for="{{ field.auto_id }}" {% if field.field.required %}class="required control-label"{% endif %}>
                     {{ field.label|safe }}
                 </label>
-                <div class="input controls">
+                <div class="controls">
                     {{ field }}
                     {% for error in field.errors %}
                         <span class="help-inline">{{ error }}</span>
                     {% endfor %}
                     {% if field.help_text %}
-                        <span class="help-block">{{ field.help_text|safe }}</span>
+                        <p class="help-block">{{ field.help_text|safe }}</p>
                     {% endif %}
                 </div>
             {% endif %}

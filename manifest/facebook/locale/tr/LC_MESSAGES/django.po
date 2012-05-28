@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-13 03:00+0300\n"
+"POT-Creation-Date: 2012-05-28 16:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,10 +62,20 @@ msgstr "Oluşturulma tarihi"
 msgid "Connecting to Facebook"
 msgstr "Facebook bağlantısı yapılıyor"
 
-#: templates/facebook/iframe.html:2
+#: templates/facebook/iframe.html:3
 msgid "Liked"
 msgstr "Beğenildi"
 
-#: templates/facebook/iframe_unliked.html:2
-msgid "Unliked"
+#: templates/facebook/iframe.html:3
+#, fuzzy
+msgid "Not liked"
 msgstr "Begenilmedi"
+
+#: templates/facebook/iframe.html:7
+msgid "Current user"
+msgstr "Şimdiki kullanıcı"
+
+#: templates/facebook/iframe.html:13
+#, fuzzy
+msgid "Connect with Facebook"
+msgstr "Facebook bağlantısı yapılıyor"

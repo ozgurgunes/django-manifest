@@ -45,7 +45,7 @@ class Graph(object):
         self._handle_errors(response)        
         
         data = simplejson.loads(response.read())
-        return data['data']
+        return data.get('data')
         
 
     def post(self, path, params):

@@ -160,6 +160,7 @@ def register(request, registration_form=RegistrationForm,
                 redirect_to = success_url
             else: 
                 redirect_to = reverse('accounts_register_complete', kwargs={'username': user.username})
+            return redirect(redirect_to) 
 
     if not extra_context: extra_context = dict()
     extra_context['form'] = form
