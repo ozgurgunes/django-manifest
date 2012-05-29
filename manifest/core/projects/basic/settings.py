@@ -98,23 +98,25 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
+	'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
 	'django.core.context_processors.csrf',
-	'django.contrib.messages.context_processors.messages',
-    'social_auth.context_processors.social_auth_by_name_backends',
     'manifest.core.context_processors.site',
+    'social_auth.context_processors.social_auth_by_name_backends',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # Enable to use browsers locale settings
+    # 'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'manifest.facebook.middleware.FacebookMiddleware',
@@ -164,11 +166,6 @@ INSTALLED_APPS = (
 	'social_auth',
 	'sorl.thumbnail',
 	'compressor',
-	'announcements',
-	'timezones',
-	'tagging',
-	'relationships',
-	'mailer',
 
     # Core
     'manifest.core',
@@ -188,7 +185,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Django Auth Settings
-LOGIN_URL   = os.path.join(SITE_URL, 'accounts/login/')
+LOGIN_URL   = os.path.join(SITE_URL, 'login/')
 LOGIN_REDIRECT_URL = SITE_URL
 AUTH_PROFILE_MODULE = 'profiles.profile'
 

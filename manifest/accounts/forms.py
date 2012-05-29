@@ -7,6 +7,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
 from django.utils.hashcompat import sha_constructor
 from django.forms.extras.widgets import SelectDateWidget
 from django.db.transaction import commit_on_success
@@ -17,42 +19,36 @@ from manifest.accounts.utils import get_profile_model
 
 attrs_dict = {'class': 'required'}
 
-class RegistrationForm(forms.Form):
+class RegistrationForm(UserCreationForm):
     """
     Form for creating a new user account.
 
     Validates that the requested username and email is not already in use.
-    Also requires the password to be entered twice and the Terms of Service to
-    be accepted.
+    Also requires the password to be entered twice.
 
     """
-    username = forms.RegexField(regex=r'^\w+$',
-                                max_length=30,
-                                widget=forms.TextInput(attrs=attrs_dict),
-                                label=_(u"Username"),
+    username = forms.RegexField(label=_(u"Username"), regex=r'^\w+$', max_length=30,
+                                widget=forms.TextInput(attrs=attrs_dict),                                
                                 error_messages={'invalid': _(u'Username must contain only letters, numbers and underscores.')})
-    email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
-                                                               maxlength=75)),
-                             label=_(u"Email address"))
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
-                                                           render_value=False),
-                                label=_(u"Password"))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
-                                                           render_value=False),
-                                label=_(u"Repeat password"))
+
+    email = forms.EmailField(label=_(u"Email address"), widget=forms.TextInput(attrs=dict(attrs_dict, maxlength=75)))
+
+    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput(attrs=attrs_dict))
+    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput(attrs=attrs_dict))
+            
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
 
     def clean_username(self):
         """
-        Validate that the username is alphanumeric and is not already in use.
-        Also validates that the username is not listed in ``ACCOUNTS_FORBIDDEN_USERNAMES`` list.
-
+        Validate that the username is unique and not listed 
+        in ``settings.ACCOUNTS_FORBIDDEN_USERNAMES`` list.
+        
         """
-        try:
-            user = User.objects.get(username__iexact=self.cleaned_data['username'])
-        except User.DoesNotExist:
-            pass
-        else:
-            raise forms.ValidationError(_(u'This username is already taken.'))
+        try: user = User.objects.get(username=self.cleaned_data["username"])
+        except User.DoesNotExist: pass
+        else: raise forms.ValidationError(self.error_messages['duplicate_username'])
         if self.cleaned_data['username'].lower() in settings.ACCOUNTS_FORBIDDEN_USERNAMES:
             raise forms.ValidationError(_(u'This username is not allowed.'))
         return self.cleaned_data['username']
@@ -63,30 +59,15 @@ class RegistrationForm(forms.Form):
             raise forms.ValidationError(_(u'This email address is already in use. Please supply a different email.'))
         return self.cleaned_data['email']
 
-    def clean(self):
-        """
-        Validates that the values entered into the two password fields match.
-        Note that an error here will end up in ``non_field_errors()`` because
-        it doesn't apply to a single field.
-
-        """
-        if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
-            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-                raise forms.ValidationError(_(u"The two password fields didn't match."))
-        return self.cleaned_data
-
     def save(self):
         """ Creates a new user and account. Returns the newly created user. """
         username, email, password = (self.cleaned_data['username'],
                                      self.cleaned_data['email'],
                                      self.cleaned_data['password1'])
 
-        new_user = Account.objects.create_user(username,
-                                                     email, 
-                                                     password,
-                                                     not settings.ACCOUNTS_ACTIVATION_REQUIRED,
-                                                     settings.ACCOUNTS_ACTIVATION_REQUIRED)
-        return new_user
+        user = Account.objects.create_user(username, email, password,
+                        not settings.ACCOUNTS_ACTIVATION_REQUIRED, settings.ACCOUNTS_ACTIVATION_REQUIRED)
+        return user
 
 class RegistrationFormOnlyEmail(RegistrationForm):
     """
@@ -174,7 +155,7 @@ class AuthenticationForm(forms.Form):
 class EmailForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=75)),
-                             label=_(u"New email"))
+                             label=_(u"New email"), required=True)
 
     def __init__(self, user, *args, **kwargs):
         """
@@ -212,49 +193,6 @@ class NameForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
-
-class NewPasswordForm(forms.Form):
-    """
-    A form that lets a user change set his/her password without
-    entering the old password
-    """
-    new_password1 = forms.CharField(label=_(u"New password"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
-    new_password2 = forms.CharField(label=_(u"New password confirmation"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
-
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        super(SetPasswordForm, self).__init__(*args, **kwargs)
-
-    def clean_new_password2(self):
-        password1 = self.cleaned_data.get('new_password1')
-        password2 = self.cleaned_data.get('new_password2')
-        if password1 and password2:
-            if password1 != password2:
-                raise forms.ValidationError(_(u"The two password fields didn't match."))
-        return password2
-
-    def save(self, commit=True):
-        self.user.set_password(self.cleaned_data['new_password1'])
-        if commit:
-            self.user.save()
-        return self.user
-                
-class PasswordForm(NewPasswordForm):
-    """
-    A form that lets a user change his/her password by entering
-    their old password.
-    """
-    old_password = forms.CharField(label=_(u"Old password"), widget=forms.PasswordInput(attrs=dict({'class':'password text'})))
-
-    def clean_old_password(self):
-        """
-        Validates that the old_password field is correct.
-        """
-        old_password = self.cleaned_data["old_password"]
-        if not self.user.check_password(old_password):
-            raise forms.ValidationError(_(u"Your old password was entered incorrectly. Please enter it again."))
-        return old_password
-PasswordForm.base_fields.keyOrder = ['old_password', 'new_password1', 'new_password2']
 
 class ProfileForm(forms.ModelForm):
     """ Base form used for fields that are always required """

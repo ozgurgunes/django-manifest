@@ -6,9 +6,9 @@ from relationships import views as relationship_views
 
 urlpatterns = patterns('',
 
-    url(r'^edit/picture/$', profile_edit, dict(form=ProfilePictureForm), 
-                                        name='profiles_picture_edit'),
-    url(r'^edit/$', profile_edit, dict(form=ProfileForm), 
-                                        name='profiles_picture_edit'),
+    url(r'^settings/update/picture/$', profile_edit, dict(form=ProfilePictureForm), 
+                                        name='profiles_picture_update'),
+    url(r'^settings/update/profile/$', profile_edit, dict(form=ProfileForm), 
+                                        name='profiles_profile_update'),
                                             
 )
