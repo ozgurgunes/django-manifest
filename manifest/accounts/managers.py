@@ -241,7 +241,7 @@ class ProfileBaseManager(models.Manager):
             All profiles that are visible to this user.
 
         """
-        profiles = self.all()
+        profiles = self.select_related().all()
 
         filter_kwargs = {'user__is_active': True}
 

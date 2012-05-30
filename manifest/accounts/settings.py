@@ -31,8 +31,8 @@ ACCOUNTS_REMEMBER_ME_DAYS = getattr(settings,
 
 ACCOUNTS_FORBIDDEN_USERNAMES = getattr(settings,
                                       'ACCOUNTS_FORBIDDEN_USERNAMES',
-                                      ('register', 'activate', 'logout', 'login', 'me', 
-                                       'user', 'password', 'account', 'profile'))
+                                      ('register', 'activate', 'logout', 'login', 'me', 'user', 
+                                       'password', 'account', 'profile', 'about', 'contact'))
 
 ACCOUNTS_USE_HTTPS = getattr(settings,
                             'ACCOUNTS_USE_HTTPS',

@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseForbidden, Http404
 from django.db.transaction import commit_on_success
-from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, TemplateView
+from django.views.generic import View, ListView, DetailView, FormView, CreateView, UpdateView, TemplateView
 
 from manifest.accounts.forms import (RegistrationForm, RegistrationFormOnlyEmail, AuthenticationForm,
                            EmailForm, ProfileForm)
@@ -459,39 +459,35 @@ def profile_edit(request, profile_form=ProfileForm,
     extra_context['profile'] = profile
     return render_to_response(template_name, extra_context, context_instance=RequestContext(request))
 
-class ProfileList(ListView):
 
-    queryset = get_profile_model().objects.select_related().all()
-    template_name = "accounts/profile_list.html"
+class ExtraContextMixin(View):
     
-    def dispatch(self, request, *args, **kwargs):
-        if accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST \
-           and not request.user.is_superuser:
-            raise Http404
-        return super(ProfileList, self).dispatch(request, *args, **kwargs)
-        
-class ProfileDetail(DetailView):
-
-    queryset = get_profile_model().objects.select_related().all()
-    template_name = "accounts/profile_detail.html"
-    slug_field = 'user__username'
-    slug_url_kwarg = 'username'
-    
-class UserTemplate(ProfileDetail):
-
     extra_context = {}
 
     def get_context_data(self, **kwargs):
-        context = super(UserTemplate, self).get_context_data(**kwargs)
-        try: context.update({'account': Account.objects.get(user=self.request.user)})
-        except: pass        
+        context = super(ExtraContextMixin, self).get_context_data(**kwargs)
+        context.update(self.extra_context)
         return context
+    
+    
+class SecureRequiredMixin(View):
+    
+    @method_decorator(secure_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(SecureRequiredMixin, self).dispatch(request, *args, **kwargs)
 
-class Register(CreateView):
+
+class LoginRequiredMixin(View):
+    
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
 
     model = User
     template_name = 'accounts/register.html'
-    success_url = None
     success_message = _(u'You have been registered.')
     
     def get_form_class(self):
@@ -500,7 +496,6 @@ class Register(CreateView):
             return RegistrationFormOnlyEmail
         else: return RegistrationForm
     
-    @method_decorator(secure_required)
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated(): return redirect(reverse('accounts_settings'))
         return super(Register, self).dispatch(request, *args, **kwargs)
@@ -513,7 +508,7 @@ class Register(CreateView):
         if self.success_url: return redirect(self.success_url)
         else: return redirect(reverse('accounts_register_complete', kwargs={'username': user.username}))
 
-class Login(FormView):
+class Login(FormView, ExtraContextMixin, SecureRequiredMixin):
 
     form_class = AuthenticationForm
     template_name = 'accounts/login.html'
@@ -535,7 +530,7 @@ class Login(FormView):
             else: return redirect(login_redirect(self.request.REQUEST.get(REDIRECT_FIELD_NAME), user))
         else: return redirect(reverse('accounts_disabled', kwargs={'username': user.username}))
 
-class Activate(TemplateView):
+class Activate(TemplateView, ExtraContextMixin):
     
     template_name = 'accounts/activate_fail.html'
     success_url = None
@@ -544,10 +539,6 @@ class Activate(TemplateView):
         if self.success_url: return self.success_url % kwargs
         else: return reverse('accounts_profile_detail', kwargs={'username': self.kwargs['username']})
         
-    @method_decorator(secure_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(Activate, self).dispatch(request, *args, **kwargs)
-
     def get(self, request, username, activation_key, *args, **kwargs):
         user = Account.objects.activate_user(username, activation_key)
         if user:
@@ -556,7 +547,7 @@ class Activate(TemplateView):
             return redirect(self.get_success_url(**kwargs))
         return super(Activate, self).get(request, *args, **kwargs)            
 
-class ProfileUpdate(UpdateView):
+class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
     
     model = get_profile_model()
     profile_form = ProfileForm
@@ -566,11 +557,6 @@ class ProfileUpdate(UpdateView):
     def get_object(self):
         return self.request.user.get_profile()
 
-    @method_decorator(secure_required)
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ProfileUpdate, self).dispatch(request, *args, **kwargs)
-        
     def get_initial(self):
         return {'first_name': self.request.user.first_name, 'last_name': self.request.user.last_name}
 
@@ -581,38 +567,36 @@ class ProfileUpdate(UpdateView):
         if self.success_url: return redirect(self.success_url)
         else: return redirect(reverse('accounts_settings'))
 
-class EmailChange(FormView):
 
-    form_class = EmailForm
-    template_name = 'accounts/email_change_form.html'
+class PasswordChange(FormView, SecureRequiredMixin, LoginRequiredMixin):
+    
+    form_class = PasswordChangeForm
+    template_name = 'accounts/password_change_form.html'
     
     def get_form_kwargs(self, **kwargs):
         kwargs = super(EmailChange, self).get_form_kwargs(**kwargs)
         kwargs['user'] = self.request.user
         return kwargs
-            
-    @method_decorator(secure_required)
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(EmailChange, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        user = form.save()
-        if self.success_url: return redirect(self.success_url)
-        else: return redirect(reverse('accounts_email_change_done', kwargs={'username': self.request.user.username}))
-
-class PasswordChange(EmailChange):
-    
-    form_class = PasswordChangeForm
-    template_name = 'accounts/password_change_form.html'
-    
+        
     def form_valid(self, form):
         user = form.save()
         accounts_signals.password_complete.send(sender=None, user=user)
         if self.success_url: return redirect(self.success_url)
         else: return redirect(reverse('accounts_password_change_done', kwargs={'username': user.username}))
                     
-class EmailConfirm(Activate):
+
+class EmailChange(PasswordChange):
+
+    form_class = EmailForm
+    template_name = 'accounts/email_change_form.html'
+    
+    def form_valid(self, form):
+        user = form.save()
+        if self.success_url: return redirect(self.success_url)
+        else: return redirect(reverse('accounts_email_change_done', kwargs={'username': self.request.user.username}))
+
+
+class EmailConfirm(Activate, ExtraContextMixin):
     
     template_name = 'accounts/email_change_fail.html'
     
@@ -626,3 +610,37 @@ class EmailConfirm(Activate):
             return redirect(self.get_success_url(**kwargs))
         return super(EmailConfirm, self).get(request, *args, **kwargs)            
 
+
+class UserView(DetailView, ExtraContextMixin):
+    
+    template_name='accounts/settings.html'
+    
+    def get_object(self):
+        return self.request.user
+
+
+class AccountView(DetailView, ExtraContextMixin):
+
+    queryset = Account.objects.select_related().all()
+    template_name = "accounts/settings.html"
+    slug_field = 'user__username'
+    slug_url_kwarg = 'username'
+
+
+class ProfileList(ListView, ExtraContextMixin):
+
+    queryset = get_profile_model().objects.get_visible_profiles()
+    template_name = "accounts/profile_list.html"
+    
+    def dispatch(self, request, *args, **kwargs):
+        if accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST \
+           and not request.user.is_superuser:
+            raise Http404
+        return super(ProfileList, self).dispatch(request, *args, **kwargs)
+        
+
+class ProfileDetail(AccountView, ExtraContextMixin):
+
+    queryset = get_profile_model().objects.get_visible_profiles()
+    template_name = "accounts/profile_detail.html"
+    
