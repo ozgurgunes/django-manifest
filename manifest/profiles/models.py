@@ -19,13 +19,16 @@ class Profile(ProfileBase, FacebookProfileBase):
     
     """
         
-    about               = models.TextField(_(u'About'), blank=True, null=True)
-    education           = models.CharField(_(u'Education'), max_length=128, blank=True, null=True)
-    occupation          = models.CharField(_(u'Occupation'), max_length=64, blank=True, null=True)
-    location            = models.CharField(_(u'Location'), blank=True, null=True, max_length=64)
-    website             = models.URLField(_(u'Website'), blank=True, null=True)
-    mobile              = PhoneNumberField(_(u'Mobile'), blank=True, null=True)
-    country             = CountryField(_(u'Country'), blank=True, null=True)
+    about = models.TextField(_(u'About'), blank=True, null=True)
+    education = models.CharField(_(u'Education'), max_length=128, 
+                    blank=True, null=True)
+    occupation = models.CharField(_(u'Occupation'), max_length=64, 
+                    blank=True, null=True)
+    location = models.CharField(_(u'Location'), max_length=64,
+                    blank=True, null=True)
+    website = models.URLField(_(u'Website'), blank=True, null=True)
+    mobile = PhoneNumberField(_(u'Mobile'), blank=True, null=True)
+    country = CountryField(_(u'Country'), blank=True, null=True)
         
     class Meta:
         verbose_name = _(u'Profile')
@@ -51,14 +54,3 @@ class Profile(ProfileBase, FacebookProfileBase):
         self.location = response.get('location')
         
         return super(Profile, self).copy_facebook(response)
-
-    # def save(self, force_insert=False, force_update=False, *args, **kwargs):
-    #     try:
-    #         old_obj = Profile.objects.get(pk=self.pk)
-    #         if old_obj.picture.path != self.picture.path:
-    #             path = old_obj.picture.path
-    #             default_storage.delete(path)
-    #     except:
-    #         pass
-    #     super(Profile, self).save(force_insert, force_update, *args, **kwargs)
-

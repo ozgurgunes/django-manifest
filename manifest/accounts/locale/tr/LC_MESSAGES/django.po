@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-31 17:54+0300\n"
-"PO-Revision-Date: 2012-05-10 13:37+0200\n"
-"Last-Translator: Hakan Yörük <hakan.yoruk@gmail.com>\n"
+"POT-Creation-Date: 2012-06-01 17:02+0300\n"
+"PO-Revision-Date: 2012-06-01 16:57+0200\n"
+"Last-Translator: Özgür Güneş <o.gunes@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -21,68 +21,67 @@ msgstr ""
 msgid "Username"
 msgstr "Kullanıcı adı"
 
-#: forms.py:32
+#: forms.py:33
 msgid "Username must contain only letters, numbers and underscores."
 msgstr "Kullanıcı adında sadece harfler, rakamlar ve alt çizgi bulunabilir."
 
-#: forms.py:34 forms.py:136
+#: forms.py:36 forms.py:173
 msgid "Email address"
 msgstr "E-posta adresi"
 
-#: forms.py:36 forms.py:126
+#: forms.py:40 forms.py:156
 msgid "Password"
 msgstr "Şifre"
 
-#: forms.py:37
-#, fuzzy
+#: forms.py:43
 msgid "Password confirmation"
 msgstr "Yeni şifre doğrulama"
 
-#: forms.py:53
+#: forms.py:67
 msgid "This username is not allowed."
 msgstr "Bu kullanıcı adı kullanılamaz."
 
-#: forms.py:59
+#: forms.py:73
 msgid "This email address is already in use. Please supply a different email."
 msgstr ""
 "Bu e-posta adresi kullanımdadır. Lütfen farklı bir e-posta adresi girin."
 
-#: forms.py:100
+#: forms.py:126
 msgid "I have read and agree to the Terms of Service."
 msgstr "Hizmet Şartlarını okudum ve kabul ediyorum."
 
-#: forms.py:101
+#: forms.py:128
 msgid "You must agree to the terms to register."
 msgstr "Kayıt şartlarını kabul etmek zorundasınız."
 
-#: forms.py:114
+#: forms.py:142
 #, python-format
 msgid "%(label)s"
 msgstr "%(label)s"
 
-#: forms.py:117
+#: forms.py:145
 #, python-format
 msgid "%(error)s"
 msgstr "%(error)s"
 
-#: forms.py:124
+#: forms.py:153
 msgid "Email"
 msgstr "E-posta"
 
-#: forms.py:125
+#: forms.py:154
 msgid "Either supply us with your email or username."
 msgstr "E-posta adresinizi veya kullanıcı adınızı girmelisiniz."
 
-#: forms.py:130
+#: forms.py:161
 #, python-format
 msgid "Remember me for %(days)s"
 msgstr "Beni %(days)s boyunca hatırla"
 
-#: forms.py:137
+#: forms.py:174
 msgid "Please supply your email address."
 msgstr "Lütfen e-posta adresinizi girin."
 
-#: forms.py:152
+#: forms.py:191
 msgid ""
 "Please enter a correct username or email address and password. Note that "
 "both fields are case-sensitive."
@@ -90,149 +89,131 @@ msgstr ""
 "Kullanıcı adı, e-posta adresi veya şifrenizi lütfen doğru bir şekilde "
 "giriniz. Her iki alan da büyük-küçük harf kullanımına duyarlıdır."
 
-#: forms.py:158
+#: forms.py:197
 msgid "New email"
 msgstr "Yeni e-posta adresi"
 
-#: forms.py:176
+#: forms.py:220
 msgid "You're already known under this email address."
 msgstr "Zaten bu e-posta adresi ile kayıtlı görünüyorsunuz."
 
-#: forms.py:178
+#: forms.py:225
 msgid ""
 "This email address is already in use. Please supply a different email "
 "address."
-msgstr "Bu e-posta adresi kullanımda. Lütfen farklı bir e-posta adresi girin."
+msgstr ""
+"Bu e-posta adresi kullanımdadır. Lütfen farklı bir e-posta adresi girin."
 
-#: forms.py:201 models.py:200
+#: forms.py:251 models.py:213
 msgid "Female"
 msgstr "Kadın"
 
-#: forms.py:202 models.py:201
+#: forms.py:252 models.py:214
 msgid "Male"
 msgstr "Erkek"
 
-#: forms.py:205
+#: forms.py:255
 msgid "First name"
 msgstr "Ad"
 
-#: forms.py:208
+#: forms.py:258
 msgid "Last name"
 msgstr "Soyad"
 
-#: forms.py:235
-msgid "Upload a valid image."
-msgstr "Geçerli bir görsel yükleyin."
+#: forms.py:289
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+"Geçerli bir görsel yükleyin. Yüklediğiniz görsel dosyası bozuk ya da resim "
+"formatında değil."
 
-#: forms.py:242
+#: forms.py:298
 #, python-format
 msgid "%s only."
 msgstr "Sadece %s"
 
-#: forms.py:245
+#: forms.py:302
 msgid "Image size is too big."
 msgstr "Görsel boyutu izin verilenden büyük."
 
-#: managers.py:207
-#, python-format
-msgid "No profile found for %(username)s"
-msgstr "%(username)s için bir profil bulunamadı."
-
-#: models.py:27 models.py:204
+#: models.py:29 models.py:217
 msgid "User"
 msgstr "Kullanıcı"
 
-#: models.py:29
+#: models.py:31
 msgid "Activation key"
 msgstr "Aktivasyon kodu"
 
-#: models.py:31
+#: models.py:34
 msgid "Unconfirmed email address"
 msgstr "Doğrulanmamış e-posta adresi"
 
-#: models.py:32
+#: models.py:36
+#, fuzzy
 msgid "Temporary email address when the user requests an email change."
 msgstr ""
 "Kullanıcı e-posta adresini değiştirmek istediğinde sağlanan geçici e-posta "
 "adresi."
 
-#: models.py:34
+#: models.py:39
 msgid "Unconfirmed email verification key"
 msgstr "Doğrulanmamış e-posta aktivasyon kodu"
 
-#: models.py:37
+#: models.py:43
 msgid "Creation date of email confirmation key"
 msgstr "E-posta aktivasyon kodu yaratılış tarihi"
 
-#: models.py:43
+#: models.py:50
 msgid "Account"
 msgstr "Hesap"
 
-#: models.py:44
+#: models.py:51
 msgid "Accounts"
 msgstr "Hesaplar"
 
-#: models.py:206
+#: models.py:220
 msgid "Birth date"
 msgstr "Doğum tarihi"
 
-#: models.py:207
+#: models.py:222
 msgid "Gender"
 msgstr "Cinsiyet"
 
-#: models.py:208
+#: models.py:225
 msgid "Picture"
 msgstr "Resim"
 
-#: models.py:209
+#: models.py:228
 msgid "Timezone"
 msgstr "Zaman dilimi"
 
-#: models.py:210
+#: models.py:230
 msgid "Locale"
 msgstr "Yer"
 
-#: models.py:229
+#: models.py:249
 #, python-format
 msgid "Profile of %(username)s"
 msgstr "%(username)s için profil bilgileri"
 
-#: models.py:309
+#: models.py:332
 #, python-format
 msgid "%(first_name)s %(last_name)s"
 msgstr "%(first_name)s %(last_name)s"
 
-#: settings.py:30
+#: settings.py:32
 msgid "a month"
 msgstr "bir ay"
 
-#: views.py:85
-#, fuzzy
+#: views.py:83
 msgid "You have been registered."
-msgstr "Giriş yaptınız."
+msgstr "Üye oldunuz."
 
-#: views.py:127
+#: views.py:128
 msgid "You have been logged in."
 msgstr "Giriş yaptınız."
 
-#: views.py:191
+#: views.py:204
 msgid "Your profile has been updated."
 msgstr "Profiliniz güncellendi."
-
-#~ msgid "Repeat password"
-#~ msgstr "Şifreyi tekrar gir"
-
-#~ msgid "This username is already taken."
-#~ msgstr "Kullanıcı adı başkası tarafından kullanılıyor."
-
-#~ msgid "The two password fields didn't match."
-#~ msgstr "İki şifre birbiriyle uyuşmuyor."
-
-#~ msgid "New password"
-#~ msgstr "Yeni şifre"
-
-#~ msgid "Old password"
-#~ msgstr "Eski şifre"
-
-#~ msgid "Your old password was entered incorrectly. Please enter it again."
-#~ msgstr "Eski şifrenizi yanlış girdiniz. Lütfen tekrar deneyin."

@@ -35,9 +35,14 @@ def owner_required(Model=None):
                     if user.__class__ == model:
                         grant = pk == user.id
                     else:
-                        names = [rel.get_accessor_name() for rel in user._meta.get_all_related_objects() if rel.model == model]
+                        names = [rel.get_accessor_name() 
+                                    for rel 
+                                    in user._meta.get_all_related_objects() 
+                                    if rel.model == model]
                         if names:
-                            grant = pk in [o.id for o in getattr(user, names[0]).all()]
+                            grant = pk in [o.id 
+                                            for o 
+                                            in getattr(user, names[0]).all()]
                 if not grant:
                     return HttpResponseForbidden('Forbidden')
                 if mod_edit:

@@ -12,7 +12,8 @@ class AuthenticationBackend(ModelBackend):
     ``username`` to the login form.
 
     """
-    def authenticate(self, identification, password=None, check_password=True):
+    def authenticate(self, identification, password=None, 
+                        check_password=True):
         """
         Authenticates a user through the combination email/username with
         password.

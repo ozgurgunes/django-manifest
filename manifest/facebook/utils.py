@@ -15,7 +15,8 @@ def facebook_required(function):
     facebook_required decorator for views.
     """
     def wrap(request, *args, **kwargs):
-        if not request.user.social_auth.get(provider='facebook').extra_data['access_token']:
+        if not request.user.social_auth.get(
+                    provider='facebook').extra_data['access_token']:
             return HttpResponseRedirect(settings.LOGIN_URL)
         return function(request, *args, **kwargs)
     return wrap
@@ -27,7 +28,8 @@ def base64_url_decode(inp):
     """
     padding_factor = (4 - len(inp) % 4) % 4
     inp += "="*padding_factor
-    return base64.b64decode(unicode(inp).translate(dict(zip(map(ord, u'-_'), u'+/'))))
+    return base64.b64decode(unicode(inp).translate(
+                        dict(zip(map(ord, u'-_'), u'+/'))))
 
 def parse_signed_request(signed_request, secret):
     """

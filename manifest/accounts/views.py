@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import redirect
 from django.contrib.auth import (authenticate, login as auth_login, logout, 
                                     REDIRECT_FIELD_NAME)
 from django.contrib.auth.forms import PasswordChangeForm
@@ -11,8 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.http import HttpResponseForbidden, Http404
-from django.db.transaction import commit_on_success
+from django.http import Http404
 from django.views.generic import (View, ListView, DetailView, FormView, 
                                     CreateView, UpdateView, TemplateView)
 
@@ -67,7 +65,7 @@ class LoginRequiredMixin(View):
 
 class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
     """
-    Registers user with a username, email and password. 
+    Register user with a username, email and password. 
     
     Users receives an email with an activation link to activate their 
     account if ``ACCOUNTS_ACTIVATION_REQUIRED`` setting is ``True``. 
@@ -108,18 +106,21 @@ class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
 
 class Login(FormView, ExtraContextMixin, SecureRequiredMixin):
     """
-    Authenticates user by combining email/username with password. 
+    Authenticate user by email or username with password. 
     
-    When the combination is correct and the user :func:`is_active` 
-    user will be redirected to ``success_url`` if it is given. 
+    When the identification is correct and the user ``is_active`` 
+    user will be redirected to ``success_url`` if it is defined. 
     
-    If no ``success_url`` is given the :func:`login_redirect` is called 
-    with the arguments ``REDIRECT_FIELD_NAME``  and an instance of the 
-    :class:`User` whois is trying the login. The returned value of the 
-    function will be the URL that is redirected to.
+    If ``success_url`` is not defined, the ``login_redirect`` function  
+    will be called with the arguments ``REDIRECT_FIELD_NAME`` and an 
+    instance of the ``User`` whois is trying the login. The returned 
+    value of the function will be the URL that will be redirected to.
 
     Users can also select to be remembered for ``ACCOUNTS_REMEMBER_DAYS``.
     
+    Extends:
+        FormView, ExtraContextMixin, SecureRequiredMixin
+
     """
     
     form_class = AuthenticationForm
@@ -151,22 +152,24 @@ class Login(FormView, ExtraContextMixin, SecureRequiredMixin):
 
 class Activate(TemplateView, ExtraContextMixin):
     """
-    Activates the user with an activation key.
+    Activate the user with the activation key.
 
-    The key is a SHA1 string. When the SHA1 is found with an
-    :class:`Account`, the :class:`User` of that account will be
-    activated.  
+    The key is a SHA1 string. When the SHA1 is found with username
+    the ``User`` of that account will be activated.  
     
-    After a successfull activation the view will redirect to
-    ``succes_url`` if it is given, else redirect to 
-    ``accounts_profile_detail`` view.
+    After a successfull activation user will be redirected to
+    ``accounts_profile_detail`` view if ``succes_url`` is not defined. 
     
     If the SHA1 is not found, the user will be shown the
     ``template_name`` template displaying a fail message.
         
+    Extends:
+        TemplateView, ExtraContextMixin
+
     """
     
     template_name = 'accounts/activate_fail.html'
+    success_message = _(u'Your account has been activated.')
     success_url = None
 
     def get_success_url(self, **kwargs):
@@ -179,11 +182,25 @@ class Activate(TemplateView, ExtraContextMixin):
         if user:
             # Sign the user in.
             auth_login(request, authenticate(identification=user.email, 
-                                    check_password=False))
+                                                check_password=False))
+            if accounts_settings.ACCOUNTS_USE_MESSAGES:
+                messages.success(self.request, self.success_message, 
+                                    fail_silently=True)
             return redirect(self.get_success_url(**kwargs))
         return super(Activate, self).get(request, *args, **kwargs)            
 
 class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
+    """
+    Update profile of current user
+    
+    Updates profile information for ``request.user``. User will be
+    redirected to ``accounts_settings`` view in ``success_url`` is not
+    defined.
+    
+    Extends:
+        UpdateView, ExtraContextMixin, SecureRequiredMixin
+
+    """
     
     model = get_profile_model()
     profile_form = ProfileForm
@@ -207,6 +224,16 @@ class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
 
 
 class PasswordChange(FormView, SecureRequiredMixin, LoginRequiredMixin):
+    """
+    Change password of current user
+    
+    Changes password for ``request.user``. User will be redirected to
+    ``accounts_password_change_done`` view if ``success_url`` is not defined.
+
+    Extends:
+        FormView, SecureRequiredMixin, LoginRequiredMixin
+
+    """
     
     form_class = PasswordChangeForm
     template_name = 'accounts/password_change_form.html'
@@ -225,6 +252,19 @@ class PasswordChange(FormView, SecureRequiredMixin, LoginRequiredMixin):
                     
 
 class EmailChange(PasswordChange):
+    """
+    Change email of current user
+    
+    Changes email for ``request.user``. Change will not be applied 
+    until user confirm their new email.
+    
+    User will be redirected to ``accounts_email_change_done`` view 
+    if ``success_url`` is not defined.
+    
+    Extends:
+        PasswordChange
+        
+    """
 
     form_class = EmailForm
     template_name = 'accounts/email_change_form.html'
@@ -238,6 +278,22 @@ class EmailChange(PasswordChange):
 
 
 class EmailConfirm(Activate, ExtraContextMixin):
+    """
+    Confirm the email address with username and confirmation key.
+
+    Confirms the new email address by running ``User.objects.confirm_email``
+    method.
+    
+    User will be redirected to ``accounts_email_change_complete`` view 
+    if ``success_url`` is not defined. 
+    
+    If no ``User`` object returned the user will be shown the
+    ``template_name`` template displaying a fail message.
+    
+    Extends:
+        Activate, ExtraContextMixin
+        
+    """
     
     template_name = 'accounts/email_change_fail.html'
     
@@ -250,10 +306,21 @@ class EmailConfirm(Activate, ExtraContextMixin):
         user = Account.objects.confirm_email(username, confirmation_key)
         if user:
             return redirect(self.get_success_url(**kwargs))
-        return super(EmailConfirm, self).get(request, *args, **kwargs)            
+        return super(EmailConfirm, self).get(request, username, 
+                                                        confirmation_key, 
+                                                        *args, **kwargs)
 
 
-class UserView(DetailView, ExtraContextMixin):
+class UserView(DetailView, LoginRequiredMixin, ExtraContextMixin):
+    """
+    Template view for current user
+    
+    Simple detail view gets ``request.user`` object.
+    
+    Extends:
+        DetailView, LoginRequiredMixin, ExtraContextMixin
+    
+    """
     
     template_name='accounts/settings.html'
     
@@ -263,6 +330,16 @@ class UserView(DetailView, ExtraContextMixin):
 
 class AccountView(DetailView, ExtraContextMixin):
 
+    """
+    Template view for current user account
+    
+    Simple detail view gets account by ``username`` as object.
+
+    Extends:
+        DetailView, ExtraContextMixin
+    
+    """
+
     queryset = Account.objects.select_related().all()
     template_name = "accounts/settings.html"
     slug_field = 'user__username'
@@ -270,6 +347,15 @@ class AccountView(DetailView, ExtraContextMixin):
 
 
 class ProfileList(ListView, ExtraContextMixin):
+    """
+    List active user profiles
+    
+    Lists active user profiles if ``ACCOUNTS_DISABLE_PROFILE_LIST``
+    setting is True. Otherwise raises Http404.
+    
+    Extends:
+        ListView, ExtraContextMixin
+    """
 
     queryset = get_profile_model().objects.get_visible_profiles()
     template_name = "accounts/profile_list.html"
@@ -282,6 +368,15 @@ class ProfileList(ListView, ExtraContextMixin):
         
 
 class ProfileDetail(AccountView, ExtraContextMixin):
+    """
+    Shows active user profile
+    
+    Simple detail view that displays an active user profile by username.
+    
+    Extends:
+        AccountView, ExtraContextMixin
+        
+    """
 
     queryset = get_profile_model().objects.get_visible_profiles()
     template_name = "accounts/profile_detail.html"

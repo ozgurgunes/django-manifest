@@ -58,10 +58,10 @@ def login_redirect(redirect=None, user=None):
     """
     Redirect user after successful sign in.
 
-    First looks for a ``requested_redirect``. If not supplied will fall-back to
-    the user specific account page. If all fails, will fall-back to the standard
-    Django ``LOGIN_REDIRECT_URL`` setting. Returns a string defining the URI to
-    go next.
+    First looks for a ``requested_redirect``. If not supplied will fall-back 
+    to the user specific account page. If all fails, will fall-back to the 
+    standard Django ``LOGIN_REDIRECT_URL`` setting. Returns a string defining 
+    the URI to go next.
 
     :param redirect:
         A value normally supplied by ``next`` form field. Gets preference
@@ -88,8 +88,8 @@ def generate_sha1(string, salt=None):
         The string that needs to be encrypted.
 
     :param salt:
-        Optionally define your own salt. If none is supplied, will use a random
-        string of 5 characters.
+        Optionally define your own salt. If none is supplied, will use a 
+        random string of 5 characters.
 
     :return: Tuple containing the salt and hash.
 

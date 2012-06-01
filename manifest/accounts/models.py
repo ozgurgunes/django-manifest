@@ -13,28 +13,35 @@ from django.template.loader import render_to_string
 from timezones.fields import TimeZoneField
 
 from manifest.accounts.managers import AccountsManager, ProfileBaseManager
-from manifest.accounts.utils import get_gravatar, generate_sha1, get_protocol, get_datetime_now
+from manifest.accounts.utils import (get_gravatar, generate_sha1,   
+                                        get_protocol, get_datetime_now)
 from manifest.accounts import settings as accounts_settings
 
 
 class Account(models.Model):
     """
-    Accounts model which stores all the necessary information to have a full
-    functional user implementation on your Django website.
+    Accounts model which stores all the necessary information to have 
+    a full functional user implementation on your Django website.
 
     """
 
-    user = models.OneToOneField(User, verbose_name=_(u'User'), related_name='account')
+    user = models.OneToOneField(User, 
+                verbose_name=_(u'User'), related_name='account')
 
-    activation_key = models.CharField(_(u'Activation key'), max_length=40, blank=True)
+    activation_key = models.CharField(_(u'Activation key'), 
+                        max_length=40, blank=True)
 
-    email_unconfirmed = models.EmailField(_(u'Unconfirmed email address'), blank=True,
-                            help_text=_(u'Temporary email address when the user requests an email change.'))
+    email_unconfirmed = models.EmailField(_(u'Unconfirmed email address'), 
+                            blank=True,
+                            help_text=_(u'Temporary email address when the '
+                                'user requests an email change.'))
 
-    email_confirmation_key = models.CharField(_(u'Unconfirmed email verification key'), 
-                                        max_length=40, blank=True)
+    email_confirmation_key = models.CharField(_(u'Unconfirmed email '
+                                                    'verification key'), 
+                                max_length=40, blank=True)
 
-    email_confirmation_key_created = models.DateTimeField(_(u'Creation date of email confirmation key'),
+    email_confirmation_key_created = models.DateTimeField(_(u'Creation date '
+                                                'of email confirmation key'),
                                         blank=True, null=True)
 
     objects = AccountsManager()
@@ -51,10 +58,10 @@ class Account(models.Model):
         Changes the email address for a user.
 
         A user needs to verify this new email address before it becomes
-        active. By storing the new email address in a temporary field --
-        ``temporary_email`` -- we are able to set this email address after the
-        user has verified it by clicking on the verification URI in the email.
-        This email gets send out by ``send_verification_email``.
+        active. By storing the new email address in a temporary field 
+        -- ``temporary_email`` -- we are able to set this email address 
+        after the user has verified it by clicking on the verification URI 
+        in the email. This email gets send out by ``send_verification_email``.
 
         :param email:
             The new email address that the user wants to use.
@@ -69,6 +76,8 @@ class Account(models.Model):
 
         # Send email for activation
         self.send_confirmation_email()
+        
+        return self.user
 
     def send_confirmation_email(self):
         """
@@ -90,12 +99,13 @@ class Account(models.Model):
 
 
         # Email to the old address
-        subject_old = render_to_string('accounts/emails/confirmation_email_subject_old.txt',
-                                       context)
-        subject_old = ''.join(subject_old.splitlines())
-
-        message_old = render_to_string('accounts/emails/confirmation_email_message_old.txt',
-                                       context)
+        subject_old = ''.join(render_to_string(
+                        'accounts/emails/confirmation_email_subject_old.txt',
+                        context).splitlines())
+        
+        message_old = render_to_string(
+                        'accounts/emails/confirmation_email_message_old.txt',
+                        context)
 
         send_mail(subject_old,
                   message_old,
@@ -103,12 +113,13 @@ class Account(models.Model):
                   [self.user.email])
 
         # Email to the new address
-        subject_new = render_to_string('accounts/emails/confirmation_email_subject_new.txt',
-                                       context)
-        subject_new = ''.join(subject_new.splitlines())
+        subject_new = ''.join(render_to_string(
+                        'accounts/emails/confirmation_email_subject_new.txt',
+                        context).splitlines())
 
-        message_new = render_to_string('accounts/emails/confirmation_email_message_new.txt',
-                                       context)
+        message_new = render_to_string(
+                        'accounts/emails/confirmation_email_message_new.txt',
+                        context)
 
         send_mail(subject_new,
                   message_new,
@@ -119,15 +130,16 @@ class Account(models.Model):
         """
         Checks if activation key is expired.
 
-        Returns ``True`` when the ``activation_key`` of the user is expired and
-        ``False`` if the key is still valid.
+        Returns ``True`` when the ``activation_key`` of the user is expired 
+        and ``False`` if the key is still valid.
 
         The key is expired when it's set to the value defined in
         ``ACCOUNTS_ACTIVATED`` or ``activation_key_created`` is beyond the
         amount of days defined in ``ACCOUNTS_ACTIVATION_DAYS``.
 
         """
-        expiration_days = datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS)
+        expiration_days = datetime.timedelta(
+                            days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS)
         expiration_date = self.user.date_joined + expiration_days
         if self.activation_key == accounts_settings.ACCOUNTS_ACTIVATED:
             return True
@@ -139,8 +151,8 @@ class Account(models.Model):
         """
         Sends a activation email to the user.
 
-        This email is send when the user wants to activate their newly created
-        user.
+        This email is send when the user wants to activate their 
+        newly created user.
 
         """
         context= {'user': self.user,
@@ -149,12 +161,13 @@ class Account(models.Model):
                   'activation_key': self.activation_key,
                   'site': Site.objects.get_current()}
 
-        subject = render_to_string('accounts/emails/activation_email_subject.txt',
-                                   context)
-        subject = ''.join(subject.splitlines())
+        subject = ''.join(render_to_string(
+                    'accounts/emails/activation_email_subject.txt',
+                    context).splitlines())
 
-        message = render_to_string('accounts/emails/activation_email_message.txt',
-                                   context)
+        message = render_to_string(
+                    'accounts/emails/activation_email_message.txt',
+                    context)
         send_mail(subject,
                   message,
                   settings.DEFAULT_FROM_EMAIL,
@@ -166,7 +179,8 @@ if 'social_auth' in settings.INSTALLED_APPS:
 
     def create_user_account(sender, user, *args, **kwargs):
         account = Account.objects.create_account(user=user)
-        user = Account.objects.activate_user(user.username, account.activation_key)
+        user = Account.objects.activate_user(user.username, 
+                                                account.activation_key)
         
     socialauth_registered.connect(create_user_account, sender=None)
 
@@ -176,37 +190,45 @@ User profile base class
 """
 def upload_to_picture(instance, filename):
     """
-    Uploads a picture for a user to the ``ACCOUNTS_GRAVATAR_PATH`` and saving it
-    under unique hash for the image. This is for privacy reasons so others
-    can't just browse through the picture directory.
+    Uploads a picture for a user to the ``ACCOUNTS_GRAVATAR_PATH`` and 
+    saving it under unique hash for the image. This is for privacy 
+    reasons so others can't just browse through the picture directory.
 
     """
     extension = filename.split('.')[-1].lower()
     salt, hash = generate_sha1(instance.id)
-    return '%(path)s/%(hash)s.%(extension)s' % {'path': getattr(accounts_settings, 
-                                                        'ACCOUNTS_GRAVATAR_PATH','%s/%s' % (
-                                                            str(instance._meta.app_label), 
-                                                            str(instance._meta.module_name)
-                                                            )
-                                                        ),
-                                               'hash': hash[:10],
-                                               'extension': extension
-                                               }
+    return '%(path)s/%(hash)s.%(extension)s' % {
+                'path': getattr(accounts_settings, 
+                            'ACCOUNTS_GRAVATAR_PATH','%s/%s' % (
+                                str(instance._meta.app_label), 
+                                str(instance._meta.module_name))),
+                'hash': hash[:10],
+                'extension': extension}
 
 class ProfileBase(models.Model):
-    """ Base model needed for extra profile functionality """
+    """ 
+    Base model needed for extra profile functionality 
+    
+    """
 
     GENDER_CHOICES = (
         ('F', _(u'Female')),
         ('M', _(u'Male')),
     )
     
-    user = models.OneToOneField(User, unique=True, verbose_name=_(u'User'), related_name='profile')
+    user = models.OneToOneField(User, unique=True, verbose_name=_(u'User'), 
+                related_name='profile')
 
     birth_date = models.DateField(_(u'Birth date'), blank=True, null=True)
-    gender = models.CharField(_(u'Gender'), choices=GENDER_CHOICES, max_length=1, blank=True, null=True)
-    picture = models.ImageField(_(u'Picture'), blank=True, upload_to=upload_to_picture)
+
+    gender = models.CharField(_(u'Gender'), choices=GENDER_CHOICES, 
+                max_length=1, blank=True, null=True)
+
+    picture = models.ImageField(_(u'Picture'), blank=True, 
+                upload_to=upload_to_picture)
+
     timezone = TimeZoneField(_(u"Timezone"))
+
     locale = models.CharField(_(u"Locale"), max_length = 10,
                                     choices = settings.LANGUAGES,
                                     default = settings.LANGUAGE_CODE)
@@ -218,9 +240,9 @@ class ProfileBase(models.Model):
         """
         Meta options making the model abstract.
 
-        The model is ``abstract`` because it only supplies basic functionality
-        to a more custom defined model that extends it. This way there is not
-        another join needed.
+        The model is ``abstract`` because it only supplies basic 
+        functionality to a more custom defined model that extends it. 
+        This way there is not another join needed.
 
         """
         abstract = True
@@ -230,7 +252,8 @@ class ProfileBase(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('accounts_profile_detail', None, { 'username': self.user.username })
+        return ('accounts_profile_detail', None, { 
+                    'username': self.user.username })
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         try:
@@ -240,7 +263,8 @@ class ProfileBase(models.Model):
                 default_storage.delete(path)
         except:
             pass
-        super(ProfileBase, self).save(force_insert, force_update, *args, **kwargs)
+        super(ProfileBase, self).save(force_insert, force_update, 
+                                        *args, **kwargs)
 
     @property
     def avatar(self):
@@ -250,7 +274,8 @@ class ProfileBase(models.Model):
     def age(self):
         TODAY = datetime.date.today()
         if self.birth_date:
-            return u"%s" % relativedelta.relativedelta(TODAY, self.birth_date).years
+            return u"%s" % relativedelta.relativedelta(TODAY, 
+                                self.birth_date).years
         else:
             return None
 
@@ -264,8 +289,8 @@ class ProfileBase(models.Model):
         ``ACCOUNTS_GRAVATAR_PICTURE`` is set to ``True``.
 
         :return:
-            ``None`` when Gravatar is not used and no default image is supplied
-            by ``ACCOUNTS_GRAVATAR_DEFAULT``.
+            ``None`` when Gravatar is not used and no default image is 
+            supplied by ``ACCOUNTS_GRAVATAR_DEFAULT``.
 
         """
         # First check for a picture and if any return that.

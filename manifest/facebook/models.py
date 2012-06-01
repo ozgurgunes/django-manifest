@@ -11,14 +11,23 @@ from manifest.accounts.models import create_user_account
 from manifest.facebook.utils import iso_time
 
 class ProfileBase(models.Model):
-    """Abstract base class for Facebook user profile"""
+    """
+    Abstract base class for Facebook user profile
+    
+    """
 
-    facebook_id         = models.BigIntegerField(_(u'Facebook id'), unique=True, blank=True, null=True)
-    facebook_token      = models.TextField(_(u'Facebook token'), blank=True, null=True)
-    facebook_expires    = models.IntegerField(_(u'Facebook expires'), blank=True, null=True)
-    facebook_username   = models.CharField(_(u'Facebook username'), max_length=255, blank=True)
-    facebook_verified   = models.BooleanField(_(u'Facebook verified'), default=False, blank=True)
-    facebook_link       = models.URLField(_(u'Facebook link'), blank=True, null=True)
+    facebook_id         = models.BigIntegerField(_(u'Facebook id'), 
+                                unique=True, blank=True, null=True)
+    facebook_token      = models.TextField(_(u'Facebook token'), 
+                                blank=True, null=True)
+    facebook_expires    = models.IntegerField(_(u'Facebook expires'), 
+                                blank=True, null=True)
+    facebook_username   = models.CharField(_(u'Facebook username'), 
+                                max_length=255, blank=True)
+    facebook_verified   = models.BooleanField(_(u'Facebook verified'), 
+                                default=False, blank=True)
+    facebook_link       = models.URLField(_(u'Facebook link'), 
+                                blank=True, null=True)
 
     class Meta:
         abstract        = True
@@ -34,7 +43,8 @@ class ProfileBase(models.Model):
             Url of profile picture
 
         """
-        return 'https://graph.facebook.com/%s/picture?type=%s' % (self.facebook_id, picture_type)
+        return 'https://graph.facebook.com/%s/picture?type=%s' % (
+                    self.facebook_id, picture_type)
 
     def copy_facebook(self, response):
         """
@@ -53,12 +63,6 @@ class ProfileBase(models.Model):
         self.facebook_verified  = response.get('verified')        
         self.facebook_link      = response.get('link')        
         
-        # self.birth_date = response.get('birthday')
-        # self.gender = response.get('gender').upper()[0]
-        # self.education = response.get('education')
-        # self.occupation = response.get('occupation')
-        # self.location = response.get('location')
-        # 
         return self.save()
 
     def copy_friends(self, friends):
@@ -67,10 +71,10 @@ class ProfileBase(models.Model):
 
         """
         old_friends = FacebookFriend.objects.filter(user=self.user).delete()
-        return FacebookFriend.objects.bulk_create(
-                        [FacebookFriend(user=self.user, 
-                            facebook_id=friend['id'], name=friend['name']) for friend in friends]
-                        )
+        return FacebookFriend.objects.bulk_create([
+                        FacebookFriend(user=self.user, 
+                            facebook_id=friend['id'], 
+                            name=friend['name']) for friend in friends])
 
     def copy_likes(self, likes):
         """
@@ -78,31 +82,42 @@ class ProfileBase(models.Model):
 
         """
         old_likes = FacebookLike.objects.filter(user=self.user).delete()
-        return FacebookLike.objects.bulk_create(
-                        [FacebookLike(user=self.user, 
-                            facebook_id=like['id'], name=like['name'], category=like['category'], 
-                            created_time=iso_time(like['created_time'])) for like in likes]
-                        )
+        return FacebookLike.objects.bulk_create([
+                        FacebookLike(user=self.user, 
+                            facebook_id=like['id'], 
+                            name=like['name'], 
+                            category=like['category'], 
+                            created_time=iso_time(
+                                like['created_time'])) for like in likes])
         
 class FacebookLike(models.Model):
-    """Abstract base class for Facebook user profile"""
+    """
+    Abstract base class for Facebook user profile
+    
+    """
 
     user = models.ForeignKey(User, verbose_name=_(u'User'))
 
-    facebook_id = models.BigIntegerField(_(u'Facebook id'))    
-    name = models.CharField(_(u'Name'), max_length=128, blank=True, null=True)
-    category = models.CharField(_(u'Category'), max_length=128, blank=True, null=True)
-    created_time =  models.DateTimeField(_(u'Created time'), blank=True, null=True)
+    facebook_id     = models.BigIntegerField(_(u'Facebook id'))    
+    name            = models.CharField(_(u'Name'), max_length=128, 
+                            blank=True, null=True)
+    category        = models.CharField(_(u'Category'), max_length=128, 
+                            blank=True, null=True)
+    created_time    =  models.DateTimeField(_(u'Created time'), 
+                            blank=True, null=True)
     
     class Meta:
         db_table = 'facebook_likes'
-        abstract        = False if settings.MANIFEST_FACEBOOK_LIKES else True
+        abstract = False if settings.MANIFEST_FACEBOOK_LIKES else True
 
     def __unicode__(self):
         return 'likes of %s' % self.user.username
 
 class FacebookFriend(models.Model):
-    """Abstract base class for Facebook user profile"""
+    """
+    Abstract base class for Facebook user profile
+    
+    """
 
     user = models.ForeignKey(User, verbose_name=_(u'User'))
 
@@ -111,7 +126,7 @@ class FacebookFriend(models.Model):
     
     class Meta:
         db_table = 'facebook_friends'
-        abstract        = False if settings.MANIFEST_FACEBOOK_FRIENDS else True
+        abstract = False if settings.MANIFEST_FACEBOOK_FRIENDS else True
         
     def __unicode__(self):
         return 'friends of %s' % self.user.username

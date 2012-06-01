@@ -5,8 +5,10 @@ from manifest.facebook.views import iframe, canvas
 
 urlpatterns = patterns('',
 
-    url(r'^connect/$', TemplateView.as_view(template_name='facebook/connect.html'), name='facebook_connect'),
     url(r'^iframe/$', iframe, name='facebook_iframe'),
     url(r'^canvas/$', canvas, name='facebook_canvas'),
+    url(r'^connect/$', 
+        TemplateView.as_view(template_name='facebook/connect.html'), 
+        name='facebook_connect'),
     
 )
