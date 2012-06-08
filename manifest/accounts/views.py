@@ -73,9 +73,6 @@ class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
     Redirects to ``success_url`` if it is given, else redirects to 
     ``accounts_register_complete`` view.
     
-    Extends:
-        CreateView, ExtraContextMixin, SecureRequiredMixin
-
     """
     
     model = User
@@ -118,9 +115,6 @@ class Login(FormView, ExtraContextMixin, SecureRequiredMixin):
 
     Users can also select to be remembered for ``ACCOUNTS_REMEMBER_DAYS``.
     
-    Extends:
-        FormView, ExtraContextMixin, SecureRequiredMixin
-
     """
     
     form_class = AuthenticationForm
@@ -163,9 +157,6 @@ class Activate(TemplateView, ExtraContextMixin):
     If the SHA1 is not found, the user will be shown the
     ``template_name`` template displaying a fail message.
         
-    Extends:
-        TemplateView, ExtraContextMixin
-
     """
     
     template_name = 'accounts/activate_fail.html'
@@ -196,9 +187,6 @@ class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
     Updates profile information for ``request.user``. User will be
     redirected to ``accounts_settings`` view in ``success_url`` is not
     defined.
-    
-    Extends:
-        UpdateView, ExtraContextMixin, SecureRequiredMixin
 
     """
     
@@ -230,9 +218,6 @@ class PasswordChange(FormView, SecureRequiredMixin, LoginRequiredMixin):
     Changes password for ``request.user``. User will be redirected to
     ``accounts_password_change_done`` view if ``success_url`` is not defined.
 
-    Extends:
-        FormView, SecureRequiredMixin, LoginRequiredMixin
-
     """
     
     form_class = PasswordChangeForm
@@ -260,10 +245,7 @@ class EmailChange(PasswordChange):
     
     User will be redirected to ``accounts_email_change_done`` view 
     if ``success_url`` is not defined.
-    
-    Extends:
-        PasswordChange
-        
+            
     """
 
     form_class = EmailForm
@@ -290,9 +272,6 @@ class EmailConfirm(Activate, ExtraContextMixin):
     If no ``User`` object returned the user will be shown the
     ``template_name`` template displaying a fail message.
     
-    Extends:
-        Activate, ExtraContextMixin
-        
     """
     
     template_name = 'accounts/email_change_fail.html'
@@ -317,9 +296,6 @@ class UserView(DetailView, LoginRequiredMixin, ExtraContextMixin):
     
     Simple detail view gets ``request.user`` object.
     
-    Extends:
-        DetailView, LoginRequiredMixin, ExtraContextMixin
-    
     """
     
     template_name='accounts/settings.html'
@@ -335,9 +311,6 @@ class AccountView(DetailView, ExtraContextMixin):
     
     Simple detail view gets account by ``username`` as object.
 
-    Extends:
-        DetailView, ExtraContextMixin
-    
     """
 
     queryset = Account.objects.select_related().all()
@@ -353,8 +326,6 @@ class ProfileList(ListView, ExtraContextMixin):
     Lists active user profiles if ``ACCOUNTS_DISABLE_PROFILE_LIST``
     setting is True. Otherwise raises Http404.
     
-    Extends:
-        ListView, ExtraContextMixin
     """
 
     queryset = get_profile_model().objects.get_visible_profiles()
@@ -372,9 +343,6 @@ class ProfileDetail(AccountView, ExtraContextMixin):
     Shows active user profile
     
     Simple detail view that displays an active user profile by username.
-    
-    Extends:
-        AccountView, ExtraContextMixin
         
     """
 
