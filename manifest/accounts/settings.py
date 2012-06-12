@@ -11,9 +11,9 @@ ACCOUNTS_REDIRECT_ON_LOGOUT = getattr(settings,
                                 'ACCOUNTS_REDIRECT_ON_LOGOUT',
                                 None)
 
-ACCOUNTS_LOGIN_REDIRECT_URL = getattr(settings, 
-                                'LOGIN_REDIRECT_URL', 
-                                '/profiles/%(username)s/')
+ACCOUNTS_LOGIN_REDIRECT_URL = '/profiles/%(username)s/' # getattr(settings, 
+                              #   'LOGIN_REDIRECT_URL', 
+                              #   '/profiles/%(username)s/')
 
 ACCOUNTS_ACTIVATION_REQUIRED = getattr(settings,
                                 'ACCOUNTS_ACTIVATION_REQUIRED',
@@ -47,7 +47,7 @@ ACCOUNTS_PICTURE_MAX_SIZE = getattr(settings,
                                '1024 x 1024')
 
 ACCOUNTS_PICTURE_PATH = getattr(settings,
-                           'ACCOUNTS_GRAVATAR_PATH',
+                           'ACCOUNTS_PICTURE_PATH',
                            'accounts')
 
 ACCOUNTS_PICTURE_FORMATS = getattr(settings,

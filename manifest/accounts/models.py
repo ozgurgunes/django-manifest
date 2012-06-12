@@ -190,7 +190,7 @@ User profile base class
 """
 def upload_to_picture(instance, filename):
     """
-    Uploads a picture for a user to the ``ACCOUNTS_GRAVATAR_PATH`` and 
+    Uploads a picture for a user to the ``ACCOUNTS_PICTURE_PATH`` and 
     saving it under unique hash for the image. This is for privacy 
     reasons so others can't just browse through the picture directory.
 
@@ -199,7 +199,7 @@ def upload_to_picture(instance, filename):
     salt, hash = generate_sha1(instance.id)
     return '%(path)s/%(hash)s.%(extension)s' % {
                 'path': getattr(accounts_settings, 
-                            'ACCOUNTS_GRAVATAR_PATH','%s/%s' % (
+                            'ACCOUNTS_PICTURE_PATH','%s/%s' % (
                                 str(instance._meta.app_label), 
                                 str(instance._meta.module_name))),
                 'hash': hash[:10],
