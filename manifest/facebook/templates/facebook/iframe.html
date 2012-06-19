@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{% if request.session.facebook_like %}{% trans "Liked" %}{% else %}{% trans "Not liked" %}{% endif %}</h1>
+<h1>{% if request.session.facebook_liked %}{% trans "Liked" %}{% else %}{% trans "Not liked" %}{% endif %}</h1>
 
 {% if request.user.is_authenticated %}
     <dl>

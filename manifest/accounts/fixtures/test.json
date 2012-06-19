@@ -1,0 +1,83 @@
+[
+{
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": 
+    {
+        "username": "john", 
+        "first_name": "John", 
+        "last_name": "Doe", 
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2012-01-01 00:00:00", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$Q3zAddbkJ7MI$AsHXImgK9F9AIAwnSX/SYUV1gCCGjfKmpCoHZ3PCPZA=", 
+        "email": "john@example.com", 
+        "date_joined": "2012-01-01 00:00:00"
+    }
+}, 
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": 
+    {
+        "username": "jane", 
+        "first_name": "Jane", 
+        "last_name": "Doe", 
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": false, 
+        "last_login": "2012-01-01 00:00:00", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$Q3zAddbkJ7MI$AsHXImgK9F9AIAwnSX/SYUV1gCCGjfKmpCoHZ3PCPZA=", 
+        "email": "jane@example.com",
+        "date_joined": "2012-01-01 00:00:00"
+    }
+}, 
+{
+    "pk": 1,
+    "model": "accounts.account",
+    "fields": 
+    {
+        "user": 1,
+        "activation_key": "ALREADY_ACTIVATED"
+    }
+},
+{
+    "pk": 2,
+    "model": "accounts.account",
+    "fields": 
+    {
+        "user": 2,
+         "activation_key": "ALREADY_ACTIVATED"
+    }
+},
+{
+    "pk": 1, 
+    "model": "profiles.profile", 
+    "fields": 
+    {
+        "user": 1, 
+        "gender": null, 
+        "picture": "", 
+        "birth_date": null, 
+        "timezone": "Europe/Istanbul",
+        "locale": "tr-tr"
+    }
+},
+{
+    "pk": 2, 
+    "model": "profiles.profile", 
+    "fields": 
+    {
+        "user": 2, 
+        "gender": null, 
+        "picture": "", 
+        "birth_date": null, 
+        "timezone": "Europe/Istanbul",
+        "locale": "en-us"
+    }
+}]

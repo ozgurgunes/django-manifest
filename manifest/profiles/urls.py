@@ -2,7 +2,6 @@
 from django.conf.urls.defaults import *
 from manifest.profiles.forms import ProfileForm, ProfilePictureForm
 from manifest.accounts.views import ProfileUpdate
-from relationships import views as relationship_views
 
 urlpatterns = patterns('',
 

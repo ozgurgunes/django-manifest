@@ -40,10 +40,12 @@ def iframe(request,
         
     """
     liked = request.session.get('facebook_liked', False)
+    request.session['facebook_liked'] = liked
     signed_request = parse_signed_request(request.POST.get('signed_request'), 
                                             settings.FACEBOOK_API_SECRET)
     if signed_request:
         liked = signed_request.get('page', signed_request).get('liked')
+        request.session['facebook_liked'] = liked
         # Get user object who requested this page via Facebook iframe
         try:    
             user = User.objects.select_related().get(is_active=True, 
@@ -55,7 +57,6 @@ def iframe(request,
             if request.user.is_authenticated():
                 # Log out authenticated user who is not requested this page
                 logout(request)
-    request.session['facebook_liked'] = liked
     if not liked and unliked_template_name:
         template_name = unliked_template_name
     if liked and redirect_url:
