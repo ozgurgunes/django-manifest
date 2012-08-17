@@ -10,5 +10,7 @@ def analytics(account=None, *args, **kwargs):
         try:
             account = settings.GOOGLE_ANALYTICS_ACCOUNT
         except:
-            raise template.TemplateSyntaxError, "Analytics account could not found either in tag parameters or settings"    
+            raise template.TemplateSyntaxError, 
+                    "Analytics account could not found either "
+                    "in tag parameters or settings"
     return {'account': account, 'params':kwargs }

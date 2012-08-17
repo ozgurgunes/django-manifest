@@ -5,5 +5,5 @@ class FacebookProfileForm(ProfileForm):
     
     class Meta:
         exclude = ['facebook_id', 'facebook_token', 'facebook_username', 
-                        'facebook_expires', 'facebook_link', 'facebook_verified']
+                    'facebook_expires', 'facebook_link', 'facebook_verified']
         

@@ -8,73 +8,108 @@ from manifest.accounts import settings as accounts_settings
 
 urlpatterns = patterns('',
     # Signup, login and logout
-    url(r'^login/$', accounts_views.login, name='accounts_login'),
-    url(r'^logout/$', auth_views.logout, {
-                            'next_page': accounts_settings.ACCOUNTS_REDIRECT_ON_LOGOUT,
-                            'template_name': 'accounts/logout.html'},
-                                    name='accounts_logout'),                                    
-    url(r'^register/$', accounts_views.register, name='accounts_register'),
-    url(r'^register/complete/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
-                                        template_name='accounts/register_complete.html',
-                                        extra_context={
-                                                'accounts_activation_required': accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED,
-                                                'accounts_activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS
-                                                }
-                                        ),
-                                    name='accounts_register_complete'),
+    url(r'^login/$', 
+        accounts_views.Login.as_view(),
+        name='accounts_login'),
+
+    url(r'^logout/$', 
+        auth_views.logout, {
+            'next_page': accounts_settings.ACCOUNTS_REDIRECT_ON_LOGOUT,
+            'template_name': 'accounts/logout.html'},
+        name='accounts_logout'), 
+
+    url(r'^register/$', 
+        accounts_views.Register.as_view(),      
+        name='accounts_register'),
+
+    url(r'^register/complete/(?P<username>\w+)/$', 
+        accounts_views.AccountView.as_view(
+            template_name='accounts/register_complete.html',
+            extra_context={
+                'accounts_activation_required': 
+                    accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED,
+                'accounts_activation_days': 
+                    accounts_settings.ACCOUNTS_ACTIVATION_DAYS}),
+        name='accounts_register_complete'),
 
     # Activate
-    url(r'^activate/(?P<username>\w+)/(?P<activation_key>\w+)/$', accounts_views.activate,
-                                    name='accounts_activate'),
+    url(r'^activate/(?P<username>\w+)/(?P<activation_key>\w+)/$', 
+        accounts_views.Activate.as_view(), 
+        name='accounts_activate'),
 
     # Disabled
-    url(r'^disabled/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(template_name='accounts/disabled.html'), 
-                                    name='accounts_disabled'),
+    url(r'^disabled/(?P<username>\w+)/$', 
+        accounts_views.AccountView.as_view(
+            template_name='accounts/disabled.html'), 
+        name='accounts_disabled'),
 
     # Settings
-    url(r'settings/$', accounts_views.settings, dict(template_name='accounts/settings.html'), 
-                                    name='accounts_settings'),
+    url(r'settings/$', 
+        accounts_views.UserView.as_view(),
+        name='accounts_settings'),
 
     # Edit profile
-    url(r'^settings/update/$', accounts_views.profile_edit,    name='accounts_update'),
+    url(r'^settings/update/$', 
+        accounts_views.ProfileUpdate.as_view(),    
+        name='accounts_update'),
 
-    # Reset password
-    url(r'^password/reset/$', auth_views.password_reset, {
-                            'template_name': 'accounts/password_reset_form.html',
-                            'email_template_name': 'accounts/emails/password_reset_message.txt'},
-                                    name='accounts_password_reset'),
-    url(r'^password/reset/done/$', auth_views.password_reset_done, {
-                            'template_name': 'accounts/password_reset_done.html'},
-                                    name='accounts_password_reset_complete'),
-    url(r'^password/reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm, {
-                            'template_name': 'accounts/password_reset_confirm.html'},
-                                    name='accounts_password_reset_confirm'),
-    url(r'^password/reset/complete/$', auth_views.password_reset_complete, {
-                            'template_name': 'accounts/password_reset_complete.html'},
-                                    name='accounts_password_reset_complete'),
+    # Reset password using django.contrib.auth.views
+    url(r'^password/reset/$', 
+        auth_views.password_reset, dict(
+            template_name='accounts/password_reset_form.html',
+            email_template_name='accounts/emails/password_reset_message.txt'),
+        name='accounts_password_reset'),
+
+    url(r'^password/reset/done/$', 
+        auth_views.password_reset_done, dict(
+            template_name='accounts/password_reset_done.html'),
+        name='accounts_password_reset_complete'),
+
+    url(r'^password/reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 
+        auth_views.password_reset_confirm, dict(
+            template_name='accounts/password_reset_confirm.html'),
+        name='accounts_password_reset_confirm'),
+
+    url(r'^password/reset/complete/$', 
+        auth_views.password_reset_complete, dict(
+            template_name='accounts/password_reset_complete.html'),
+        name='accounts_password_reset_complete'),
 
     # Change email and confirm it
-    url(r'^email/change/$', accounts_views.email_change, {
-                            'template_name': 'accounts/email_change_form.html'},
-                                    name='accounts_email_change'),
-    url(r'^email/change/done/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
-                                        template_name='accounts/email_change_done.html'),
-                                    name='accounts_email_change_done'),
-    url(r'^email/change/confirm/(?P<confirmation_key>\w+)/$', accounts_views.email_confirm,
-                                    name='accounts_email_confirm'),
-    url(r'^email/change/complete/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
-                                        template_name='accounts/email_change_complete.html'),
-                                    name='accounts_email_change_complete'),
+    url(r'^email/change/$', 
+        accounts_views.EmailChange.as_view(),
+        name='accounts_email_change'),
+
+    url(r'^email/change/done/(?P<username>\w+)/$', 
+        accounts_views.AccountView.as_view(
+            template_name='accounts/email_change_done.html'),
+        name='accounts_email_change_done'),
+    
+    url(r'^email/change/confirm/(?P<username>\w+)/(?P<confirmation_key>\w+)/$', 
+        accounts_views.EmailConfirm.as_view(),
+        name='accounts_email_confirm'),
+
+    url(r'^email/change/complete/(?P<username>\w+)/$', 
+        accounts_views.AccountView.as_view(
+            template_name='accounts/email_change_complete.html'),
+        name='accounts_email_change_complete'),
+
     # Change password
-    url(r'^password/change/$', accounts_views.password_change,
-                                    name='accounts_password_change'),
-    url(r'^password/change/done/(?P<username>\w+)/$', accounts_views.UserTemplate.as_view(
-                                        template_name='accounts/password_change_complete.html'),
-                                    name='accounts_password_change_done'),
+    url(r'^password/change/$', 
+        accounts_views.PasswordChange.as_view(),
+        name='accounts_password_change'),
+
+    url(r'^password/change/done/(?P<username>\w+)/$', 
+        accounts_views.AccountView.as_view(
+            template_name='accounts/password_change_complete.html'),
+        name='accounts_password_change_done'),
 
     # View profiles
-    url(r'^profiles/(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', accounts_views.ProfileDetail.as_view(),
-                                    name='accounts_profile_detail'),
-    url(r'^profiles/$', accounts_views.ProfileList.as_view(),
-                                    name='accounts_profile_list'),
+    url(r'^profiles/(?P<username>(?!logout|register|login|password|account|profile)\w+)/$', 
+        accounts_views.ProfileDetail.as_view(),
+        name='accounts_profile_detail'),
+
+    url(r'^profiles/$', 
+        accounts_views.ProfileList.as_view(),
+        name='accounts_profile_list'),
 )

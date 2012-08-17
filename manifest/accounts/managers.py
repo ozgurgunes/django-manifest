@@ -2,7 +2,8 @@
 import re, datetime
 from django.db import models
 from django.db.models import Q
-from django.contrib.auth.models import User, UserManager, Permission, AnonymousUser
+from django.contrib.auth.models import (User, UserManager, Permission, 
+                                            AnonymousUser)
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 
@@ -10,7 +11,9 @@ from manifest.accounts import settings as accounts_settings
 from manifest.accounts import signals as accounts_signals
 from manifest.accounts.utils import generate_sha1, get_profile_model
 
+
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
+
 
 class AccountsManager(UserManager):
     """ Extra functionality for the Accounts model. """
@@ -34,9 +37,9 @@ class AccountsManager(UserManager):
             on a link in an email. Defauts to ``True``.
 
         :param send_email:
-            Boolean that defines if the user should be send an email. You could
-            set this to ``False`` when you want to create a user in your own
-            code, but don't want the user to activate through email.
+            Boolean that defines if the user should be send an email. You 
+            could set this to ``False`` when you want to create a user in 
+            your own code, but don't want the user to activate through email.
 
         :return: :class:`User` instance representing the new user.
 
@@ -55,7 +58,8 @@ class AccountsManager(UserManager):
 
     def create_account(self, user):
         """
-        Creates both :class:`Account` and :class:`Profile` instances for this user.
+        Creates both :class:`Account` and :class:`Profile` instances 
+        for this user.
 
         :param user:
             Django :class:`User` instance.
@@ -118,11 +122,12 @@ class AccountsManager(UserManager):
                 user.save(using=self._db)
 
                 # Send the activation_complete signal
-                accounts_signals.activation_complete.send(sender=None, user=user)
+                accounts_signals.activation_complete.send(sender=None, 
+                    user=user)
                 return user
         return False
 
-    def confirm_email(self, confirmation_key):
+    def confirm_email(self, username, confirmation_key):
         """
         Confirm an email address by checking a ``confirmation_key``.
 
@@ -139,8 +144,9 @@ class AccountsManager(UserManager):
         """
         if SHA1_RE.search(confirmation_key):
             try:
-                account = self.get(email_confirmation_key=confirmation_key,
-                                   email_unconfirmed__isnull=False)
+                account = self.select_related().get(user__username=username,
+                                    email_confirmation_key=confirmation_key,
+                                    email_unconfirmed__isnull=False)
             except self.model.DoesNotExist:
                 return False
             else:
@@ -151,7 +157,8 @@ class AccountsManager(UserManager):
                 user.save(using=self._db)
 
                 # Send the confirmation_complete signal
-                accounts_signals.confirmation_complete.send(sender=None, user=user)
+                accounts_signals.confirmation_complete.send(sender=None, 
+                    user=user)
                 return user
         return False
 
@@ -170,55 +177,6 @@ class AccountsManager(UserManager):
                 user.delete()
         return deleted_users
 
-    def check_permissions(self):
-        """
-        Checks that all permissions are set correctly for the users.
-
-        :return: A set of users whose permissions was wrong.
-
-        """
-        # Variable to supply some feedback
-        changed_permissions = []
-        changed_users = []
-        warnings = []
-
-        # Check that all the permissions are available.
-        for model, perms in ASSIGNED_PERMISSIONS.items():
-            if model == 'profile':
-                model_obj = get_profile_model()
-            else: model_obj = User
-            model_content_type = ContentType.objects.get_for_model(model_obj)
-            for perm in perms:
-                try:
-                    Permission.objects.get(codename=perm[0],
-                                           content_type=model_content_type)
-                except Permission.DoesNotExist:
-                    changed_permissions.append(perm[1])
-                    Permission.objects.create(name=perm[1],
-                                              codename=perm[0],
-                                              content_type=model_content_type)
-
-        for user in User.objects.all():
-            if not user.username == 'AnonymousUser':
-                try:
-                    user_profile = user.get_profile()
-                except get_profile_model().DoesNotExist:
-                    warnings.append(_(u"No profile found for %(username)s") \
-                                        % {'username': user.username})
-                else:
-                    all_permissions = get_perms(user, user_profile) + get_perms(user, user)
-
-                    for model, perms in ASSIGNED_PERMISSIONS.items():
-                        if model == 'profile':
-                            perm_object = user.get_profile()
-                        else: perm_object = user
-
-                        for perm in perms:
-                            if perm[0] not in all_permissions:
-                                assign(perm[0], user, perm_object)
-                                changed_users.append(user)
-
-        return (changed_permissions, changed_users, warnings)
 
 class ProfileBaseManager(models.Manager):
     """
@@ -240,7 +198,7 @@ class ProfileBaseManager(models.Manager):
             All profiles that are visible to this user.
 
         """
-        profiles = self.all()
+        profiles = self.select_related().all()
 
         filter_kwargs = {'user__is_active': True}
 
@@ -249,23 +207,3 @@ class ProfileBaseManager(models.Manager):
             profiles = profiles.filter(user=user)
         return profiles
 
-class ContactLookup(object):
-    def get_query(self,q,request):
-        """
-        Return a query set.  you also have access to request.user if needed
-        
-        """
-        return User.objects.filter(username__startswith=q)
-
-    def format_result(self,user):
-        # The search results display in the dropdown menu.  may contain html and multiple-lines. will remove any |  """
-        return u"%s" % (user)
-
-    def format_item(self,user):
-        # The display of a currently selected object in the area below the search box. html is OK """
-        return unicode(user)
-
-    def get_objects(self):
-        # Given a list of ids, return the objects ordered as you would like them on the admin page.
-        # This is for displaying the currently selected items (in the case of a ManyToMany field)
-        return User.objects.all()

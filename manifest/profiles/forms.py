@@ -10,14 +10,19 @@ from manifest.profiles.models import Profile
 from manifest.facebook.forms import FacebookProfileForm
 
 class ProfileForm(FacebookProfileForm):
-    about               = forms.CharField(widget=forms.Textarea(attrs={'class': 'textarea', 'rows': 5}), required=False)
-    occupation          = forms.CharField(max_length=24, required=False, widget=forms.TextInput(attrs={'class':'text'}))
-    location            = forms.CharField(required=False, max_length=64, widget=forms.TextInput(attrs={'class':'text'}))
-    country             = forms.ChoiceField(choices=list([('','')] + list(countries.COUNTRIES_PLUS)))
+    about = forms.CharField(required=False, 
+                    widget=forms.Textarea(
+                        attrs={'class': 'textarea', 'rows': 5}))
+    occupation = forms.CharField(max_length=24, required=False, 
+                    widget=forms.TextInput(attrs={'class':'text'}))
+    location = forms.CharField(required=False, max_length=64, 
+                    widget=forms.TextInput(attrs={'class':'text'}))
+    country = forms.ChoiceField(choices=list([('','')] + list(
+                                    countries.COUNTRIES_PLUS)))
     
 class ProfilePictureForm(FacebookProfileForm):
-    user_id             = forms.CharField(widget=forms.HiddenInput(), required=False)
-    picture             = forms.ImageField(required=True)
+    user_id = forms.CharField(required=False, widget=forms.HiddenInput())
+    picture = forms.ImageField(required=True)
     
     class Meta:
         model = get_profile_model()
@@ -25,8 +30,10 @@ class ProfilePictureForm(FacebookProfileForm):
         fields = ['picture', 'user_id']
 
 class NameForm(forms.ModelForm):
-    first_name          = forms.CharField(max_length=32, required=True, widget=forms.TextInput(attrs={'class':'text'}))
-    last_name          = forms.CharField(max_length=32, required=True, widget=forms.TextInput(attrs={'class':'text'}))
+    first_name = forms.CharField(max_length=32, required=True, 
+                    widget=forms.TextInput(attrs={'class':'text'}))
+    last_name = forms.CharField(max_length=32, required=True, 
+                    widget=forms.TextInput(attrs={'class':'text'}))
     class Meta:
         model = User
         fields = ('first_name', 'last_name')

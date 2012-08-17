@@ -1,0 +1,10 @@
+=============
+June 19, 2012
+=============
+
+    * Accounts views rewritten completely using Django class based generic views.
+    * Unit tests for accounts application
+    * Minor Facebook application improvements including iframe and canvas views.
+    * Minor Bootstrap theme improvements made for forms.
+    * New ``site`` context processor added for Django ``sites`` framework.
+    * Basic project settings updated.

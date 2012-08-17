@@ -29,7 +29,7 @@
                     </li>
                 </ul>
             {% else %}
-                <label for="{{ field.auto_id }}" {% if field.field.required %}class="required control-label"{% endif %}>
+                <label for="{{ field.auto_id }}" class="control-label{% if field.field.required %} required{% endif %}">
                     {{ field.label|safe }}
                 </label>
                 <div class="controls">
