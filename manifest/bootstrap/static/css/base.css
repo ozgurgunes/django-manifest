@@ -21,3 +21,11 @@ footer p {
 .modal form {
     margin-bottom: 0;
 }
+
+#brand, #brand a {
+    margin:0;
+    padding:0;
+}
+#brand {
+    margin-right: 1em;
+}

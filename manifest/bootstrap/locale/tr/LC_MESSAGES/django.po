@@ -37,40 +37,40 @@ msgstr ""
 "Üzgünüz ama sunucuda bir hata meydana geldi. Hatanın en kısa zamanda çözümü "
 "için tarafımıza gereken bilgilendirme yapıldı."
 
-#: templates/_account_navbar.html:10
+#: templates/_navbar_account.html:10
 msgid "Profile"
 msgstr "Profil"
 
-#: templates/_account_navbar.html:12
+#: templates/_navbar_account.html:12
 msgid "Admin"
 msgstr "Yönetici"
 
-#: templates/_account_navbar.html:13
+#: templates/_navbar_account.html:13
 msgid "Logout"
 msgstr "Çıkış"
 
-#: templates/_account_navbar.html:17
+#: templates/_navbar_account.html:17
 msgid "Notifications"
 msgstr "Bildirimler"
 
-#: templates/_account_navbar.html:19 templates/accounts/settings.html:5
+#: templates/_navbar_account.html:19 templates/accounts/settings.html:5
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: templates/_account_navbar.html:23 templates/accounts/login.html:15
+#: templates/_navbar_account.html:23 templates/accounts/login.html:15
 msgid "Log In"
 msgstr "Giriş yap"
 
-#: templates/_account_navbar.html:24 templates/comments/delete.html:8
+#: templates/_navbar_account.html:24 templates/comments/delete.html:8
 msgid "or"
 msgstr "ya da"
 
-#: templates/_account_navbar.html:25 templates/accounts/register.html:3
+#: templates/_navbar_account.html:25 templates/accounts/register.html:3
 #: templates/accounts/register.html.py:9 templates/accounts/register.html:13
 msgid "Register"
 msgstr "Üye ol"
 
-#: templates/_search_navbar.html:2
+#: templates/_navbar_search.html:2
 msgid "Search"
 msgstr "Ara"
 

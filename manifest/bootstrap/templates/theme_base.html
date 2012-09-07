@@ -44,15 +44,17 @@
                     {% block brand %}
         				<h1 id="brand" class="logo pull-left"><a class="brand" href="/">Django Manifest</a></h1>
         			{% endblock %}
-                    {% block account_navbar %}{% include "_account_navbar.html" %}{% endblock %}
-                    {% block menu_navbar %}
-                    <ul class="nav nav-pills">
+                    {% block navbar_account %}{% include "_navbar_account.html" %}{% endblock %}
+                    {% block navbar_menu_base %}
+                    <ul class="nav">
+                        {% block navbar_menu %}
                         <li class="{% active_path request "^/$" %}"><a href="/">{% trans "Home" %}</a></li>
                         <li class="{% active_path request "^/about" %}"><a href="/about/">{% trans "About" %}</a></li>
                         <li class="{% active_path request "^/contact" %}"><a href="/contact/">{% trans "Contact" %}</a></li>
+                        {% endblock %}
                     </ul>
                     {% endblock %}
-                    {% block search_navnar %}{% include "_search_navbar.html" %}{% endblock %}
+                    {% block navbar_search %}{% include "_navbar_search.html" %}{% endblock %}
                 {% endblock %}
                 </div>
             </div>
