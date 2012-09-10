@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content_base %}
+    <div id="content" class="{% block content_class %}row{% endblock %}">
+    {% block content %}
+        {% block main_base %}
+            <section id="main" class="span8">
+            {% block main %}{% endblock %}
+            </section>
+        {% endblock %}
+        {% block aside_base %}
+            <aside id="side" class="span4">
+            {% block aside %}{% endblock %}
+            </aside>
+        {% endblock %}
+    {% endblock %}
+    </div>
+{% endblock %}        

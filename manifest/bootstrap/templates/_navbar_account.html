@@ -1,0 +1,29 @@
+<ul class="account nav pull-right">
+{% if user.is_authenticated %}
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		    {% thumbnail user.get_profile.avatar "16x16" as im %}
+            <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
+            {% endthumbnail %}
+            {% if user.first_name %}{{ user.first_name|escape }}{% else %}{{ user.username }}{% endif %} <span class="caret"></span></a>
+		<ul class="dropdown-menu">
+            <li><a href="{% url accounts_profile_detail user.username %}">{% trans "Profile" %}</a></li>
+            <li class="divider"></li>
+            {% if user.is_staff %}<li><a href="/admin/">{% trans "Admin" %}</a></li>{% endif %}
+            <li><a href="{% url accounts_logout %}">{% trans "Logout" %}</a></li>
+		</ul>
+	</li>
+	{% if 'notification' in INSTALLED_APPS %}
+    <li><a href="{% url notification_notices %}">{% trans "Notifications" %}{% if notice_unseen_count %} ({{ notice_unseen_count }}){% endif %}</a></li>
+	{% endif %}
+    <li><a href="{% url accounts_settings %}">{% trans "Settings" %}</a></li>
+{% else %}
+	<li>
+		<p class="navbar-text">
+			<a href="{% url accounts_login %}">{% trans 'Log In' %}</a>
+            {% trans "or" %}
+			<a href="{% url accounts_register %}">{% trans 'Register' %}</a>
+		</p>
+	<li>
+{% endif %}
+</ul> 		    		
