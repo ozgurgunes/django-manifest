@@ -3,7 +3,7 @@
 	<article class="comments {% cycle odd,even %}" id="comment_{{ comment.id }}"><a name="comment_{{ comment.id }}"></a>
 		{% if perms.comments.can_change or comment.user == user.username %}
         <div class="commands">
-            <a class="delete button" href="{% url apps.commenting.views.delete comment.id %}"
+            <a class="delete button" href="{% url commenting.views.delete comment.id %}"
                 onclick="return confirm('{% blocktrans %}Will be deleted: {{ comment }}{% endblocktrans %}')">{% trans 'delete' %}</a>
         </div>
         {% endif %}

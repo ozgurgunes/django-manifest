@@ -122,7 +122,7 @@ class Account(models.Model):
                         context)
 
         send_mail(subject_new,
-                  message_new,
+                  message_old_new,
                   settings.DEFAULT_FROM_EMAIL,
                   [self.email_unconfirmed,])
 
