@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
+from django.conf import settings
 from django.http import HttpRequest
 from django.utils.importlib import import_module
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 
 from manifest.accounts.tests.profiles.tests import ProfileTestCase
 from manifest.accounts.tests.profiles.models import Profile
@@ -33,13 +34,12 @@ class LocaleMiddlewareTests(ProfileTestCase):
                  (2, 'en-us'))
 
         for pk, lang in users:
-            user = User.objects.get(pk=pk)
-            profile = user.get_profile()
+            user = get_user_model().objects.get(pk=pk)
 
             req = self._get_request_with_user(user)
 
             # Check that the user has this preference
-            self.failUnlessEqual(profile.locale, lang)
+            self.failUnlessEqual(user.locale, lang)
 
             # Request should have a ``LANGUAGE_CODE`` with dutch
             LocaleMiddleware().process_request(req)
@@ -49,7 +49,7 @@ class LocaleMiddlewareTests(ProfileTestCase):
         """ Middleware should do nothing when a user has no profile """
         # Delete the profile
         Profile.objects.get(pk=1).delete()
-        user = User.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
 
         # User shouldn't have a profile
         self.assertRaises(ObjectDoesNotExist, user.get_profile)
@@ -62,7 +62,7 @@ class LocaleMiddlewareTests(ProfileTestCase):
     def test_without_language_field(self):
         """ Middleware should do nothing if the profile has no language field """
         accounts_settings.ACCOUNTS_LOCALE_FIELD = 'non_existant_language_field'
-        user = User.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
 
         req = self._get_request_with_user(user)
 

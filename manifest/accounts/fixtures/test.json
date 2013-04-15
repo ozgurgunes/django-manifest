@@ -1,7 +1,7 @@
 [
 {
     "pk": 1, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "john", 
@@ -15,12 +15,14 @@
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$Q3zAddbkJ7MI$AsHXImgK9F9AIAwnSX/SYUV1gCCGjfKmpCoHZ3PCPZA=", 
         "email": "john@example.com", 
+        "timezone": "Europe/Istanbul",
+        "locale": "tr-tr",
         "date_joined": "2012-01-01 00:00:00"
     }
 }, 
 {
     "pk": 2, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "jane", 
@@ -34,27 +36,11 @@
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$Q3zAddbkJ7MI$AsHXImgK9F9AIAwnSX/SYUV1gCCGjfKmpCoHZ3PCPZA=", 
         "email": "jane@example.com",
+        "timezone": "Europe/Istanbul",
+        "locale": "en-us",
         "date_joined": "2012-01-01 00:00:00"
     }
 }, 
-{
-    "pk": 1,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 1,
-        "activation_key": "ALREADY_ACTIVATED"
-    }
-},
-{
-    "pk": 2,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 2,
-         "activation_key": "ALREADY_ACTIVATED"
-    }
-},
 {
     "pk": 1, 
     "model": "profiles.profile", 
@@ -63,9 +49,7 @@
         "user": 1, 
         "gender": null, 
         "picture": "", 
-        "birth_date": null, 
-        "timezone": "Europe/Istanbul",
-        "locale": "tr-tr"
+        "birth_date": null 
     }
 },
 {
@@ -76,8 +60,7 @@
         "user": 2, 
         "gender": null, 
         "picture": "", 
-        "birth_date": null, 
-        "timezone": "Europe/Istanbul",
-        "locale": "en-us"
+        "birth_date": null
     }
-}]
+}
+]

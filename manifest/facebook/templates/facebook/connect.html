@@ -41,7 +41,7 @@
         {% else %}
             var loader = new Image();
             loader.src = '{{ STATIC_URL }}img/facebook_loader.gif';
-            var url = '{% url socialauth_begin "facebook" %}?next={% url facebook_connect %}?next='+GET['next'];
+            var url = '{% url 'socialauth_begin' "facebook" %}?next={% url 'facebook_connect' %}?next='+GET['next'];
             loader.onload = setTimeout(document.location = url, 1000);
         {% endif %}
     </script>

@@ -228,7 +228,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'DjangoManifest', u'Django Manifest Documentation',
-   u'Özgür Güneş', 'DjangoManifest', 'One line description of project.',
+   u'Özgür Güneş', 'DjangoManifest', 'A kickstarter for Django Web Framework projects.',
    'Miscellaneous'),
 ]
 

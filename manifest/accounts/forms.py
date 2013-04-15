@@ -5,8 +5,7 @@ from StringIO import StringIO
 from PIL import Image
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 
@@ -15,10 +14,10 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.db.transaction import commit_on_success
 
 from manifest.accounts import settings
-from manifest.accounts.models import Account
 from manifest.accounts.utils import get_profile_model
 
 attrs_dict = {'class': 'required'}
+
 
 class RegistrationForm(UserCreationForm):
     """
@@ -46,7 +45,7 @@ class RegistrationForm(UserCreationForm):
                                         attrs=attrs_dict))
             
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['username', 'email', 'password1', 'password2']
 
     def clean_username(self):
@@ -56,8 +55,8 @@ class RegistrationForm(UserCreationForm):
         
         """
         try: 
-            user = User.objects.get(username=self.cleaned_data["username"])
-        except User.DoesNotExist: 
+            user = get_user_model().objects.get(username=self.cleaned_data["username"])
+        except get_user_model().DoesNotExist: 
             pass
         else: 
             raise forms.ValidationError(
@@ -73,9 +72,9 @@ class RegistrationForm(UserCreationForm):
         Validate that the email address is unique. 
         
         """
-        if User.objects.filter(
+        if get_user_model().objects.filter(
             Q(email__iexact=self.cleaned_data['email']) |
-            Q(account__email_unconfirmed__iexact=self.cleaned_data['email'])):
+            Q(email_unconfirmed__iexact=self.cleaned_data['email'])):
             raise forms.ValidationError(_(u'This email address is already '
                         'in use. Please supply a different email.'))
         return self.cleaned_data['email']
@@ -89,7 +88,7 @@ class RegistrationForm(UserCreationForm):
                                      self.cleaned_data['email'],
                                      self.cleaned_data['password1'])
 
-        user = Account.objects.create_user(username, email, password,
+        user = get_user_model().objects.create_user(username, email, password,
                         not settings.ACCOUNTS_ACTIVATION_REQUIRED, 
                             settings.ACCOUNTS_ACTIVATION_REQUIRED)
         return user
@@ -117,8 +116,8 @@ class RegistrationFormOnlyEmail(RegistrationForm):
         while True:
             username = sha_constructor(str(random.random())).hexdigest()[:5]
             try:
-                User.objects.get(username__iexact=username)
-            except User.DoesNotExist: break
+                get_user_model().objects.get(username__iexact=username)
+            except get_user_model().DoesNotExist: break
 
         self.cleaned_data['username'] = username
         return super(RegistrationFormOnlyEmail, self).save()
@@ -213,7 +212,7 @@ class EmailForm(forms.Form):
 
         """
         super(EmailForm, self).__init__(*args, **kwargs)
-        if not isinstance(user, User):
+        if not isinstance(user, get_user_model()):
             raise TypeError, "user must be an instance of User"
         else: self.user = user
 
@@ -225,7 +224,7 @@ class EmailForm(forms.Form):
         if self.cleaned_data['email'].lower() == self.user.email:
             raise forms.ValidationError(_(u"You're already known under "
                                                 "this email address."))
-        if User.objects.filter(
+        if get_user_model().objects.filter(
                 email__iexact=self.cleaned_data['email']).exclude(
                     email__iexact=self.user.email):
             raise forms.ValidationError(_(u'This email address is already '
@@ -239,7 +238,7 @@ class EmailForm(forms.Form):
         new email address.
 
         """
-        return self.user.account.change_email(self.cleaned_data['email'])
+        return self.user.change_email(self.cleaned_data['email'])
 
 class NameForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=False, 
@@ -247,7 +246,7 @@ class NameForm(forms.ModelForm):
     last_name = forms.CharField(max_length=30, required=False, 
                         widget=forms.TextInput(attrs={'class':'text'}))
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('first_name', 'last_name')
 
 class ProfileForm(forms.ModelForm):

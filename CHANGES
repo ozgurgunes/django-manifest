@@ -1,4 +1,11 @@
 =============
+April 12, 2013
+=============
+	
+	* Accounts module modified to use custom user model
+    * Management commands removed from project.
+	
+=============
 June 19, 2012
 =============
 

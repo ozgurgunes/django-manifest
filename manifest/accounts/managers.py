@@ -2,7 +2,8 @@
 import re, datetime
 from django.db import models
 from django.db.models import Q
-from django.contrib.auth.models import (User, UserManager, Permission, 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import (UserManager, Permission, 
                                             AnonymousUser)
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
@@ -15,9 +16,11 @@ from manifest.accounts.utils import generate_sha1, get_profile_model
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 
-class AccountsManager(UserManager):
-    """ Extra functionality for the Accounts model. """
-
+class ActivationManager(UserManager):
+    """
+    User registration and account activation functionalities for User model.
+    """
+    
     def create_user(self, username, email, password, active=False,
                     send_email=True):
         """
@@ -45,36 +48,22 @@ class AccountsManager(UserManager):
 
         """
 
-        new_user = User.objects.create_user(username, email, password)
-        new_user.is_active = active
-        new_user.save()
+        user = super(ActivationManager, self).create_user(username, email, password)
 
-        new_account = self.create_account(new_user)
+        # Create profile
+        profile = self.create_profile(user)
+
+        if isinstance(user.username, unicode):
+            username = user.username.encode('utf-8')
+        salt, activation_key = generate_sha1(username)
+        user.is_active = active
+        user.activation_key = activation_key
+        user.save(using=self._db)
 
         if send_email:
-            new_account.send_activation_email()
+            user.send_activation_email()
  
-        return new_user
-
-    def create_account(self, user):
-        """
-        Creates both :class:`Account` and :class:`Profile` instances 
-        for this user.
-
-        :param user:
-            Django :class:`User` instance.
-
-        :return: The newly created :class:`Account` instance.
-
-        """
-        # Create profile first
-        new_profile = self.create_profile(user)
-
-        # Create and reurn new account
-        if isinstance(user.username, unicode):
-            user.username = user.username.encode('utf-8')
-        salt, activation_key = generate_sha1(user.username)
-        return self.create(user=user, activation_key=activation_key)
+        return user
 
     def create_profile(self, user):
         """
@@ -89,11 +78,11 @@ class AccountsManager(UserManager):
         # All users have an empty profile
         profile_model = get_profile_model()
         try:
-            new_profile = user.get_profile()
+            profile = user.get_profile()
         except profile_model.DoesNotExist:
-            new_profile = profile_model(user=user)
-            new_profile.save(using=self._db)
-        return new_profile
+            profile = profile_model(user=user)
+            profile.save(using=self._db)
+        return profile
 
     def activate_user(self, username, activation_key):
         """
@@ -111,16 +100,13 @@ class AccountsManager(UserManager):
         """
         if SHA1_RE.search(activation_key):
             try:
-                account = self.get(activation_key=activation_key)
+                user = self.get(activation_key=activation_key)
             except self.model.DoesNotExist:
                 return False
-            if not account.activation_key_expired():
-                account.activation_key = accounts_settings.ACCOUNTS_ACTIVATED
-                user = account.user
+            if not user.activation_key_expired():
+                user.activation_key = accounts_settings.ACCOUNTS_ACTIVATED
                 user.is_active = True
-                account.save(using=self._db)
                 user.save(using=self._db)
-
                 # Send the activation_complete signal
                 accounts_signals.activation_complete.send(sender=None, 
                     user=user)
@@ -144,18 +130,15 @@ class AccountsManager(UserManager):
         """
         if SHA1_RE.search(confirmation_key):
             try:
-                account = self.select_related().get(user__username=username,
+                user = self.select_related().get(username=username,
                                     email_confirmation_key=confirmation_key,
                                     email_unconfirmed__isnull=False)
             except self.model.DoesNotExist:
                 return False
             else:
-                user = account.user
-                user.email = account.email_unconfirmed
-                account.email_unconfirmed, account.email_confirmation_key = '',''
-                account.save(using=self._db)
+                user.email = user.email_unconfirmed
+                user.email_unconfirmed, user.email_confirmation_key = '',''
                 user.save(using=self._db)
-
                 # Send the confirmation_complete signal
                 accounts_signals.confirmation_complete.send(sender=None, 
                     user=user)
@@ -171,11 +154,15 @@ class AccountsManager(UserManager):
 
         """
         deleted_users = []
-        for user in User.objects.filter(is_staff=False, is_active=False):
-            if user.account.activation_key_expired():
+        for user in self.filter(is_staff=False, is_active=False):
+            if user.activation_key_expired():
                 deleted_users.append(user)
                 user.delete()
-        return deleted_users
+        return deleted_users    
+    
+
+class UserManager(ActivationManager):
+    """ Extra functionality for the User model. """
 
 
 class ProfileBaseManager(models.Manager):

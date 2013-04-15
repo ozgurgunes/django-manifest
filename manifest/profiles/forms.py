@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.forms.models import inlineformset_factory
 from django_countries import countries
@@ -35,6 +35,6 @@ class NameForm(forms.ModelForm):
     last_name = forms.CharField(max_length=32, required=True, 
                     widget=forms.TextInput(attrs={'class':'text'}))
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('first_name', 'last_name')
         

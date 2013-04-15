@@ -8,7 +8,7 @@
         <dd>{{ request.user.get_full_name }}</dd>
     </dl>
 {% else %}
-    <p><a href="{% url facebook_connect %}" onClick="window.open(this.href, 
+    <p><a href="{% url 'facebook_connect' %}" onClick="window.open(this.href, 
             'connect', 'height=200,width=480,toolbar=no,menubar=no'); 
             return false;">{% trans "Connect with Facebook" %}</a></p>
 {% endif %}

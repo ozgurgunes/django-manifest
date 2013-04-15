@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from manifest.accounts import views as accounts_views
 from manifest.accounts import settings as accounts_settings
 
+
 urlpatterns = patterns('',
     # Signup, login and logout
     url(r'^login/$', 
@@ -23,7 +24,7 @@ urlpatterns = patterns('',
         name='accounts_register'),
 
     url(r'^register/complete/(?P<username>\w+)/$', 
-        accounts_views.AccountView.as_view(
+        accounts_views.UserView.as_view(
             template_name='accounts/register_complete.html',
             extra_context={
                 'accounts_activation_required': 
@@ -39,13 +40,13 @@ urlpatterns = patterns('',
 
     # Disabled
     url(r'^disabled/(?P<username>\w+)/$', 
-        accounts_views.AccountView.as_view(
+        accounts_views.UserView.as_view(
             template_name='accounts/disabled.html'), 
         name='accounts_disabled'),
 
     # Settings
     url(r'settings/$', 
-        accounts_views.UserView.as_view(),
+        accounts_views.UserTemplateView.as_view(),
         name='accounts_settings'),
 
     # Edit profile
@@ -81,7 +82,7 @@ urlpatterns = patterns('',
         name='accounts_email_change'),
 
     url(r'^email/change/done/(?P<username>\w+)/$', 
-        accounts_views.AccountView.as_view(
+        accounts_views.UserView.as_view(
             template_name='accounts/email_change_done.html'),
         name='accounts_email_change_done'),
     
@@ -90,7 +91,7 @@ urlpatterns = patterns('',
         name='accounts_email_confirm'),
 
     url(r'^email/change/complete/(?P<username>\w+)/$', 
-        accounts_views.AccountView.as_view(
+        accounts_views.UserView.as_view(
             template_name='accounts/email_change_complete.html'),
         name='accounts_email_change_complete'),
 
@@ -100,7 +101,7 @@ urlpatterns = patterns('',
         name='accounts_password_change'),
 
     url(r'^password/change/done/(?P<username>\w+)/$', 
-        accounts_views.AccountView.as_view(
+        accounts_views.UserView.as_view(
             template_name='accounts/password_change_complete.html'),
         name='accounts_password_change_done'),
 

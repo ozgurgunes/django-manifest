@@ -30,11 +30,11 @@ def parse_dependency_links(file_name):
 setup(
     name="django-manifest",
     version=version,
-    description = "A package to help automate creation of web applications in Django",
+    description = "A kickstarter for Django Web Framework projects.",
     long_description=open("README").read(),
-    author = "Propaganda Istanbul",
-    author_email = "developer@propaganda.com.tr",
-    url = "http://github.com/propaganda-istanbul/django-manifest/",
+    author = "Özgür Guneş",
+    author_email = "o.gunes@gmail.com",
+    url = "http://github.com/ozgurgunes/django-manifest/",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 1 - Planning",

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.core.management.base import NoArgsCommand
 
-from manifest.accounts.models import Account
+from django.contrib.auth import get_user_model
+
 
 class Command(NoArgsCommand):
     """
@@ -10,4 +12,4 @@ class Command(NoArgsCommand):
     """
     help = 'Deletes expired users.'
     def handle_noargs(self, **options):
-        users = Account.objects.delete_expired_users()
+        users = get_user_model().objects.delete_expired_users()

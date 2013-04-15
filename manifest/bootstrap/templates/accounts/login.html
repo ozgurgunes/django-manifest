@@ -13,13 +13,13 @@
   {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
  <div class="form-actions">
      <input type="submit" value="{% trans "Log In" %}" class="btn btn-primary" />
-     <a href="{% url accounts_password_reset %}" title="{% trans "Forgot your password?" %}" class="btn">{% trans "Forgot your password?" %}</a>
+     <a href="{% url 'accounts_password_reset' %}" title="{% trans "Forgot your password?" %}" class="btn">{% trans "Forgot your password?" %}</a>
  </div>
 </form>
 <aside class="span-4 pull-right">
     <ul>
       <li>
-        <a href="{% url socialauth_begin 'facebook' %}">{% trans "Connect with Facebook" %}</a>
+        <a href="{% url 'socialauth_begin' 'facebook' %}">{% trans "Connect with Facebook" %}</a>
       </li>
     </ul>
 </div>

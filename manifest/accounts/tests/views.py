@@ -1,8 +1,9 @@
-from django.core.urlresolvers import reverse
-from django.core import mail
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import PasswordChangeForm
+# -*- coding: utf-8 -*-
 from django.conf import settings
+from django.core import mail
+from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm
 
 from manifest.accounts import forms
 from manifest.accounts import settings as accounts_settings
@@ -21,14 +22,14 @@ class AccountsViewsTests(ProfileTestCase):
                                'password1': 'pass',
                                'password2': 'pass',
                                'tos': 'on'})
-        user = User.objects.get(email='alice@example.com')
+        user = get_user_model().objects.get(email='alice@example.com')
         response = self.client.get(reverse('accounts_activate',
                                            kwargs={'username': user.username,
-                                                   'activation_key': user.account.activation_key}))
+                                                   'activation_key': user.activation_key}))
         self.assertRedirects(response,
                              reverse('accounts_profile_detail', kwargs={'username': user.username}))
 
-        user = User.objects.get(email='alice@example.com')
+        user = get_user_model().objects.get(email='alice@example.com')
         self.failUnless(user.is_active)
 
     def test_invalid_activation(self):
@@ -46,12 +47,12 @@ class AccountsViewsTests(ProfileTestCase):
     def test_valid_confirmation(self):
         """ A ``GET`` to the verification view """
         # First, try to change an email.
-        user = User.objects.get(pk=1)
-        user.account.change_email('johnie@example.com')
+        user = get_user_model().objects.get(pk=1)
+        user.change_email('johnie@example.com')
 
         response = self.client.get(reverse('accounts_email_confirm',
                                            kwargs={'username': user.username,
-                                                   'confirmation_key': user.account.email_confirmation_key}))
+                                                   'confirmation_key': user.email_confirmation_key}))
 
         self.assertRedirects(response,
                              reverse('accounts_email_change_complete', kwargs={'username': user.username}))
@@ -130,7 +131,7 @@ class AccountsViewsTests(ProfileTestCase):
                              reverse('accounts_register_complete', kwargs={'username': 'alice'}))
 
         # Check for new user.
-        self.assertEqual(User.objects.filter(email__iexact='alice@example.com').count(), 1)
+        self.assertEqual(get_user_model().objects.filter(email__iexact='alice@example.com').count(), 1)
 
     def test_login_view(self):
         """ A ``GET`` to the login view should render the correct form """
@@ -166,7 +167,7 @@ class AccountsViewsTests(ProfileTestCase):
 
     def test_login_view_inactive(self):
         """ A ``POST`` from a inactive user """
-        user = User.objects.get(email='john@example.com')
+        user = get_user_model().objects.get(email='john@example.com')
         user.is_active = False
         user.save()
 
@@ -260,7 +261,7 @@ class AccountsViewsTests(ProfileTestCase):
                                                kwargs={'username': 'john'}))
 
         # Check that the new password is set.
-        john = User.objects.get(username='john')
+        john = get_user_model().objects.get(username='john')
         self.failUnless(john.check_password(new_password))
 
     def test_profile_detail_view(self):

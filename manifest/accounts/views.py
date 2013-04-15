@@ -3,11 +3,10 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth import (authenticate, login as auth_login, logout, 
-                                    REDIRECT_FIELD_NAME)
+                                    get_user_model, REDIRECT_FIELD_NAME)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.http import Http404
@@ -18,11 +17,11 @@ from manifest.accounts.forms import (RegistrationForm,
                                         RegistrationFormOnlyEmail, 
                                         AuthenticationForm,
                                         EmailForm, ProfileForm)
-from manifest.accounts.models import Account
 from manifest.accounts.decorators import secure_required
 from manifest.accounts.utils import login_redirect, get_profile_model
 from manifest.accounts import signals as accounts_signals
 from manifest.accounts import settings as accounts_settings
+
 
 
 class ExtraContextMixin(View):
@@ -75,7 +74,7 @@ class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
     
     """
     
-    model = User
+    model = get_user_model()
     template_name = 'accounts/register.html'
     success_message = _(u'You have been registered.')
     
@@ -169,7 +168,7 @@ class Activate(TemplateView, ExtraContextMixin):
                         kwargs={'username': self.kwargs['username']})
         
     def get(self, request, username, activation_key, *args, **kwargs):
-        user = Account.objects.activate_user(username, activation_key)
+        user = get_user_model().objects.activate_user(username, activation_key)
         if user:
             # Sign the user in.
             auth_login(request, authenticate(identification=user.email, 
@@ -263,7 +262,7 @@ class EmailConfirm(Activate, ExtraContextMixin):
     """
     Confirm the email address with username and confirmation key.
 
-    Confirms the new email address by running ``User.objects.confirm_email``
+    Confirms the new email address by running ``get_user_model().objects.confirm_email``
     method.
     
     User will be redirected to ``accounts_email_change_complete`` view 
@@ -282,7 +281,7 @@ class EmailConfirm(Activate, ExtraContextMixin):
                         kwargs={'username': self.kwargs['username']})
 
     def get(self, request, username, confirmation_key, *args, **kwargs):
-        user = Account.objects.confirm_email(username, confirmation_key)
+        user = get_user_model().objects.confirm_email(username, confirmation_key)
         if user:
             return redirect(self.get_success_url(**kwargs))
         return super(EmailConfirm, self).get(request, username, 
@@ -290,7 +289,7 @@ class EmailConfirm(Activate, ExtraContextMixin):
                                                         *args, **kwargs)
 
 
-class UserView(DetailView, LoginRequiredMixin, ExtraContextMixin):
+class UserTemplateView(DetailView, LoginRequiredMixin, ExtraContextMixin):
     """
     Template view for current user
     
@@ -304,7 +303,7 @@ class UserView(DetailView, LoginRequiredMixin, ExtraContextMixin):
         return self.request.user
 
 
-class AccountView(DetailView, ExtraContextMixin):
+class UserView(DetailView, ExtraContextMixin):
 
     """
     Template view for current user account
@@ -313,9 +312,9 @@ class AccountView(DetailView, ExtraContextMixin):
 
     """
 
-    queryset = Account.objects.select_related().all()
+    queryset = get_user_model().objects.select_related().all()
     template_name = "accounts/settings.html"
-    slug_field = 'user__username'
+    slug_field = 'username'
     slug_url_kwarg = 'username'
 
 
@@ -338,7 +337,7 @@ class ProfileList(ListView, ExtraContextMixin):
         return super(ProfileList, self).dispatch(request, *args, **kwargs)
         
 
-class ProfileDetail(AccountView, ExtraContextMixin):
+class ProfileDetail(UserView, ExtraContextMixin):
     """
     Shows active user profile
     
@@ -348,4 +347,6 @@ class ProfileDetail(AccountView, ExtraContextMixin):
 
     queryset = get_profile_model().objects.get_visible_profiles()
     template_name = "accounts/profile_detail.html"
+    slug_field = 'user__username'
+    slug_url_kwarg = 'username'
     

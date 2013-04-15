@@ -1,18 +1,22 @@
-from django.test import TestCase
-
-from django.contrib.auth.models import User, AnonymousUser
-from django.contrib.sites.models import Site
+# -*- coding: utf-8 -*-
+import re
+import hashlib
+import datetime
 
 from django.core import mail
 from django.conf import settings
+from django.test import TestCase
 
-from manifest.accounts.models import Account, upload_to_picture
+from django.contrib.sites.models import Site
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
+
 from manifest.accounts import settings as accounts_settings
+from manifest.accounts.models import upload_to_picture
 
 from manifest.accounts.tests.profiles.tests import ProfileTestCase
 from manifest.accounts.tests.profiles.models import Profile
 
-import datetime, hashlib, re
 
 
 class AccountModelTests(ProfileTestCase):
@@ -30,7 +34,7 @@ class AccountModelTests(ProfileTestCase):
         TODO: What if a image get's uploaded with no extension?
 
         """
-        user = User.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
         filename = 'my_avatar.png'
         path = upload_to_picture(user.profile, filename)
 
@@ -46,16 +50,6 @@ class AccountModelTests(ProfileTestCase):
 
         self.failUnless(PICTURE_RE.search(path))
 
-    def test_stringification(self):
-        """
-        Test the stringification of a ``Account`` object. A
-        "human-readable" representation of an ``Account`` object.
-
-        """
-        account = Account.objects.get(pk=1)
-        self.failUnlessEqual(account.__unicode__(),
-                             'Account of %s' % account.user.username)
-
     def test_change_email(self):
         """ TODO """
         pass
@@ -67,12 +61,12 @@ class AccountModelTests(ProfileTestCase):
         ``ACCOUNTS_ACTIVATION_DAYS``.
 
         """
-        user = Account.objects.create_user(**self.user_info)
+        user = get_user_model().objects.create_user(**self.user_info)
         user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
         user.save()
 
-        user = User.objects.get(username='foo')
-        self.failUnless(user.account.activation_key_expired())
+        user = get_user_model().objects.get(username='foo')
+        self.failUnless(user.activation_key_expired())
 
     def test_activation_used_account(self):
         """
@@ -80,10 +74,10 @@ class AccountModelTests(ProfileTestCase):
         already used.
 
         """
-        user = Account.objects.create_user(**self.user_info)
-        activated_user = Account.objects.activate_user(user.username,
-                                                             user.account.activation_key)
-        self.failUnless(activated_user.account.activation_key_expired())
+        user = get_user_model().objects.create_user(**self.user_info)
+        activated_user = get_user_model().objects.activate_user(user.username,
+                                                             user.activation_key)
+        self.failUnless(activated_user.activation_key_expired())
 
     def test_activation_unexpired_account(self):
         """
@@ -91,8 +85,8 @@ class AccountModelTests(ProfileTestCase):
         ``activation_key_created`` is within the defined timeframe.``
 
         """
-        user = Account.objects.create_user(**self.user_info)
-        self.failIf(user.account.activation_key_expired())
+        user = get_user_model().objects.create_user(**self.user_info)
+        self.failIf(user.activation_key_expired())
 
     def test_activation_email(self):
         """
@@ -100,7 +94,7 @@ class AccountModelTests(ProfileTestCase):
         by ``Account.send_activation_email``.
 
         """
-        new_user = Account.objects.create_user(**self.user_info)
+        new_user = get_user_model().objects.create_user(**self.user_info)
         self.failUnlessEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [self.user_info['email']])
 
@@ -176,7 +170,7 @@ class ProfileBaseModelTest(ProfileTestCase):
 
     def test_get_full_name_or_username(self):
         """ Test if the full name or username are returned correcly """
-        user = User.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
         profile = user.get_profile()
 
         # Profile #1 has a first and last name

@@ -1,14 +1,15 @@
+# -*- coding: utf-8 -*-
+import hashlib
+
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import SiteProfileNotAvailable
 
 from manifest.accounts.utils import (get_gravatar, login_redirect, get_profile_model,
                            get_protocol)
 from manifest.accounts import settings as accounts_settings
 from manifest.accounts.models import ProfileBase
-
-import hashlib
 
 class UtilsTests(TestCase):
     """ Test the extra utils methods """
@@ -65,7 +66,7 @@ class UtilsTests(TestCase):
         self.failUnlessEqual(login_redirect(redirect='/accounts/'), '/accounts/')
 
         # Test with only the user specified
-        user = User.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
         self.failUnlessEqual(login_redirect(user=user),
                              '/profiles/%s/' % user.username)
         

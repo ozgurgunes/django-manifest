@@ -4,7 +4,7 @@
 
 {% trans "Please click on the link below to activate your account." %}
 
-{{ protocol }}://{{ site.domain }}{% url accounts_activate user.username activation_key %}
+{{ protocol }}://{{ site.domain }}{% url 'accounts_activate' user.username activation_key %}
 
 {% trans "Thank you for registering at our website." %}
 

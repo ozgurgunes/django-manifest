@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from manifest.facebook.utils import parse_signed_request
 from social_auth.utils import setting
 
@@ -48,12 +48,12 @@ def iframe(request,
         request.session['facebook_liked'] = liked
         # Get user object who requested this page via Facebook iframe
         try:    
-            user = User.objects.select_related().get(is_active=True, 
+            user = get_user_model().objects.select_related().get(is_active=True, 
                         social_auth__provider='facebook', 
                         social_auth__uid=signed_request.get('user_id', None))
             if user.id is not request.user.id:
                 return redirect('socialauth_begin', backend='facebook')
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             if request.user.is_authenticated():
                 # Log out authenticated user who is not requested this page
                 logout(request)

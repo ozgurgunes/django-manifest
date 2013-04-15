@@ -1,7 +1,7 @@
 [
 {
     "pk": 1, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "admin", 
@@ -20,7 +20,7 @@
 }, 
 {
     "pk": 2, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "test", 
@@ -39,7 +39,7 @@
 }, 
 {
     "pk": 3, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "demo", 
@@ -55,32 +55,5 @@
         "email": "demo@example.com",
         "date_joined": "2012-01-01 00:00:00"
     }
-}, 
-{
-    "pk": 1,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 1,
-        "activation_key": "ALREADY_ACTIVATED"
-    }
-},
-{
-    "pk": 2,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 2,
-         "activation_key": "ALREADY_ACTIVATED"
-    }
-},
-{
-    "pk": 3,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 3,
-         "activation_key": "ALREADY_ACTIVATED"
-     }
 }
 ]

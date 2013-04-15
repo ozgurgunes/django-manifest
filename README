@@ -1,9 +1,11 @@
-===============
+================
 Django Manifest
-===============
+================
 
-Django Manifest aimed to provide a starter package for Django projects.
+A kickstarter for Django Web Framework projects.
+------------------------------------------------
 
+Inspired by Pinax
 
 Quick Start
 ===========
@@ -13,5 +15,5 @@ Run in shell:
     $ virtualenv my_env
     $ source my_env/bin/activate
     (my_env)$ pip install django-manifest
-    (my_env)$ manifest-admin setup my_site
+    (my_env)$ django-admin startproject my_site 
     

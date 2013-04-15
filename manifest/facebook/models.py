@@ -2,12 +2,12 @@
 import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from social_auth.backends.facebook import FacebookBackend
 from social_auth.signals import pre_update, socialauth_registered
 from manifest.facebook.api import Graph
 from manifest.accounts.utils import get_profile_model
-from manifest.accounts.models import create_user_account
+from manifest.accounts.models import create_user
 from manifest.facebook.utils import iso_time
 
 class ProfileBase(models.Model):
@@ -96,7 +96,7 @@ class FacebookLike(models.Model):
     
     """
 
-    user = models.ForeignKey(User, verbose_name=_(u'User'))
+    user = models.ForeignKey(get_user_model(), verbose_name=_(u'User'))
 
     facebook_id     = models.BigIntegerField(_(u'Facebook id'))    
     name            = models.CharField(_(u'Name'), max_length=128, 
@@ -119,7 +119,7 @@ class FacebookFriend(models.Model):
     
     """
 
-    user = models.ForeignKey(User, verbose_name=_(u'User'))
+    user = models.ForeignKey(get_user_model(), verbose_name=_(u'User'))
 
     facebook_id = models.BigIntegerField(_(u'Facebook id'))    
     name = models.CharField(_(u'Name'), max_length=128, blank=True, null=True)
@@ -149,7 +149,7 @@ def register_profile(sender, user, response, *args, **kwargs):
         try:
             profile = user.get_profile()
         except:
-            create_user_account(user)
+            create_user(user)
             profile = user.get_profile()
         profile.copy_facebook(response)    
         facebook = Graph(user)    

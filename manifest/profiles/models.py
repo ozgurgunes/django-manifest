@@ -5,7 +5,7 @@ from dateutil import relativedelta
 from django.conf import settings
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.localflavor.us.models import PhoneNumberField
 from django_countries import CountryField
 

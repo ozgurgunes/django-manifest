@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from manifest.accounts import forms
@@ -165,7 +166,7 @@ class EmailFormTests(TestCase):
     fixtures = ['test']
 
     def test_email_form(self):
-        user = User.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
         invalid_data_dicts = [
             # No change in e-mail address
             {'data': {'email': 'john@example.com'},

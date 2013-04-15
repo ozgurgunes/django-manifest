@@ -25,7 +25,7 @@ class LocaleMiddleware(object):
 
                 if profile:
                     try:
-                        lang = getattr(profile, 
+                        lang = getattr(request.user, 
                                     accounts_settings.ACCOUNTS_LOCALE_FIELD)
                         translation.activate(lang)
                         request.LANGUAGE_CODE = translation.get_language()

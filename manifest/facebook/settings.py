@@ -2,7 +2,7 @@
 from django.conf import settings
 
 MANIFEST_FACEBOOK_FRIENDS = getattr(settings, 
-                                'MANIFEST_FACEBOOK_FRIENDS', True)
+                                'MANIFEST_FACEBOOK_FRIENDS', False)
 MANIFEST_FACEBOOK_LIKES = getattr(settings, 
                                 'MANIFEST_FACEBOOK_LIKES', False)
 MANIFEST_FACEBOOK_SYNC = getattr(settings, 

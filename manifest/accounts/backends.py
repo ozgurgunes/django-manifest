@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.contrib.sites.models import Site
 from django.core.validators import email_re
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
-from django.contrib.auth.models import User
-from manifest.accounts.models import Account
+from manifest.accounts import settings as accounts_settings
+
 
 class AuthenticationBackend(ModelBackend):
     """
@@ -34,11 +35,11 @@ class AuthenticationBackend(ModelBackend):
 
         """
         if email_re.search(identification):
-            try: user = User.objects.get(email__iexact=identification)
-            except User.DoesNotExist: return None
+            try: user = get_user_model().objects.get(email__iexact=identification)
+            except get_user_model().DoesNotExist: return None
         else:
-            try: user = User.objects.get(username__iexact=identification)
-            except User.DoesNotExist: return None
+            try: user = get_user_model().objects.get(username__iexact=identification)
+            except get_user_model().DoesNotExist: return None
         if check_password:
             if user.check_password(password):
                 return user
@@ -46,6 +47,6 @@ class AuthenticationBackend(ModelBackend):
         else: return user
 
     def get_user(self, user_id):
-        try: return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
+        try: return get_user_model().objects.get(pk=user_id)
+        except get_user_model().DoesNotExist:
             return None

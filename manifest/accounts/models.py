@@ -3,31 +3,26 @@ import datetime
 
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
-from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.core.files.storage import default_storage
+from django.contrib.sites.models import Site
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
 from timezones.fields import TimeZoneField
 
-from manifest.accounts.managers import AccountsManager, ProfileBaseManager
+from manifest.accounts.managers import UserManager, ProfileBaseManager
 from manifest.accounts.utils import (get_gravatar, generate_sha1,   
                                         get_protocol, get_datetime_now)
 from manifest.accounts import settings as accounts_settings
 
 
-class Account(models.Model):
+class ActivationMixin(models.Model):
     """
-    Accounts model which stores all the necessary information to have 
-    a full functional user implementation on your Django website.
-
+    A mixin that adds the field and methods necessary to support
+    account activation and email confirmation.
     """
-
-    user = models.OneToOneField(User, 
-                verbose_name=_(u'User'), related_name='account')
-
     activation_key = models.CharField(_(u'Activation key'), 
                         max_length=40, blank=True)
 
@@ -44,15 +39,9 @@ class Account(models.Model):
                                                 'of email confirmation key'),
                                         blank=True, null=True)
 
-    objects = AccountsManager()
-
     class Meta:
-        verbose_name = _(u'Account')
-        verbose_name_plural = _(u'Accounts')
-
-    def __unicode__(self):
-        return 'Account of %s' % self.user.username
-
+        abstract = True        
+    
     def change_email(self, email):
         """
         Changes the email address for a user.
@@ -69,7 +58,7 @@ class Account(models.Model):
         """
         self.email_unconfirmed = email
 
-        salt, hash = generate_sha1(self.user.username)
+        salt, hash = generate_sha1(self.username)
         self.email_confirmation_key = hash
         self.email_confirmation_key_created = get_datetime_now()
         self.save()
@@ -77,7 +66,7 @@ class Account(models.Model):
         # Send email for activation
         self.send_confirmation_email()
         
-        return self.user
+        return self
 
     def send_confirmation_email(self):
         """
@@ -85,13 +74,13 @@ class Account(models.Model):
 
         This method sends out two emails. One to the new email address that
         contains the ``email_confirmation_key`` which is used to verify this
-        this email address with :func:`AccountsUser.objects.confirm_email`.
+        this email address with :func:`User.objects.confirm_email`.
 
         The other email is to the old email address to let the user know that
         a request is made to change this email address.
 
         """
-        context= {'user': self.user,
+        context= {'user': self,
                   'new_email': self.email_unconfirmed,
                   'protocol': get_protocol(),
                   'confirmation_key': self.email_confirmation_key,
@@ -110,7 +99,7 @@ class Account(models.Model):
         send_mail(subject_old,
                   message_old,
                   settings.DEFAULT_FROM_EMAIL,
-                  [self.user.email])
+                  [self.email])
 
         # Email to the new address
         subject_new = ''.join(render_to_string(
@@ -122,7 +111,7 @@ class Account(models.Model):
                         context)
 
         send_mail(subject_new,
-                  message_old_new,
+                  message_new,
                   settings.DEFAULT_FROM_EMAIL,
                   [self.email_unconfirmed,])
 
@@ -140,7 +129,7 @@ class Account(models.Model):
         """
         expiration_days = datetime.timedelta(
                             days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS)
-        expiration_date = self.user.date_joined + expiration_days
+        expiration_date = self.date_joined + expiration_days
         if self.activation_key == accounts_settings.ACCOUNTS_ACTIVATED:
             return True
         if get_datetime_now() >= expiration_date:
@@ -155,7 +144,7 @@ class Account(models.Model):
         newly created user.
 
         """
-        context= {'user': self.user,
+        context= {'user': self,
                   'protocol': get_protocol(),
                   'activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS,
                   'activation_key': self.activation_key,
@@ -171,18 +160,35 @@ class Account(models.Model):
         send_mail(subject,
                   message,
                   settings.DEFAULT_FROM_EMAIL,
-                  [self.user.email,])
+                  [self.email,])
+
+
+class User(AbstractUser, ActivationMixin):
+    """
+    Custom user model which stores all the necessary information 
+    to have a fully functional user implementation on your Django website.
+    """
+
+    timezone = TimeZoneField(_(u"Timezone"))
+
+    locale = models.CharField(_(u"Locale"), max_length = 10,
+                                    choices = settings.LANGUAGES,
+                                    default = settings.LANGUAGE_CODE)
+                                    
+    objects = UserManager()
+
+    # def __unicode__(self):
+    #     return self.__str__
 
 
 if 'social_auth' in settings.INSTALLED_APPS:
     from social_auth.signals import socialauth_registered
 
-    def create_user_account(sender, user, *args, **kwargs):
-        account = Account.objects.create_account(user=user)
-        user = Account.objects.activate_user(user.username, 
-                                                account.activation_key)
+    def create_user(sender, user, *args, **kwargs):
+        user = User.objects.activate_user(user.username, 
+                                                user.activation_key)
         
-    socialauth_registered.connect(create_user_account, sender=None)
+    socialauth_registered.connect(create_user, sender=None)
 
 """
 User profile base class
@@ -226,12 +232,6 @@ class ProfileBase(models.Model):
 
     picture = models.ImageField(_(u'Picture'), blank=True, 
                 upload_to=upload_to_picture)
-
-    timezone = TimeZoneField(_(u"Timezone"))
-
-    locale = models.CharField(_(u"Locale"), max_length = 10,
-                                    choices = settings.LANGUAGES,
-                                    default = settings.LANGUAGE_CODE)
 
     objects = ProfileBaseManager()
 

@@ -6,8 +6,8 @@
 <ul id="profile_list">
   {% for profile in profile_list %}
   <li>
-  <a href="{% url accounts_profile_detail profile.user.username %}"><img src="{{ profile.get_picture_url }}" /></a>
-  <a href="{% url accounts_profile_detail profile.user.username %}">{{ profile.user.username }}</a>
+  <a href="{% url 'accounts_profile_detail' profile.user.username %}"><img src="{{ profile.get_picture_url }}" /></a>
+  <a href="{% url 'accounts_profile_detail' profile.user.username %}">{{ profile.user.username }}</a>
   </li>
   {% endfor %}
 
@@ -17,7 +17,7 @@
 <div class="pagination">
   <ul>
     {% if page_obj.has_previous %}
-    <li><a href="{% url accounts_profile_list %}?page={{ page_obj.previous_page_number }}">{% trans 'previous' %}</a></li>
+    <li><a href="{% url 'accounts_profile_list' %}?page={{ page_obj.previous_page_number }}">{% trans 'previous' %}</a></li>
     {% endif %}
 
     <span class="current">
@@ -25,7 +25,7 @@
     </span>
 
     {% if page_obj.has_next %}
-    <li><a href="{% url accounts_profile_list %}?page={{ page_obj.next_page_number }}">{% trans 'next' %}</a>
+    <li><a href="{% url 'accounts_profile_list' %}?page={{ page_obj.next_page_number }}">{% trans 'next' %}</a>
     {% endif %}
   </ul>
 </div>

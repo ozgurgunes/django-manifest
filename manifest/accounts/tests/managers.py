@@ -1,11 +1,12 @@
-from django.test import TestCase
+# -*- coding: utf-8 -*-
+import re
+import datetime
+
 from django.core import mail
-from django.contrib.auth.models import User
+from django.test import TestCase
+from django.contrib.auth import get_user_model
 
-from manifest.accounts.models import Account
 from manifest.accounts import settings as accounts_settings
-
-import datetime, re
 
 
 class AccountManagerTests(TestCase):
@@ -29,7 +30,7 @@ class AccountManagerTests(TestCase):
 
         """
         # Check that the fields are set.
-        new_user = Account.objects.create_user(**self.user_info)
+        new_user = get_user_model().objects.create_user(**self.user_info)
         self.assertEqual(new_user.username, self.user_info['username'])
         self.assertEqual(new_user.email, self.user_info['email'])
         self.failUnless(new_user.check_password(self.user_info['password']))
@@ -38,13 +39,13 @@ class AccountManagerTests(TestCase):
         self.failIf(new_user.is_active)
 
         # User has a valid SHA1 activation key
-        self.failUnless(re.match('^[a-f0-9]{40}$', new_user.account.activation_key))
+        self.failUnless(re.match('^[a-f0-9]{40}$', new_user.activation_key))
 
         # User now has an profile.
         self.failUnless(new_user.get_profile())
 
         # User should be saved
-        self.failUnlessEqual(User.objects.filter(email=self.user_info['email']).count(), 1)
+        self.failUnlessEqual(get_user_model().objects.filter(email=self.user_info['email']).count(), 1)
 
     def test_activation_valid(self):
         """
@@ -55,9 +56,9 @@ class AccountManagerTests(TestCase):
         the setting ``ACCOUNTS_ACTIVATED``.
 
         """
-        user = Account.objects.create_user(**self.user_info)
-        active_user = Account.objects.activate_user(user.username,
-                                                          user.account.activation_key)
+        user = get_user_model().objects.create_user(**self.user_info)
+        active_user = get_user_model().objects.activate_user(user.username,
+                                                          user.activation_key)
 
         # The returned user should be the same as the one just created.
         self.failUnlessEqual(user, active_user)
@@ -66,7 +67,7 @@ class AccountManagerTests(TestCase):
         self.failUnless(active_user.is_active)
 
         # The activation key should be the same as in the settings
-        self.assertEqual(active_user.account.activation_key,
+        self.assertEqual(active_user.activation_key,
                          accounts_settings.ACCOUNTS_ACTIVATED)
 
     def test_activation_invalid(self):
@@ -76,11 +77,11 @@ class AccountManagerTests(TestCase):
 
         """
         # Wrong key
-        self.failIf(Account.objects.activate_user('john', 'wrong_key'))
+        self.failIf(get_user_model().objects.activate_user('john', 'wrong_key'))
 
         # At least the right length
         invalid_key = 10 * 'a1b2'
-        self.failIf(Account.objects.activate_user('john', invalid_key))
+        self.failIf(get_user_model().objects.activate_user('john', invalid_key))
 
     def test_activation_expired(self):
         """
@@ -88,23 +89,23 @@ class AccountManagerTests(TestCase):
         ``Account.objects.activation_user`` return ``False``.
 
         """
-        user = Account.objects.create_user(**self.user_info)
+        user = get_user_model().objects.create_user(**self.user_info)
 
         # Set the date that the key is created a day further away than allowed
         user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
         user.save()
 
         # Try to activate the user
-        Account.objects.activate_user(user.username, user.account.activation_key)
+        get_user_model().objects.activate_user(user.username, user.activation_key)
 
-        active_user = User.objects.get(username='foo')
+        active_user = get_user_model().objects.get(username='foo')
 
         # Account activation should have failed
         self.failIf(active_user.is_active)
 
         # The activation key should still be a hash
-        self.assertEqual(user.account.activation_key,
-                         active_user.account.activation_key)
+        self.assertEqual(user.activation_key,
+                         active_user.activation_key)
 
     def test_confirmation_valid(self):
         """
@@ -112,20 +113,20 @@ class AccountManagerTests(TestCase):
 
         """
         new_email = 'john@newexample.com'
-        user = User.objects.get(pk=1)
-        user.account.change_email(new_email)
+        user = get_user_model().objects.get(pk=1)
+        user.change_email(new_email)
 
         # Confirm email
-        confirmed_user = Account.objects.confirm_email(user.username,
-                                                       user.account.email_confirmation_key)
+        confirmed_user = get_user_model().objects.confirm_email(user.username,
+                                                       user.email_confirmation_key)
         self.failUnlessEqual(user, confirmed_user)
 
         # Check the new email is set.
         self.failUnlessEqual(confirmed_user.email, new_email)
 
         # ``email_new`` and ``email_verification_key`` should be empty
-        self.failIf(confirmed_user.account.email_unconfirmed)
-        self.failIf(confirmed_user.account.email_confirmation_key)
+        self.failIf(confirmed_user.email_unconfirmed)
+        self.failIf(confirmed_user.email_confirmation_key)
 
     def test_confirmation_invalid(self):
         """
@@ -134,24 +135,24 @@ class AccountManagerTests(TestCase):
 
         """
         new_email = 'john@newexample.com'
-        user = User.objects.get(pk=1)
-        user.account.change_email(new_email)
+        user = get_user_model().objects.get(pk=1)
+        user.change_email(new_email)
 
         # Verify email with wrong SHA1
-        self.failIf(Account.objects.confirm_email('john', 'sha1'))
+        self.failIf(get_user_model().objects.confirm_email('john', 'sha1'))
 
         # Correct SHA1, but non-existend in db.
-        self.failIf(Account.objects.confirm_email('john', 10 * 'a1b2'))
+        self.failIf(get_user_model().objects.confirm_email('john', 10 * 'a1b2'))
 
     def test_delete_expired_users(self):
         """
         Test if expired users are deleted from the database.
 
         """
-        expired_user = Account.objects.create_user(**self.user_info)
+        expired_user = get_user_model().objects.create_user(**self.user_info)
         expired_user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
         expired_user.save()
 
-        deleted_users = Account.objects.delete_expired_users()
+        deleted_users = get_user_model().objects.delete_expired_users()
 
         self.failUnlessEqual(deleted_users[0].username, 'foo')

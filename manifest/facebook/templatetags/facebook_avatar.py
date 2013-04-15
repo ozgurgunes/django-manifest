@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import template
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 register = template.Library()
 
@@ -11,7 +11,7 @@ class Avatar(template.Node):
         self.type = type
 
     def render(self, context):
-        uid = User.objects.select_related().get(username=self.user.resolve(context)).social_auth.get(provider='facebook').uid
+        uid = get_user_model().objects.select_related().get(username=self.user.resolve(context)).social_auth.get(provider='facebook').uid
         if self.type:
             return 'https://graph.facebook.com/%s/picture?type=%s' % (uid, self.type)
         return 'https://graph.facebook.com/%s/picture' % uid

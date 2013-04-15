@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from manifest.accounts.backends import AuthenticationBackend
 
@@ -28,12 +29,12 @@ class AuthenticationBackendTests(TestCase):
             result = self.backend.authenticate(
                             identification=invalid_dict['identification'],
                             password=invalid_dict['password'])
-            self.failIf(isinstance(result, User))
+            self.failIf(isinstance(result, get_user_model()))
 
         # Valid username and password
         result = self.backend.authenticate(identification='john',
                                            password='pass')
-        self.failUnless(isinstance(result, User))
+        self.failUnless(isinstance(result, get_user_model()))
 
     def test_with_email(self):
         """ Test the backend when email address is supplied """
@@ -50,12 +51,12 @@ class AuthenticationBackendTests(TestCase):
             result = self.backend.authenticate(
                                 identification=invalid_dict['identification'],
                                 password=invalid_dict['password'])
-            self.failIf(isinstance(result, User))
+            self.failIf(isinstance(result, get_user_model()))
 
         # Valid e-email address and password
         result = self.backend.authenticate(identification='john@example.com',
                                            password='pass')
-        self.failUnless(isinstance(result, User))
+        self.failUnless(isinstance(result, get_user_model()))
 
     def test_get_user(self):
         """ Test that the user is returned """
