@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup, find_packages
 import re
+from setuptools import setup, find_packages
 
 # Dynamically calculate the version based on manifest.VERSION.
 version = __import__('manifest').get_version()
+
 
 def parse_requirements(file_name):
     requirements = []
@@ -19,6 +20,7 @@ def parse_requirements(file_name):
 
     return requirements
 
+
 def parse_dependency_links(file_name):
     dependency_links = []
     for line in open(file_name, 'r').read().split('\n'):
@@ -26,13 +28,14 @@ def parse_dependency_links(file_name):
             dependency_links.append(re.sub(r'\s*-[ef]\s+', '', line))
 
     return dependency_links
+
     
 setup(
     name="django-manifest",
     version=version,
     description = "A kickstarter for Django Web Framework projects.",
     long_description=open("README").read(),
-    author = "Özgür Guneş",
+    author = "Ozgur Gunes",
     author_email = "o.gunes@gmail.com",
     url = "http://github.com/ozgurgunes/django-manifest/",
     packages=find_packages(),
@@ -47,9 +50,4 @@ setup(
     ],
     include_package_data=True,
     zip_safe=False,
-    entry_points={
-            "console_scripts": [
-                "manifest-admin = manifest.core.management:execute_from_command_line",
-            ],
-        },
 )

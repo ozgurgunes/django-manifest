@@ -1,0 +1,33 @@
+[
+{
+    "pk": 1, 
+    "model": "sites.site", 
+    "fields": 
+    {
+        "domain": "localhost:8000", 
+        "name": "Django Manifest"
+    }
+},
+{
+    "pk": 1,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "About",
+        "url": "/about/",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum viverra pellentesque facilisis. Aenean ut varius urna. Ut pharetra dignissim mi vel vehicula. Integer non scelerisque ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a fringilla metus. In laoreet vestibulum nunc, nec faucibus diam ultrices vulputate. Donec vel sapien laoreet sapien posuere interdum."
+    }
+},
+{
+    "pk": 2,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "Contact",
+        "url": "/contact/",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum viverra pellentesque facilisis. Aenean ut varius urna. Ut pharetra dignissim mi vel vehicula. Integer non scelerisque ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a fringilla metus. In laoreet vestibulum nunc, nec faucibus diam ultrices vulputate. Donec vel sapien laoreet sapien posuere interdum."
+    }
+}
+]

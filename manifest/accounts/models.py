@@ -295,7 +295,7 @@ class ProfileBase(models.Model):
         """
         # First check for a picture and if any return that.
         if self.picture:
-            return self.picture.url
+            return self.picture
 
         # Use Gravatar if the user wants to.
         if accounts_settings.ACCOUNTS_GRAVATAR_PICTURE:

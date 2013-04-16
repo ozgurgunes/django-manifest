@@ -10,7 +10,7 @@
 },
 {
     "pk": 1, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "admin", 
@@ -24,12 +24,13 @@
         "user_permissions": [], 
         "password": "sha1$e467e$508942f1c9be858fd46dc976c2496ba133ba4122", 
         "email": "admin@example.com", 
-        "date_joined": "2012-01-01 00:00:00"
+        "date_joined": "2012-01-01 00:00:00",
+        "activation_key": "ALREADY_ACTIVATED"
     }
 }, 
 {
     "pk": 2, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "test", 
@@ -43,12 +44,13 @@
         "user_permissions": [], 
         "password": "sha1$3cb32$046d34b6eee347cb4ce099b266f1b9b3d066553a", 
         "email": "test@example.com",
-        "date_joined": "2012-01-01 00:00:00"
+        "date_joined": "2012-01-01 00:00:00",
+        "activation_key": "ALREADY_ACTIVATED"
     }
 }, 
 {
     "pk": 3, 
-    "model": "auth.user", 
+    "model": "accounts.user", 
     "fields": 
     {
         "username": "demo", 
@@ -62,36 +64,10 @@
         "user_permissions": [], 
         "password": "sha1$1e2d3$0fd3f38117e48024ad68058252c42e9b9d69ca43", 
         "email": "demo@example.com",
-        "date_joined": "2012-01-01 00:00:00"
-    }
-}, 
-{
-    "pk": 1,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 1,
+        "date_joined": "2012-01-01 00:00:00",
         "activation_key": "ALREADY_ACTIVATED"
     }
-},
-{
-    "pk": 2,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 2,
-         "activation_key": "ALREADY_ACTIVATED"
-    }
-},
-{
-    "pk": 3,
-    "model": "accounts.account",
-    "fields": 
-    {
-        "user": 3,
-         "activation_key": "ALREADY_ACTIVATED"
-     }
-},
+}, 
 {
     "pk": 1, 
     "model": "profiles.profile", 
@@ -138,6 +114,28 @@
         "country": "", 
         "birth_date": null, 
         "occupation": null
+    }
+},
+{
+    "pk": 1,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "About",
+        "url": "/about/",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum viverra pellentesque facilisis. Aenean ut varius urna. Ut pharetra dignissim mi vel vehicula. Integer non scelerisque ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a fringilla metus. In laoreet vestibulum nunc, nec faucibus diam ultrices vulputate. Donec vel sapien laoreet sapien posuere interdum."
+    }
+},
+{
+    "pk": 2,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "Contact",
+        "url": "/contact/",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum viverra pellentesque facilisis. Aenean ut varius urna. Ut pharetra dignissim mi vel vehicula. Integer non scelerisque ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a fringilla metus. In laoreet vestibulum nunc, nec faucibus diam ultrices vulputate. Donec vel sapien laoreet sapien posuere interdum."
     }
 }
 ]

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-import datetime
 import os
+import datetime
 import subprocess
 
+
 VERSION = (0, 1, 0, 'beta', 5)
+
 
 def get_version(version=None):
     "Returns a PEP 386-compliant version number from VERSION."
@@ -33,6 +34,7 @@ def get_version(version=None):
         sub = mapping[version[3]] + str(version[4])
 
     return str(main + sub)
+
 
 def get_git_changeset():
     """Returns a numeric identifier of the latest git changeset.

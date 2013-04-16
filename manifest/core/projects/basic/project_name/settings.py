@@ -90,7 +90,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(os.path.dirname(PATH), 'httpdocs', 'media/')
+MEDIA_ROOT = os.path.join(PATH, 'httpdocs', 'media/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -101,7 +101,7 @@ MEDIA_URL = os.path.join(URL, 'media/')
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(os.path.dirname(PATH), 'httpdocs', 'static/')
+STATIC_ROOT = os.path.join(PATH, 'httpdocs', 'static/')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -174,7 +174,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PATH, 'templates/'),
+    os.path.join(PATH, '{{ project_name }}', 'templates/'),
 )
 
 INSTALLED_APPS = (
@@ -215,9 +215,10 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Django Auth Settings
+AUTH_USER_MODEL = 'accounts.User'
+AUTH_PROFILE_MODULE = 'profiles.Profile'
 LOGIN_URL   = os.path.join(URL, 'login/')
 LOGIN_REDIRECT_URL = URL
-AUTH_PROFILE_MODULE = 'profiles.Profile'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -248,6 +249,9 @@ LOGGING = {
     }
 }
 
+# Google Analytics Id
+GOOGLE_ANALYTICS_ACCOUNT    = ''
+
 # Django Social Auth Secrets
 FACEBOOK_APP_ID              = ''
 FACEBOOK_API_SECRET          = ''
@@ -255,6 +259,22 @@ FACEBOOK_API_SECRET          = ''
 # Django Social Auth Settings
 SOCIAL_AUTH_EXPIRATION = 'expires'
 FACEBOOK_EXTENDED_PERMISSIONS = ['email', 'user_likes',]
+
+# Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# SMTP Authentication
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
+# Automated correspondence
+DEFAULT_FROM_EMAIL = 'Django Manifest <no-reply@django-manifest.org>'
+EMAIL_SUBJECT_PREFIX = '[Django Manifest] '
+
+
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
