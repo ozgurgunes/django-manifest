@@ -35,18 +35,24 @@ class AuthenticationBackend(ModelBackend):
 
         """
         if email_re.search(identification):
-            try: user = get_user_model().objects.get(email__iexact=identification)
-            except get_user_model().DoesNotExist: return None
+            try: 
+                user = get_user_model().objects.get(email__iexact=identification)
+            except get_user_model().DoesNotExist: 
+                return None
         else:
-            try: user = get_user_model().objects.get(username__iexact=identification)
-            except get_user_model().DoesNotExist: return None
+            try: 
+                user = get_user_model().objects.get(username__iexact=identification)
+            except get_user_model().DoesNotExist: 
+                return None
         if check_password:
             if user.check_password(password):
                 return user
             return None
-        else: return user
+        else: 
+            return user
 
     def get_user(self, user_id):
-        try: return get_user_model().objects.get(pk=user_id)
+        try: 
+            return get_user_model().objects.get(pk=user_id)
         except get_user_model().DoesNotExist:
             return None
