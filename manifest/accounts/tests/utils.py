@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import SiteProfileNotAvailable
 
-from manifest.accounts.utils import (get_gravatar, login_redirect, get_profile_model,
+from manifest.accounts.utils import (get_gravatar, login_redirect,
                            get_protocol)
 from manifest.accounts import settings as accounts_settings
 from manifest.accounts.models import ProfileBase
@@ -72,22 +72,6 @@ class UtilsTests(TestCase):
         
         # The ultimate fallback, probably never used
         self.failUnlessEqual(login_redirect(), settings.LOGIN_REDIRECT_URL)
-
-    def test_get_profile_model(self):
-        """
-        Test if the correct profile model is returned when
-        ``get_profile_model()`` is called.
-
-        """
-        # A non existent model should also raise ``SiteProfileNotAvailable``
-        # error.
-        settings.AUTH_PROFILE_MODULE = 'accounts.FakeProfile'
-        self.assertRaises(SiteProfileNotAvailable, get_profile_model)
-
-        # An error should be raised when there is no ``AUTH_PROFILE_MODULE``
-        # supplied.
-        settings.AUTH_PROFILE_MODULE = None
-        self.assertRaises(SiteProfileNotAvailable, get_profile_model)
 
     def test_get_protocol(self):
         """ Test if the correct protocol is returned """

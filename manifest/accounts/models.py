@@ -12,20 +12,75 @@ from django.template.loader import render_to_string
 
 from timezones.fields import TimeZoneField
 
-from manifest.accounts.managers import UserManager, ProfileBaseManager
+from manifest.accounts.managers import UserManager
 from manifest.accounts.utils import (get_gravatar, generate_sha1,   
                                         get_protocol, get_datetime_now)
 from manifest.accounts import settings as accounts_settings
 
 
-class ActivationMixin(models.Model):
+class AccountActivationMixin(models.Model):
     """
     A mixin that adds the field and methods necessary to support
-    account activation and email confirmation.
+    account activation.
     """
     activation_key = models.CharField(_(u'Activation key'), 
                         max_length=40, blank=True)
 
+    class Meta:
+        abstract = True        
+
+    def activation_key_expired(self):
+        """
+        Checks if activation key is expired.
+
+        Returns ``True`` when the ``activation_key`` of the user is expired 
+        and ``False`` if the key is still valid.
+
+        The key is expired when it's set to the value defined in
+        ``ACCOUNTS_ACTIVATED`` or ``activation_key_created`` is beyond the
+        amount of days defined in ``ACCOUNTS_ACTIVATION_DAYS``.
+
+        """
+        expiration_days = datetime.timedelta(
+                            days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS)
+        expiration_date = self.date_joined + expiration_days
+        if self.activation_key == accounts_settings.ACCOUNTS_ACTIVATED:
+            return True
+        if get_datetime_now() >= expiration_date:
+            return True
+        return False
+
+    def send_activation_email(self):
+        """
+        Sends a activation email to the user.
+
+        This email is send when the user wants to activate their 
+        newly created user.
+
+        """
+        context= {'user': self,
+                  'protocol': get_protocol(),
+                  'activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS,
+                  'activation_key': self.activation_key,
+                  'site': Site.objects.get_current()}
+
+        subject = ''.join(render_to_string(
+                    'accounts/emails/activation_email_subject.txt',
+                    context).splitlines())
+
+        message = render_to_string(
+                    'accounts/emails/activation_email_message.txt',
+                    context)
+        send_mail(subject,
+                  message,
+                  settings.DEFAULT_FROM_EMAIL,
+                  [self.email,])
+
+class EmailConfirmationMixin(models.Model):
+    """
+    A mixin that adds the field and methods necessary to support
+    e-mail address confirmation.
+    """
     email_unconfirmed = models.EmailField(_(u'Unconfirmed email address'), 
                             blank=True,
                             help_text=_(u'Temporary email address when the '
@@ -41,7 +96,7 @@ class ActivationMixin(models.Model):
 
     class Meta:
         abstract = True        
-    
+
     def change_email(self, email):
         """
         Changes the email address for a user.
@@ -115,85 +170,7 @@ class ActivationMixin(models.Model):
                   settings.DEFAULT_FROM_EMAIL,
                   [self.email_unconfirmed,])
 
-    def activation_key_expired(self):
-        """
-        Checks if activation key is expired.
-
-        Returns ``True`` when the ``activation_key`` of the user is expired 
-        and ``False`` if the key is still valid.
-
-        The key is expired when it's set to the value defined in
-        ``ACCOUNTS_ACTIVATED`` or ``activation_key_created`` is beyond the
-        amount of days defined in ``ACCOUNTS_ACTIVATION_DAYS``.
-
-        """
-        expiration_days = datetime.timedelta(
-                            days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS)
-        expiration_date = self.date_joined + expiration_days
-        if self.activation_key == accounts_settings.ACCOUNTS_ACTIVATED:
-            return True
-        if get_datetime_now() >= expiration_date:
-            return True
-        return False
-
-    def send_activation_email(self):
-        """
-        Sends a activation email to the user.
-
-        This email is send when the user wants to activate their 
-        newly created user.
-
-        """
-        context= {'user': self,
-                  'protocol': get_protocol(),
-                  'activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS,
-                  'activation_key': self.activation_key,
-                  'site': Site.objects.get_current()}
-
-        subject = ''.join(render_to_string(
-                    'accounts/emails/activation_email_subject.txt',
-                    context).splitlines())
-
-        message = render_to_string(
-                    'accounts/emails/activation_email_message.txt',
-                    context)
-        send_mail(subject,
-                  message,
-                  settings.DEFAULT_FROM_EMAIL,
-                  [self.email,])
-
-
-class User(AbstractUser, ActivationMixin):
-    """
-    Custom user model which stores all the necessary information 
-    to have a fully functional user implementation on your Django website.
-    """
-
-    timezone = TimeZoneField(_(u"Timezone"))
-
-    locale = models.CharField(_(u"Locale"), max_length = 10,
-                                    choices = settings.LANGUAGES,
-                                    default = settings.LANGUAGE_CODE)
-                                    
-    objects = UserManager()
-
-    # def __unicode__(self):
-    #     return self.__str__
-
-
-if 'social_auth' in settings.INSTALLED_APPS:
-    from social_auth.signals import socialauth_registered
-
-    def create_user(sender, user, *args, **kwargs):
-        user = User.objects.activate_user(user.username, 
-                                                user.activation_key)
-        
-    socialauth_registered.connect(create_user, sender=None)
-
-"""
-User profile base class
-
-"""
+                  
 def upload_to_picture(instance, filename):
     """
     Uploads a picture for a user to the ``ACCOUNTS_PICTURE_PATH`` and 
@@ -210,8 +187,9 @@ def upload_to_picture(instance, filename):
                                 str(instance._meta.module_name))),
                 'hash': hash[:10],
                 'extension': extension}
+    
 
-class ProfileBase(models.Model):
+class UserProfileMixin(models.Model):
     """ 
     Base model needed for extra profile functionality 
     
@@ -221,34 +199,16 @@ class ProfileBase(models.Model):
         ('F', _(u'Female')),
         ('M', _(u'Male')),
     )
-    
-    user = models.OneToOneField(User, unique=True, verbose_name=_(u'User'), 
-                related_name='profile')
-
-    birth_date = models.DateField(_(u'Birth date'), blank=True, null=True)
 
     gender = models.CharField(_(u'Gender'), choices=GENDER_CHOICES, 
-                max_length=1, blank=True, null=True)
-
+                max_length=1, blank=True, null=True)    
+    birth_date = models.DateField(_(u'Birth date'), blank=True, null=True)
     picture = models.ImageField(_(u'Picture'), blank=True, 
                 upload_to=upload_to_picture)
 
-    objects = ProfileBaseManager()
-
 
     class Meta:
-        """
-        Meta options making the model abstract.
-
-        The model is ``abstract`` because it only supplies basic 
-        functionality to a more custom defined model that extends it. 
-        This way there is not another join needed.
-
-        """
         abstract = True
-
-    def __unicode__(self):
-        return _(u'Profile of %(username)s') % {'username': self.user.username}
 
     @models.permalink
     def get_absolute_url(self):
@@ -278,7 +238,7 @@ class ProfileBase(models.Model):
                                 self.birth_date).years
         else:
             return None
-
+    
     def get_picture_url(self):
         """
         Returns the image containing the picture for the user.
@@ -341,3 +301,48 @@ class ProfileBase(models.Model):
             else:
                 name = "%(email)s" % {'email': user.email}
         return name.strip()
+
+
+class UserLocaleMixin(models.Model):
+    """
+    A mixin that adds the field and methods necessary to support
+    i18n & L10n for UI.
+    """
+    timezone = TimeZoneField(_(u"Timezone"))
+
+    locale = models.CharField(_(u"Locale"), max_length = 10,
+                                    choices = settings.LANGUAGES,
+                                    default = settings.LANGUAGE_CODE)
+    class Meta:
+        abstract = True
+
+    
+class BaseUser(AccountActivationMixin, EmailConfirmationMixin, 
+                    UserProfileMixin, UserLocaleMixin):
+    """
+    Custom user model base which stores all the necessary information 
+    to have a fully functional user implementation on your Django website.
+    """
+
+    class Meta:
+        abstract = True
+        
+
+class User(AbstractUser, BaseUser):
+                                    
+    objects = UserManager()
+
+    # def __unicode__(self):
+    #     return self.__str__
+
+
+if 'social_auth' in settings.INSTALLED_APPS:
+    from social_auth.signals import socialauth_registered
+
+    def create_user(sender, user, *args, **kwargs):
+        user = User.objects.activate_user(user.username, 
+                                                user.activation_key)
+        
+    socialauth_registered.connect(create_user, sender=None)
+
+

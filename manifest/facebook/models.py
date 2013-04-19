@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from social_auth.backends.facebook import FacebookBackend
 from social_auth.signals import pre_update, socialauth_registered
 from manifest.facebook.api import Graph
-from manifest.accounts.utils import get_profile_model
 from manifest.accounts.models import create_user
 from manifest.facebook.utils import iso_time
 
@@ -134,29 +133,23 @@ class FacebookFriend(models.Model):
 
 def update_profile(sender, user, response, *args, **kwargs):
     try:
-        profile = user.get_profile()
-        profile.copy_facebook(response)
+        user.copy_facebook(response)
         facebook = Graph(user)    
         if 'friends' in settings.MANIFEST_FACEBOOK_SYNC:
-            friends = profile.copy_friends(facebook.get('friends'))
+            friends = user.copy_friends(facebook.get('friends'))
         if 'likes' in settings.MANIFEST_FACEBOOK_SYNC:
-            likes = profile.copy_likes(facebook.get('likes'))
+            likes = user.copy_likes(facebook.get('likes'))
     except:
         pass
     
 def register_profile(sender, user, response, *args, **kwargs):
     try:
-        try:
-            profile = user.get_profile()
-        except:
-            create_user(user)
-            profile = user.get_profile()
-        profile.copy_facebook(response)    
+        user.copy_facebook(response)    
         facebook = Graph(user)    
         if settings.MANIFEST_FACEBOOK_FRIENDS:
-            friends = profile.copy_friends(facebook.get('friends'))
+            friends = user.copy_friends(facebook.get('friends'))
         if settings.MANIFEST_FACEBOOK_LIKES:
-            likes = profile.copy_likes(facebook.get('likes'))
+            likes = user.copy_likes(facebook.get('likes'))
     except:
         pass
     

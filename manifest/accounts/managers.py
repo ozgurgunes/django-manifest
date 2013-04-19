@@ -3,22 +3,21 @@ import re, datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import (UserManager, Permission, 
-                                            AnonymousUser)
+from django.contrib.auth.models import AnonymousUser, UserManager as BaseManager
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 
 from manifest.accounts import settings as accounts_settings
 from manifest.accounts import signals as accounts_signals
-from manifest.accounts.utils import generate_sha1, get_profile_model
+from manifest.accounts.utils import generate_sha1
 
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 
-class ActivationManager(UserManager):
+class AccountActivationManager(models.Manager):
     """
-    User registration and account activation functionalities for User model.
+    Registration and account activation functionalities for User model.
     """
     
     def create_user(self, username, email, password, active=False,
@@ -48,10 +47,7 @@ class ActivationManager(UserManager):
 
         """
 
-        user = super(ActivationManager, self).create_user(username, email, password)
-
-        # Create profile
-        profile = self.create_profile(user)
+        user = super(AccountActivationManager, self).create_user(username, email, password)
 
         if isinstance(user.username, unicode):
             username = user.username.encode('utf-8')
@@ -64,25 +60,6 @@ class ActivationManager(UserManager):
             user.send_activation_email()
  
         return user
-
-    def create_profile(self, user):
-        """
-        Creates a :class:`Profile` instance for this user        
-
-        :param user:
-            Django :class:`User` instance.
-
-        :return: The newly created :class:`Profile` instance.
-
-        """
-        # All users have an empty profile
-        profile_model = get_profile_model()
-        try:
-            profile = user.get_profile()
-        except profile_model.DoesNotExist:
-            profile = profile_model(user=user)
-            profile.save(using=self._db)
-        return profile
 
     def activate_user(self, username, activation_key):
         """
@@ -113,6 +90,26 @@ class ActivationManager(UserManager):
                 return user
         return False
 
+    def delete_expired_users(self):
+        """
+        Checks for expired users and delete's the ``User`` associated with
+        it. Skips if the user ``is_staff``.
+
+        :return: A list containing the deleted users.
+
+        """
+        deleted_users = []
+        for user in self.filter(is_staff=False, is_active=False):
+            if user.activation_key_expired():
+                deleted_users.append(user)
+                user.delete()
+        return deleted_users    
+    
+class EmailConfirmationManager(models.Manager):
+    """
+    E-mail address confirmation functionalities for User model.
+    """
+    
     def confirm_email(self, username, confirmation_key):
         """
         Confirm an email address by checking a ``confirmation_key``.
@@ -145,31 +142,12 @@ class ActivationManager(UserManager):
                 return user
         return False
 
-    def delete_expired_users(self):
-        """
-        Checks for expired users and delete's the ``User`` associated with
-        it. Skips if the user ``is_staff``.
 
-        :return: A list containing the deleted users.
-
-        """
-        deleted_users = []
-        for user in self.filter(is_staff=False, is_active=False):
-            if user.activation_key_expired():
-                deleted_users.append(user)
-                user.delete()
-        return deleted_users    
-    
-
-class UserManager(ActivationManager):
-    """ Extra functionality for the User model. """
-
-
-class ProfileBaseManager(models.Manager):
+class UserProfileManager(models.Manager):
     """
-    Manager for :class: `ProfileBase`
-    
+    Profile functionalities for User model.
     """
+
     def get_visible_profiles(self, user=None):
         """
         Returns all the visible profiles available to this user.
@@ -187,10 +165,21 @@ class ProfileBaseManager(models.Manager):
         """
         profiles = self.select_related().all()
 
-        filter_kwargs = {'user__is_active': True}
+        filter_kwargs = {'is_active': True}
 
         profiles = profiles.filter(**filter_kwargs)
         if user and isinstance(user, AnonymousUser):
-            profiles = profiles.filter(user=user)
+            profiles = []
         return profiles
 
+
+class BaseUserManager(AccountActivationManager,
+                        EmailConfirmationManager,
+                        UserProfileManager):
+    pass
+
+
+
+class UserManager(BaseManager, BaseUserManager):
+    """ Extra functionality for the User model. """
+    pass

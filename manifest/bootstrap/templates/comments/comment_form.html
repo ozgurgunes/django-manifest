@@ -8,7 +8,7 @@
         <legend>{% trans "Leave your comment" %}</legend>  
         <div class="control-group">
             <p class="control-label">
-                {% thumbnail user.get_profile.avatar "16x16" as im %}
+                {% thumbnail user.avatar "16x16" as im %}
                 <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
                 {% endthumbnail %}
                 <a href="{% url 'accounts_profile_detail' user.username %}">{% firstof user.real_name user.username %}</a>

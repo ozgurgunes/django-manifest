@@ -100,23 +100,6 @@ def generate_sha1(string, salt=None):
 
     return (salt, hash)
 
-def get_profile_model():
-    """
-    Return the model class for the currently-active user profile
-    model, as defined by the ``AUTH_PROFILE_MODULE`` setting.
-
-    :return: The model that is used as profile.
-
-    """
-    if (not hasattr(settings, 'AUTH_PROFILE_MODULE')) or \
-           (not settings.AUTH_PROFILE_MODULE):
-        raise SiteProfileNotAvailable
-
-    profile_model = get_model(*settings.AUTH_PROFILE_MODULE.split('.'))
-    if profile_model is None:
-        raise SiteProfileNotAvailable
-    return profile_model
-
 def get_protocol():
     """
     Returns a string with the current protocol.

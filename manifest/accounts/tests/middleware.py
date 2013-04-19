@@ -45,20 +45,6 @@ class LocaleMiddlewareTests(ProfileTestCase):
             LocaleMiddleware().process_request(req)
             self.failUnlessEqual(req.LANGUAGE_CODE, lang)
 
-    def test_without_profile(self):
-        """ Middleware should do nothing when a user has no profile """
-        # Delete the profile
-        Profile.objects.get(pk=1).delete()
-        user = get_user_model().objects.get(pk=1)
-
-        # User shouldn't have a profile
-        self.assertRaises(ObjectDoesNotExist, user.get_profile)
-
-        req = self._get_request_with_user(user)
-        LocaleMiddleware().process_request(req)
-
-        self.failIf(hasattr(req, 'LANGUAGE_CODE'))
-
     def test_without_language_field(self):
         """ Middleware should do nothing if the profile has no language field """
         accounts_settings.ACCOUNTS_LOCALE_FIELD = 'non_existant_language_field'

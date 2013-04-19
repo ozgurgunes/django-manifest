@@ -2,7 +2,7 @@
 {% if user.is_authenticated %}
 	<li class="dropdown">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-		    {% thumbnail user.get_profile.avatar "16x16" as im %}
+		    {% thumbnail user.avatar "16x16" as im %}
             <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
             {% endthumbnail %}
             {% if user.first_name %}{{ user.first_name|escape }}{% else %}{{ user.username }}{% endif %} <span class="caret"></span></a>

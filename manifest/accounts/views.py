@@ -18,7 +18,7 @@ from manifest.accounts.forms import (RegistrationForm,
                                         AuthenticationForm,
                                         EmailForm, ProfileForm)
 from manifest.accounts.decorators import secure_required
-from manifest.accounts.utils import login_redirect, get_profile_model
+from manifest.accounts.utils import login_redirect
 from manifest.accounts import signals as accounts_signals
 from manifest.accounts import settings as accounts_settings
 
@@ -189,13 +189,13 @@ class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
 
     """
     
-    model = get_profile_model()
+    model = get_user_model()
     profile_form = ProfileForm
     template_name = 'accounts/profile_form.html'
     success_message = _(u'Your profile has been updated.')
     
     def get_object(self):
-        return self.request.user.get_profile()
+        return self.request.user
 
     def get_initial(self):
         return {'first_name': self.request.user.first_name, 
@@ -327,7 +327,7 @@ class ProfileList(ListView, ExtraContextMixin):
     
     """
 
-    queryset = get_profile_model().objects.get_visible_profiles()
+    queryset = get_user_model().objects.get_visible_profiles()
     template_name = "accounts/profile_list.html"
     
     def dispatch(self, request, *args, **kwargs):
@@ -345,7 +345,7 @@ class ProfileDetail(UserView, ExtraContextMixin):
         
     """
 
-    queryset = get_profile_model().objects.get_visible_profiles()
+    queryset = get_user_model().objects.get_visible_profiles()
     template_name = "accounts/profile_detail.html"
     slug_field = 'user__username'
     slug_url_kwarg = 'username'

@@ -41,9 +41,6 @@ class AccountManagerTests(TestCase):
         # User has a valid SHA1 activation key
         self.failUnless(re.match('^[a-f0-9]{40}$', new_user.activation_key))
 
-        # User now has an profile.
-        self.failUnless(new_user.get_profile())
-
         # User should be saved
         self.failUnlessEqual(get_user_model().objects.filter(email=self.user_info['email']).count(), 1)
 

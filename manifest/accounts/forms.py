@@ -14,7 +14,6 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.db.transaction import commit_on_success
 
 from manifest.accounts import settings
-from manifest.accounts.utils import get_profile_model
 
 attrs_dict = {'class': 'required'}
 
@@ -280,7 +279,7 @@ class ProfileForm(forms.ModelForm):
         self.fields.keyOrder = new_order
 
     class Meta:
-        model = get_profile_model()
+        model = get_user_model()
         exclude = ['user']
 
     def clean_picture(self):
@@ -306,15 +305,4 @@ class ProfileForm(forms.ModelForm):
             if picture_data.size > int(settings.ACCOUNTS_PICTURE_MAX_FILE):
                 raise forms.ValidationError(_(u'Image size is too big.'))
             return self.cleaned_data['picture']
-
-    @commit_on_success()
-    def save(self, force_insert=False, force_update=False, commit=True):
-        profile = super(ProfileForm, self).save(commit=commit)
-        # Save first and last name
-        user = profile.user
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.save()
-
-        return profile
 

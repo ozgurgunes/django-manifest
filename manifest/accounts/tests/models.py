@@ -14,12 +14,8 @@ from django.contrib.auth.models import AnonymousUser
 from manifest.accounts import settings as accounts_settings
 from manifest.accounts.models import upload_to_picture
 
-from manifest.accounts.tests.profiles.tests import ProfileTestCase
-from manifest.accounts.tests.profiles.models import Profile
 
-
-
-class AccountModelTests(ProfileTestCase):
+class AccountModelTests(TestCase):
     """ Test the model of Account """
     user_info = {'username': 'foo',
                  'password': 'bar',
@@ -36,7 +32,7 @@ class AccountModelTests(ProfileTestCase):
         """
         user = get_user_model().objects.get(pk=1)
         filename = 'my_avatar.png'
-        path = upload_to_picture(user.profile, filename)
+        path = upload_to_picture(user, filename)
 
         # Path should be changed from the original
         self.failIfEqual(filename, path)
@@ -45,8 +41,8 @@ class AccountModelTests(ProfileTestCase):
         PICTURE_RE = re.compile('^%(picture_path)s/[a-f0-9]{10}.png$' %
                             {'picture_path': getattr(accounts_settings, 
                                 'ACCOUNTS_PICTURE_PATH','%s/%s' % (
-                                    str(user.profile._meta.app_label), 
-                                    str(user.profile._meta.module_name)))})
+                                    str(user._meta.app_label), 
+                                    str(user._meta.module_name)))})
 
         self.failUnless(PICTURE_RE.search(path))
 
@@ -171,10 +167,9 @@ class ProfileBaseModelTest(ProfileTestCase):
     def test_get_full_name_or_username(self):
         """ Test if the full name or username are returned correcly """
         user = get_user_model().objects.get(pk=1)
-        profile = user.get_profile()
 
         # Profile #1 has a first and last name
-        full_name = profile.get_full_name_or_username()
+        full_name = user.get_full_name_or_username()
         self.failUnlessEqual(full_name, "John Doe")
 
         # Let's empty out his name, now we should get his username
@@ -182,12 +177,12 @@ class ProfileBaseModelTest(ProfileTestCase):
         user.last_name = ''
         user.save()
 
-        self.failUnlessEqual(profile.get_full_name_or_username(),
+        self.failUnlessEqual(user.get_full_name_or_username(),
                              "john")
 
         # Finally, accounts doesn't use any usernames, so we should return the
         # e-mail address.
         accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = True
-        self.failUnlessEqual(profile.get_full_name_or_username(),
+        self.failUnlessEqual(user.get_full_name_or_username(),
                              "john@example.com")
         accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = False
