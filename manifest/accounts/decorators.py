@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.utils.decorators import available_attrs
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 from django.utils.functional import wraps
 
@@ -22,7 +22,7 @@ def secure_required(view_func):
     """
     def _wrapped_view(request, *args, **kwargs):
         if not request.is_secure():
-            if accounts_settings.ACCOUNTS_USE_HTTPS:
+            if defaults.ACCOUNTS_USE_HTTPS:
                 request_url = request.build_absolute_uri(
                                     request.get_full_path())
                 secure_url = request_url.replace('http://', 'https://')

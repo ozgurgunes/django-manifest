@@ -7,7 +7,7 @@ from django.contrib.auth.models import AnonymousUser, UserManager as BaseManager
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 from manifest.accounts import signals as accounts_signals
 from manifest.accounts.utils import generate_sha1
 
@@ -15,7 +15,7 @@ from manifest.accounts.utils import generate_sha1
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 
-class AccountActivationManager(models.Manager):
+class AccountActivationManager(BaseManager):
     """
     Registration and account activation functionalities for User model.
     """
@@ -81,7 +81,7 @@ class AccountActivationManager(models.Manager):
             except self.model.DoesNotExist:
                 return False
             if not user.activation_key_expired():
-                user.activation_key = accounts_settings.ACCOUNTS_ACTIVATED
+                user.activation_key = defaults.ACCOUNTS_ACTIVATED
                 user.is_active = True
                 user.save(using=self._db)
                 # Send the activation_complete signal
@@ -105,7 +105,7 @@ class AccountActivationManager(models.Manager):
                 user.delete()
         return deleted_users    
     
-class EmailConfirmationManager(models.Manager):
+class EmailConfirmationManager(BaseManager):
     """
     E-mail address confirmation functionalities for User model.
     """
@@ -143,7 +143,7 @@ class EmailConfirmationManager(models.Manager):
         return False
 
 
-class UserProfileManager(models.Manager):
+class UserProfileManager(BaseManager):
     """
     Profile functionalities for User model.
     """
@@ -180,6 +180,6 @@ class BaseUserManager(AccountActivationManager,
 
 
 
-class UserManager(BaseManager, BaseUserManager):
+class UserManager(BaseUserManager):
     """ Extra functionality for the User model. """
     pass

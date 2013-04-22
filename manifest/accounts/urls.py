@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 
 from manifest.accounts import views as accounts_views
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 
 urlpatterns = patterns('',
@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 
     url(r'^logout/$', 
         auth_views.logout, {
-            'next_page': accounts_settings.ACCOUNTS_REDIRECT_ON_LOGOUT,
+            'next_page': defaults.ACCOUNTS_REDIRECT_ON_LOGOUT,
             'template_name': 'accounts/logout.html'},
         name='accounts_logout'), 
 
@@ -28,9 +28,9 @@ urlpatterns = patterns('',
             template_name='accounts/register_complete.html',
             extra_context={
                 'accounts_activation_required': 
-                    accounts_settings.ACCOUNTS_ACTIVATION_REQUIRED,
+                    defaults.ACCOUNTS_ACTIVATION_REQUIRED,
                 'accounts_activation_days': 
-                    accounts_settings.ACCOUNTS_ACTIVATION_DAYS}),
+                    defaults.ACCOUNTS_ACTIVATION_DAYS}),
         name='accounts_register_complete'),
 
     # Activate

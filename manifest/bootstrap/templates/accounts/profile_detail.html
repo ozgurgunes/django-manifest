@@ -1,35 +1,35 @@
 {% extends 'accounts/base.html' %}
-{% block title %}{% blocktrans with profile.user.username as username %}{{ username }}'s profile.{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans with user.username as username %}{{ username }}'s profile.{% endblocktrans %}{% endblock %}
 
 {% block main %}
   <div class="white-box">
     <div id="details">
       {% block profile_details %}
-      {% thumbnail profile.get_picture_url "128x128" as im %}
+      {% thumbnail user.avatar "128x128" as im %}
       <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
       {% endthumbnail %}
       
         <dl>
           {% block profile_definition_list %}
-            {% if profile.user.get_full_name %}
+            {% if user.get_full_name %}
               <dt>{% trans "Name" %}</dt>
-              <dd>{{ profile.user.get_full_name }}</dd>
+              <dd>{{ user.get_full_name }}</dd>
             {% endif %}
-            {% if profile.age %}          
+            {% if user.age %}          
               <dt>{% trans "Age" %}</dt>
-              <dd>{{ profile.age }}</dd>
+              <dd>{{ user.age }}</dd>
             {% endif %}
-            {% if profile.website %}
+            {% if user.website %}
               <dt>{% trans "website" %}</dt>
-              <dd>{{ profile.website|urlize }}</dd>
+              <dd>{{ user.website|urlize }}</dd>
             {% endif %}
-            {% if profile.location %}
+            {% if user.location %}
               <dt>{% trans "Location" %}</dt>
-              <dd>{{ profile.location }}</dd>
+              <dd>{{ user.location }}</dd>
             {% endif %}
-            {% if profile.about_me %}
+            {% if user.about_me %}
               <dt>{% trans "About me" %}</dt>
-              <dd>{{ profile.about_me }}</dd>
+              <dd>{{ user.about_me }}</dd>
             {% endif %}
           {% endblock %}
         </dl>

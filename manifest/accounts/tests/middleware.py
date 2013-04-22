@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.test import TestCase
 from django.http import HttpRequest
 from django.utils.importlib import import_module
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
-from manifest.accounts.tests.profiles.tests import ProfileTestCase
-from manifest.accounts.tests.profiles.models import Profile
 from manifest.accounts.middleware import LocaleMiddleware
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
-class LocaleMiddlewareTests(ProfileTestCase):
+class LocaleMiddlewareTests(TestCase):
     """ Test the ``LocaleMiddleware`` """
     fixtures = ['test']
 
@@ -47,7 +46,7 @@ class LocaleMiddlewareTests(ProfileTestCase):
 
     def test_without_language_field(self):
         """ Middleware should do nothing if the profile has no language field """
-        accounts_settings.ACCOUNTS_LOCALE_FIELD = 'non_existant_language_field'
+        defaults.ACCOUNTS_LOCALE_FIELD = 'non_existant_language_field'
         user = get_user_model().objects.get(pk=1)
 
         req = self._get_request_with_user(user)

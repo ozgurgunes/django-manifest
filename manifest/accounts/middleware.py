@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.contrib.auth.models import SiteProfileNotAvailable
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 class LocaleMiddleware(object):
     """
@@ -20,7 +20,7 @@ class LocaleMiddleware(object):
             if request.user.is_authenticated():
                 try:
                     lang = getattr(request.user, 
-                                accounts_settings.ACCOUNTS_LOCALE_FIELD)
+                                defaults.ACCOUNTS_LOCALE_FIELD)
                     translation.activate(lang)
                     request.LANGUAGE_CODE = translation.get_language()
                 except AttributeError: pass

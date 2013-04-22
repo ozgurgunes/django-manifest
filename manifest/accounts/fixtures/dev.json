@@ -7,15 +7,13 @@
         "username": "admin", 
         "first_name": "Admin", 
         "last_name": "User", 
+        "email": "admin@example.com", 
         "is_active": true, 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2012-01-01 00:00:00", 
-        "groups": [], 
-        "user_permissions": [], 
         "password": "sha1$e467e$508942f1c9be858fd46dc976c2496ba133ba4122", 
-        "email": "admin@example.com", 
-        "date_joined": "2012-01-01 00:00:00"
+        "last_login": "2012-12-31T22:00:00Z", 
+        "date_joined": "2012-12-31T22:00:00Z"
     }
 }, 
 {
@@ -26,15 +24,13 @@
         "username": "test", 
         "first_name": "Test", 
         "last_name": "User", 
+        "email": "test@example.com",
         "is_active": true, 
         "is_superuser": true, 
         "is_staff": false, 
-        "last_login": "2012-01-01 00:00:00", 
-        "groups": [], 
-        "user_permissions": [], 
         "password": "sha1$3cb32$046d34b6eee347cb4ce099b266f1b9b3d066553a", 
-        "email": "test@example.com",
-        "date_joined": "2012-01-01 00:00:00"
+        "last_login": "2012-12-31T22:00:00Z", 
+        "date_joined": "2012-12-31T22:00:00Z"
     }
 }, 
 {
@@ -45,15 +41,13 @@
         "username": "demo", 
         "first_name": "Demo", 
         "last_name": "User", 
+        "email": "demo@example.com",
         "is_active": true, 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2012-01-01 00:00:00", 
-        "groups": [], 
-        "user_permissions": [], 
         "password": "sha1$1e2d3$0fd3f38117e48024ad68058252c42e9b9d69ca43", 
-        "email": "demo@example.com",
-        "date_joined": "2012-01-01 00:00:00"
+        "last_login": "2012-12-31T22:00:00Z", 
+        "date_joined": "2012-12-31T22:00:00Z"
     }
 }
 ]

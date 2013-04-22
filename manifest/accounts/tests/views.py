@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.test import TestCase
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 
 from manifest.accounts import forms
-from manifest.accounts import settings as accounts_settings
-from manifest.accounts.tests.profiles.tests import ProfileTestCase
+from manifest.accounts import defaults
+from manifest.accounts.tests.base import AccountsTestCase
 
-class AccountsViewsTests(ProfileTestCase):
+class AccountsViewsTests(AccountsTestCase):
     """ Test the account views """
     fixtures = ['test']
 
@@ -89,14 +90,14 @@ class AccountsViewsTests(ProfileTestCase):
 
         # Now check that a different form is used when
         # ``ACCOUNTS_WITHOUT_USERNAMES`` setting is set to ``True``
-        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = True
+        defaults.ACCOUNTS_WITHOUT_USERNAMES = True
 
         response = self.client.get(reverse('accounts_register'))
         self.failUnless(isinstance(response.context['form'],
                                    forms.RegistrationFormOnlyEmail))
 
         # Back to default
-        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = False
+        defaults.ACCOUNTS_WITHOUT_USERNAMES = False
 
     def test_register_view_redirect(self):
         """ Check that an authenticated user shouldn't register. """
@@ -151,7 +152,7 @@ class AccountsViewsTests(ProfileTestCase):
                                           'password': 'pass',
                                           'remember_me': True})
         self.assertEqual(self.client.session.get_expiry_age(),
-                         accounts_settings.ACCOUNTS_REMEMBER_ME_DAYS[1] * 3600 * 24)
+                         defaults.ACCOUNTS_REMEMBER_ME_DAYS[1] * 3600 * 24)
 
     def test_login_view_remember_off(self):
         """
@@ -285,12 +286,12 @@ class AccountsViewsTests(ProfileTestCase):
         """ A ``GET`` to the list view of a user """
 
         # A profile list should be shown.
-        accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST = False
+        defaults.ACCOUNTS_DISABLE_PROFILE_LIST = False
         response = self.client.get(reverse('accounts_profile_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/profile_list.html')
 
         # Profile list is disabled.
-        accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST = True
+        defaults.ACCOUNTS_DISABLE_PROFILE_LIST = True
         response = self.client.get(reverse('accounts_profile_list'))
         self.assertEqual(response.status_code, 404)

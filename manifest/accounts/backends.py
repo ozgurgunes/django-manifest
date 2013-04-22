@@ -4,7 +4,7 @@ from django.core.validators import email_re
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 
 class AuthenticationBackend(ModelBackend):

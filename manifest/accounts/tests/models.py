@@ -11,40 +11,18 @@ from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 from manifest.accounts.models import upload_to_picture
+from manifest.accounts.tests.base import AccountsTestCase
 
 
-class AccountModelTests(TestCase):
+class AccountModelTests(AccountsTestCase):
     """ Test the model of Account """
     user_info = {'username': 'foo',
                  'password': 'bar',
                  'email': 'foo@example.com'}
 
     fixtures = ['test']
-
-    def test_upload_picture(self):
-        """
-        Test the uploaded path of pictures
-
-        TODO: What if a image get's uploaded with no extension?
-
-        """
-        user = get_user_model().objects.get(pk=1)
-        filename = 'my_avatar.png'
-        path = upload_to_picture(user, filename)
-
-        # Path should be changed from the original
-        self.failIfEqual(filename, path)
-
-        # Check if the correct path is returned
-        PICTURE_RE = re.compile('^%(picture_path)s/[a-f0-9]{10}.png$' %
-                            {'picture_path': getattr(accounts_settings, 
-                                'ACCOUNTS_PICTURE_PATH','%s/%s' % (
-                                    str(user._meta.app_label), 
-                                    str(user._meta.module_name)))})
-
-        self.failUnless(PICTURE_RE.search(path))
 
     def test_change_email(self):
         """ TODO """
@@ -58,7 +36,7 @@ class AccountModelTests(TestCase):
 
         """
         user = get_user_model().objects.create_user(**self.user_info)
-        user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
+        user.date_joined -= datetime.timedelta(days=defaults.ACCOUNTS_ACTIVATION_DAYS + 1)
         user.save()
 
         user = get_user_model().objects.get(username='foo')
@@ -95,25 +73,37 @@ class AccountModelTests(TestCase):
         self.assertEqual(mail.outbox[0].to, [self.user_info['email']])
 
 
-class ProfileBaseModelTest(ProfileTestCase):
-    """ Test the ``ProfileBase`` model """
-    fixtures = ['test']
+    def test_upload_picture(self):
+        """
+        Test the uploaded path of pictures
+
+        TODO: What if a image get's uploaded with no extension?
+
+        """
+        user = get_user_model().objects.get(pk=1)
+        filename = 'my_avatar.png'
+        path = upload_to_picture(user, filename)
+
+        # Path should be changed from the original
+        self.failIfEqual(filename, path)
+
+        # Check if the correct path is returned
+        PICTURE_RE = re.compile('^%(picture_path)s/[a-f0-9]{10}.png$' %
+                            {'picture_path': getattr(defaults, 
+                                'ACCOUNTS_PICTURE_PATH','%s/%s' % (
+                                    str(user._meta.app_label), 
+                                    str(user._meta.module_name)))})
+
+        self.failUnless(PICTURE_RE.search(path))
 
     def test_picture_url(self):
         """ The user has uploaded it's own picture. This should be returned. """
-        profile = Profile.objects.get(pk=1)
-        profile.picture = 'fake_image.png'
-        profile.save()
-
-        profile = Profile.objects.get(pk=1)
-        self.failUnlessEqual(profile.get_picture_url(),
-                             settings.MEDIA_URL + 'fake_image.png')
-
-    def test_stringification(self):
-        """ Profile should return a human-readable name as an object """
-        profile = Profile.objects.get(pk=1)
-        self.failUnlessEqual(profile.__unicode__(),
-                             'Profile of %s' % profile.user.username)
+        filename = 'fake_image.png'
+        user = get_user_model().objects.get(pk=1)
+        user.picture = filename
+        user.save()
+        self.failUnlessEqual(user.get_picture_url(),
+                             settings.MEDIA_URL + filename)
 
     def test_get_picture_url_without_gravatar(self):
         """
@@ -121,19 +111,18 @@ class ProfileBaseModelTest(ProfileTestCase):
         ``ACCOUNTS_PICTURE_GRAVATAR`` is set to ``False``.
 
         """
+        user = get_user_model().objects.get(pk=1)
         # This user has no picture, and gravatar is disabled. And to make
         # matters worse, there isn't even a default image.
-        accounts_settings.ACCOUNTS_GRAVATAR_PICTURE = False
-        profile = Profile.objects.get(pk=1)
-        self.failUnlessEqual(profile.get_picture_url(), None)
+        defaults.ACCOUNTS_GRAVATAR_PICTURE = False
+        self.failUnlessEqual(user.get_picture_url(), None)
 
         # There _is_ a default image
-        accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT = 'http://example.com'
-        profile = Profile.objects.get(pk=1)
-        self.failUnlessEqual(profile.get_picture_url(), 'http://example.com')
+        defaults.ACCOUNTS_GRAVATAR_DEFAULT = 'http://example.com'
+        self.failUnlessEqual(user.get_picture_url(), 'http://example.com')
 
         # Settings back to default
-        accounts_settings.ACCOUNTS_PICTURE_GRAVATAR = True
+        defaults.ACCOUNTS_PICTURE_GRAVATAR = True
 
     def test_get_picture_url_with_gravatar(self):
         """
@@ -141,28 +130,28 @@ class ProfileBaseModelTest(ProfileTestCase):
 
         """
         template = 'http://www.gravatar.com/avatar/%(hash)s?s=%(size)s&d=%(default)s'
-        profile = Profile.objects.get(pk=1)
+        user = get_user_model().objects.get(pk=1)
 
-        gravatar_hash = hashlib.md5(profile.user.email).hexdigest()
+        gravatar_hash = hashlib.md5(user.email).hexdigest()
 
         # Test with the default settings
-        self.failUnlessEqual(profile.get_picture_url(),
+        self.failUnlessEqual(user.get_picture_url(),
                              template % {'hash': gravatar_hash,
-                                         'size': accounts_settings.ACCOUNTS_GRAVATAR_SIZE,
-                                         'default': accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT})
+                                         'size': defaults.ACCOUNTS_GRAVATAR_SIZE,
+                                         'default': defaults.ACCOUNTS_GRAVATAR_DEFAULT})
 
         # Change accounts settings
-        accounts_settings.ACCOUNTS_GRAVATAR_SIZE = 180
-        accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT = '404'
+        defaults.ACCOUNTS_GRAVATAR_SIZE = 180
+        defaults.ACCOUNTS_GRAVATAR_DEFAULT = '404'
 
-        self.failUnlessEqual(profile.get_picture_url(),
+        self.failUnlessEqual(user.get_picture_url(),
                              template % {'hash': gravatar_hash,
-                                         'size': accounts_settings.ACCOUNTS_GRAVATAR_SIZE,
-                                         'default': accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT})
+                                         'size': defaults.ACCOUNTS_GRAVATAR_SIZE,
+                                         'default': defaults.ACCOUNTS_GRAVATAR_DEFAULT})
 
         # Settings back to default
-        accounts_settings.ACCOUNTS_PICTURE_MAX_SIZE = 80
-        accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT = 'identicon'
+        defaults.ACCOUNTS_PICTURE_MAX_SIZE = 80
+        defaults.ACCOUNTS_GRAVATAR_DEFAULT = 'identicon'
 
     def test_get_full_name_or_username(self):
         """ Test if the full name or username are returned correcly """
@@ -182,7 +171,7 @@ class ProfileBaseModelTest(ProfileTestCase):
 
         # Finally, accounts doesn't use any usernames, so we should return the
         # e-mail address.
-        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = True
+        defaults.ACCOUNTS_WITHOUT_USERNAMES = True
         self.failUnlessEqual(user.get_full_name_or_username(),
                              "john@example.com")
-        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = False
+        defaults.ACCOUNTS_WITHOUT_USERNAMES = False

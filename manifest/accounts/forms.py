@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
+import hashlib
 from datetime import datetime
 from StringIO import StringIO  
 from PIL import Image
@@ -9,11 +10,10 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 
-from django.utils.hashcompat import sha_constructor
 from django.forms.extras.widgets import SelectDateWidget
 from django.db.transaction import commit_on_success
 
-from manifest.accounts import settings
+from manifest.accounts import defaults
 
 attrs_dict = {'class': 'required'}
 
@@ -50,7 +50,7 @@ class RegistrationForm(UserCreationForm):
     def clean_username(self):
         """
         Validate that the username is unique and not listed 
-        in ``settings.ACCOUNTS_FORBIDDEN_USERNAMES`` list.
+        in ``defaults.ACCOUNTS_FORBIDDEN_USERNAMES`` list.
         
         """
         try: 
@@ -62,7 +62,7 @@ class RegistrationForm(UserCreationForm):
                             self.error_messages['duplicate_username'])
 
         if self.cleaned_data['username'].lower() \
-            in settings.ACCOUNTS_FORBIDDEN_USERNAMES:
+            in defaults.ACCOUNTS_FORBIDDEN_USERNAMES:
             raise forms.ValidationError(_(u'This username is not allowed.'))
         return self.cleaned_data['username']
 
@@ -88,8 +88,8 @@ class RegistrationForm(UserCreationForm):
                                      self.cleaned_data['password1'])
 
         user = get_user_model().objects.create_user(username, email, password,
-                        not settings.ACCOUNTS_ACTIVATION_REQUIRED, 
-                            settings.ACCOUNTS_ACTIVATION_REQUIRED)
+                        not defaults.ACCOUNTS_ACTIVATION_REQUIRED, 
+                            defaults.ACCOUNTS_ACTIVATION_REQUIRED)
         return user
 
 class RegistrationFormOnlyEmail(RegistrationForm):
@@ -113,7 +113,7 @@ class RegistrationFormOnlyEmail(RegistrationForm):
         
         """
         while True:
-            username = sha_constructor(str(random.random())).hexdigest()[:5]
+            username = hashlib.sha1(str(random.random())).hexdigest()[:5]
             try:
                 get_user_model().objects.get(username__iexact=username)
             except get_user_model().DoesNotExist: break
@@ -163,7 +163,7 @@ class AuthenticationForm(forms.Form):
     remember_me = forms.BooleanField(widget=forms.CheckboxInput(),
                                      required=False,
                                      label=_(u'Remember me for %(days)s') % 
-                        {'days': _(settings.ACCOUNTS_REMEMBER_ME_DAYS[0])})
+                        {'days': _(defaults.ACCOUNTS_REMEMBER_ME_DAYS[0])})
 
     def __init__(self, *args, **kwargs):
         """ 
@@ -172,7 +172,7 @@ class AuthenticationForm(forms.Form):
         
         """
         super(AuthenticationForm, self).__init__(*args, **kwargs)
-        if settings.ACCOUNTS_WITHOUT_USERNAMES:
+        if defaults.ACCOUNTS_WITHOUT_USERNAMES:
             self.fields['identification'] = identification_field_factory(
                                                 _(u"Email address"),
                                                 _(u"Please supply your "
@@ -270,14 +270,6 @@ class ProfileForm(forms.ModelForm):
                         years=range(datetime.today().year-99, 
                                     datetime.today().year-10)))
 
-    def __init__(self, *args, **kw):
-        super(ProfileForm, self).__init__(*args, **kw)
-        # Put the first and last name at the top
-        new_order = self.fields.keyOrder[:-2]
-        new_order.insert(0, 'first_name')
-        new_order.insert(1, 'last_name')
-        self.fields.keyOrder = new_order
-
     class Meta:
         model = get_user_model()
         exclude = ['user']
@@ -298,11 +290,11 @@ class ProfileForm(forms.ModelForm):
             if content_type:
                 main, sub = content_type.split('/')
                 if not (main == 'image' 
-                            and sub in settings.ACCOUNTS_PICTURE_FORMATS):
+                            and sub in defaults.ACCOUNTS_PICTURE_FORMATS):
                     raise forms.ValidationError(_(u'%s only.' % 
-                                    settings.ACCOUNTS_PICTURE_FORMATS))
+                                    defaults.ACCOUNTS_PICTURE_FORMATS))
         
-            if picture_data.size > int(settings.ACCOUNTS_PICTURE_MAX_FILE):
+            if picture_data.size > int(defaults.ACCOUNTS_PICTURE_MAX_FILE):
                 raise forms.ValidationError(_(u'Image size is too big.'))
             return self.cleaned_data['picture']
 

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import ugettext as _
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 
 class UserAdmin(BaseUserAdmin):

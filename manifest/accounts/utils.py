@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+import hashlib
 from django.conf import settings
-from django.utils.hashcompat import sha_constructor
 from django.contrib.auth.models import SiteProfileNotAvailable
 from django.db.models import get_model
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 import urllib, random, datetime
 
-from django.utils.hashcompat import md5_constructor
 
 def get_gravatar(email, size=80, default='identicon'):
     """ Get's a Gravatar for a email address.
@@ -42,13 +41,13 @@ def get_gravatar(email, size=80, default='identicon'):
     :return: The URI pointing to the Gravatar.
 
     """
-    if accounts_settings.ACCOUNTS_GRAVATAR_SECURE:
+    if defaults.ACCOUNTS_GRAVATAR_SECURE:
         base_url = 'https://secure.gravatar.com/avatar/'
     else: base_url = 'http://www.gravatar.com/avatar/'
 
     gravatar_url = '%(base_url)s%(gravatar_id)s?' % \
             {'base_url': base_url,
-             'gravatar_id': md5_constructor(email.lower()).hexdigest()}
+             'gravatar_id': hashlib.md5(email.lower()).hexdigest()}
 
     gravatar_url += urllib.urlencode({'s': str(size),
                                       'd': default})
@@ -75,7 +74,7 @@ def login_redirect(redirect=None, user=None):
     """
     if redirect: return redirect
     elif user is not None:
-        return accounts_settings.ACCOUNTS_LOGIN_REDIRECT_URL % \
+        return defaults.ACCOUNTS_LOGIN_REDIRECT_URL % \
                 {'username': user.username}
     else: return settings.LOGIN_REDIRECT_URL
 
@@ -95,8 +94,8 @@ def generate_sha1(string, salt=None):
 
     """
     if not salt:
-        salt = sha_constructor(str(random.random())).hexdigest()[:5]
-    hash = sha_constructor(salt+str(string)).hexdigest()
+        salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+    hash = hashlib.sha1(salt+str(string)).hexdigest()
 
     return (salt, hash)
 
@@ -109,7 +108,7 @@ def get_protocol():
 
     """
     protocol = 'http'
-    if accounts_settings.ACCOUNTS_USE_HTTPS:
+    if defaults.ACCOUNTS_USE_HTTPS:
         protocol = 'https'
     return protocol
 

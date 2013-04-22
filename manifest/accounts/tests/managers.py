@@ -6,11 +6,12 @@ from django.core import mail
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
+from manifest.accounts.tests.base import AccountsTestCase
 
 
-class AccountManagerTests(TestCase):
-    """ Test the manager of Userena """
+class AccountManagerTests(AccountsTestCase):
+    """ Test the manager of Accunts """
     user_info = {'username': 'foo',
                  'password': 'bar',
                  'email': 'foo@example.com'}
@@ -65,7 +66,7 @@ class AccountManagerTests(TestCase):
 
         # The activation key should be the same as in the settings
         self.assertEqual(active_user.activation_key,
-                         accounts_settings.ACCOUNTS_ACTIVATED)
+                         defaults.ACCOUNTS_ACTIVATED)
 
     def test_activation_invalid(self):
         """
@@ -89,7 +90,7 @@ class AccountManagerTests(TestCase):
         user = get_user_model().objects.create_user(**self.user_info)
 
         # Set the date that the key is created a day further away than allowed
-        user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
+        user.date_joined -= datetime.timedelta(days=defaults.ACCOUNTS_ACTIVATION_DAYS + 1)
         user.save()
 
         # Try to activate the user
@@ -147,7 +148,7 @@ class AccountManagerTests(TestCase):
 
         """
         expired_user = get_user_model().objects.create_user(**self.user_info)
-        expired_user.date_joined -= datetime.timedelta(days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS + 1)
+        expired_user.date_joined -= datetime.timedelta(days=defaults.ACCOUNTS_ACTIVATION_DAYS + 1)
         expired_user.save()
 
         deleted_users = get_user_model().objects.delete_expired_users()

@@ -8,10 +8,10 @@ from django.contrib.auth.models import SiteProfileNotAvailable
 
 from manifest.accounts.utils import (get_gravatar, login_redirect,
                            get_protocol)
-from manifest.accounts import settings as accounts_settings
-from manifest.accounts.models import ProfileBase
+from manifest.accounts import defaults
+from manifest.accounts.tests.base import AccountsTestCase
 
-class UtilsTests(TestCase):
+class UtilsTests(AccountsTestCase):
     """ Test the extra utils methods """
     fixtures = ['test']
 
@@ -45,7 +45,7 @@ class UtilsTests(TestCase):
         self.failUnlessEqual(response.status_code, 404)
 
         # Test the switch to HTTPS
-        accounts_settings.ACCOUNTS_GRAVATAR_SECURE = True
+        defaults.ACCOUNTS_GRAVATAR_SECURE = True
 
         template = 'https://secure.gravatar.com/avatar/%(hash)s?s=%(size)s&d=%(type)s'
         self.failUnlessEqual(get_gravatar('alice@example.com'),
@@ -54,7 +54,7 @@ class UtilsTests(TestCase):
                                          'type': 'identicon'})
 
         # And set back to default
-        accounts_settings.ACCOUNTS_GRAVATAR_SECURE = False
+        defaults.ACCOUNTS_GRAVATAR_SECURE = False
 
     def test_login_redirect(self):
         """
@@ -77,6 +77,6 @@ class UtilsTests(TestCase):
         """ Test if the correct protocol is returned """
         self.failUnlessEqual(get_protocol(), 'http')
 
-        accounts_settings.ACCOUNTS_USE_HTTPS = True
+        defaults.ACCOUNTS_USE_HTTPS = True
         self.failUnlessEqual(get_protocol(), 'https')
-        accounts_settings.ACCOUNTS_USE_HTTPS = False
+        defaults.ACCOUNTS_USE_HTTPS = False

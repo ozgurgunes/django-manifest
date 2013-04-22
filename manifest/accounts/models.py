@@ -15,7 +15,7 @@ from timezones.fields import TimeZoneField
 from manifest.accounts.managers import UserManager
 from manifest.accounts.utils import (get_gravatar, generate_sha1,   
                                         get_protocol, get_datetime_now)
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 
 class AccountActivationMixin(models.Model):
@@ -42,9 +42,9 @@ class AccountActivationMixin(models.Model):
 
         """
         expiration_days = datetime.timedelta(
-                            days=accounts_settings.ACCOUNTS_ACTIVATION_DAYS)
+                            days=defaults.ACCOUNTS_ACTIVATION_DAYS)
         expiration_date = self.date_joined + expiration_days
-        if self.activation_key == accounts_settings.ACCOUNTS_ACTIVATED:
+        if self.activation_key == defaults.ACCOUNTS_ACTIVATED:
             return True
         if get_datetime_now() >= expiration_date:
             return True
@@ -60,7 +60,7 @@ class AccountActivationMixin(models.Model):
         """
         context= {'user': self,
                   'protocol': get_protocol(),
-                  'activation_days': accounts_settings.ACCOUNTS_ACTIVATION_DAYS,
+                  'activation_days': defaults.ACCOUNTS_ACTIVATION_DAYS,
                   'activation_key': self.activation_key,
                   'site': Site.objects.get_current()}
 
@@ -181,7 +181,7 @@ def upload_to_picture(instance, filename):
     extension = filename.split('.')[-1].lower()
     salt, hash = generate_sha1(instance.id)
     return '%(path)s/%(hash)s.%(extension)s' % {
-                'path': getattr(accounts_settings, 
+                'path': getattr(defaults, 
                             'ACCOUNTS_PICTURE_PATH','%s/%s' % (
                                 str(instance._meta.app_label), 
                                 str(instance._meta.module_name))),
@@ -213,7 +213,7 @@ class UserProfileMixin(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('accounts_profile_detail', None, { 
-                    'username': self.user.username })
+                    'username': self.username })
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         try:
@@ -223,7 +223,7 @@ class UserProfileMixin(models.Model):
                 default_storage.delete(path)
         except:
             pass
-        super(ProfileBase, self).save(force_insert, force_update, 
+        super(UserProfileMixin, self).save(force_insert, force_update, 
                                         *args, **kwargs)
 
     @property
@@ -255,21 +255,21 @@ class UserProfileMixin(models.Model):
         """
         # First check for a picture and if any return that.
         if self.picture:
-            return self.picture
+            return self.picture.url
 
         # Use Gravatar if the user wants to.
-        if accounts_settings.ACCOUNTS_GRAVATAR_PICTURE:
-            return get_gravatar(self.user.email,
-                                accounts_settings.ACCOUNTS_GRAVATAR_SIZE,
-                                accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT)
+        if defaults.ACCOUNTS_GRAVATAR_PICTURE:
+            return get_gravatar(self.email,
+                                defaults.ACCOUNTS_GRAVATAR_SIZE,
+                                defaults.ACCOUNTS_GRAVATAR_DEFAULT)
 
         # Gravatar not used, check for a default image.
         else:
-            if accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT not in ['404', 'mm',
+            if defaults.ACCOUNTS_GRAVATAR_DEFAULT not in ['404', 'mm',
                                                                 'identicon',
                                                                 'monsterid',
                                                                 'wavatar']:
-                return accounts_settings.ACCOUNTS_GRAVATAR_DEFAULT
+                return defaults.ACCOUNTS_GRAVATAR_DEFAULT
             else: return None
 
     def get_full_name_or_username(self):
@@ -287,19 +287,18 @@ class UserProfileMixin(models.Model):
             the ``ACCOUNTS_WITHOUT_USERNAMES`` setting.
 
         """
-        user = self.user
-        if user.first_name or user.last_name:
+        if self.first_name or self.last_name:
             # We will return this as translated string. Maybe there are some
             # countries that first display the last name.
             name = _(u"%(first_name)s %(last_name)s") % \
-                {'first_name': user.first_name,
-                 'last_name': user.last_name}
+                {'first_name': self.first_name,
+                 'last_name': self.last_name}
         else:
             # Fallback to the username if usernames are used
-            if not accounts_settings.ACCOUNTS_WITHOUT_USERNAMES:
-                name = "%(username)s" % {'username': user.username}
+            if not defaults.ACCOUNTS_WITHOUT_USERNAMES:
+                name = "%(username)s" % {'username': self.username}
             else:
-                name = "%(email)s" % {'email': user.email}
+                name = "%(email)s" % {'email': self.email}
         return name.strip()
 
 

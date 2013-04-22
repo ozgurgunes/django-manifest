@@ -20,7 +20,7 @@ from manifest.accounts.forms import (RegistrationForm,
 from manifest.accounts.decorators import secure_required
 from manifest.accounts.utils import login_redirect
 from manifest.accounts import signals as accounts_signals
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
 
 
 
@@ -80,7 +80,7 @@ class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
     
     def get_form_class(self):
         if self.form_class: return self.form_class
-        elif accounts_settings.ACCOUNTS_WITHOUT_USERNAMES:
+        elif defaults.ACCOUNTS_WITHOUT_USERNAMES:
             return RegistrationFormOnlyEmail
         else: return RegistrationForm
     
@@ -93,7 +93,7 @@ class Register(CreateView, ExtraContextMixin, SecureRequiredMixin):
         user = form.save()
         accounts_signals.registration_complete.send(sender=None, 
             user=user, request=self.request)
-        if accounts_settings.ACCOUNTS_USE_MESSAGES:
+        if defaults.ACCOUNTS_USE_MESSAGES:
             messages.success(self.request, self.success_message, 
                 fail_silently=True)
         if self.success_url: return redirect(self.success_url)
@@ -128,9 +128,9 @@ class Login(FormView, ExtraContextMixin, SecureRequiredMixin):
             auth_login(self.request, user)
             if form.cleaned_data['remember_me']:
                 self.request.session.set_expiry(
-                    accounts_settings.ACCOUNTS_REMEMBER_ME_DAYS[1] * 86400)
+                    defaults.ACCOUNTS_REMEMBER_ME_DAYS[1] * 86400)
             else: self.request.session.set_expiry(0)
-            if accounts_settings.ACCOUNTS_USE_MESSAGES:
+            if defaults.ACCOUNTS_USE_MESSAGES:
                 messages.success(self.request, self.success_message, 
                     fail_silently=True)
             if self.success_url: 
@@ -173,7 +173,7 @@ class Activate(TemplateView, ExtraContextMixin):
             # Sign the user in.
             auth_login(request, authenticate(identification=user.email, 
                                                 check_password=False))
-            if accounts_settings.ACCOUNTS_USE_MESSAGES:
+            if defaults.ACCOUNTS_USE_MESSAGES:
                 messages.success(self.request, self.success_message, 
                                     fail_silently=True)
             return redirect(self.get_success_url(**kwargs))
@@ -203,7 +203,7 @@ class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
 
     def form_valid(self, form):
         profile = form.save()
-        if accounts_settings.ACCOUNTS_USE_MESSAGES:
+        if defaults.ACCOUNTS_USE_MESSAGES:
             messages.success(self.request, self.success_message, 
                 fail_silently=True)
         if self.success_url: return redirect(self.success_url)
@@ -331,7 +331,7 @@ class ProfileList(ListView, ExtraContextMixin):
     template_name = "accounts/profile_list.html"
     
     def dispatch(self, request, *args, **kwargs):
-        if accounts_settings.ACCOUNTS_DISABLE_PROFILE_LIST \
+        if defaults.ACCOUNTS_DISABLE_PROFILE_LIST \
            and not request.user.is_superuser:
             raise Http404
         return super(ProfileList, self).dispatch(request, *args, **kwargs)
@@ -347,6 +347,6 @@ class ProfileDetail(UserView, ExtraContextMixin):
 
     queryset = get_user_model().objects.get_visible_profiles()
     template_name = "accounts/profile_detail.html"
-    slug_field = 'user__username'
+    slug_field = 'username'
     slug_url_kwarg = 'username'
     

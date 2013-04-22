@@ -1,9 +1,10 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
+from manifest.accounts.tests.base import AccountsTestCase
 
-class DecoratorTests(TestCase):
+class DecoratorTests(AccountsTestCase):
     """ Test the decorators """
 
     def test_secure_required(self):
@@ -12,7 +13,7 @@ class DecoratorTests(TestCase):
         to a secured page.
 
         """
-        userena_settings.ACCOUNTS_USE_HTTPS = True
+        defaults.ACCOUNTS_USE_HTTPS = True
         response = self.client.get(reverse('login'))
 
         # Test for the permanent redirect
@@ -24,4 +25,4 @@ class DecoratorTests(TestCase):
         self.assertTrue('https' in str(response))
 
         # Set back to the old settings
-        userena_settings.ACCOUNTS_USE_HTTPS = False
+        defaults.ACCOUNTS_USE_HTTPS = False

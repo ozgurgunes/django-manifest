@@ -4,8 +4,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 
 from manifest.accounts.backends import AuthenticationBackend
+from manifest.accounts.tests.base import AccountsTestCase
 
-class AuthenticationBackendTests(TestCase):
+class AuthenticationBackendTests(AccountsTestCase):
     """
     Test the ``AuthenticationBackend`` which should return a ``User``
     when supplied with a username/email and a correct password.

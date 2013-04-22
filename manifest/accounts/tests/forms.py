@@ -4,9 +4,10 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from manifest.accounts import forms
-from manifest.accounts import settings as accounts_settings
+from manifest.accounts import defaults
+from manifest.accounts.tests.base import AccountsTestCase
 
-class RegistrationFormTests(TestCase):
+class RegistrationFormTests(AccountsTestCase):
     """ Test the registration form. """
     fixtures = ['test']
 
@@ -74,7 +75,7 @@ class RegistrationFormTests(TestCase):
 
         self.failUnless(form.is_valid())
 
-class AuthenticationFormTests(TestCase):
+class AuthenticationFormTests(AccountsTestCase):
     """ Test the ``AuthenticationForm`` """
 
     fixtures = ['test']
@@ -116,7 +117,7 @@ class AuthenticationFormTests(TestCase):
         ``ACCOUNTS_WITHOUT_USERNAME`` is set to ``True``
 
         """
-        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = True
+        defaults.ACCOUNTS_WITHOUT_USERNAMES = True
 
         form = forms.AuthenticationForm(data={'identification': "john",
                                               'password': "test"})
@@ -126,9 +127,9 @@ class AuthenticationFormTests(TestCase):
                          correct_label)
 
         # Restore default settings
-        accounts_settings.ACCOUNTS_WITHOUT_USERNAMES = False
+        defaults.ACCOUNTS_WITHOUT_USERNAMES = False
 
-class RegistrationFormOnlyEmailTests(TestCase):
+class RegistrationFormOnlyEmailTests(AccountsTestCase):
     """
     Test the :class:`RegistrationFormOnlyEmail`.
 
