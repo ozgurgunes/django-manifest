@@ -27,7 +27,6 @@ urlpatterns = patterns('',
     url(r'^', include('social_auth.urls')),
     url(r'^', include('manifest.facebook.urls')),
     url(r'^', include('manifest.accounts.urls')),
-    url(r'^', include('manifest.profiles.urls')),
 
 )
 

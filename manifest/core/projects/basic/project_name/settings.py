@@ -200,7 +200,6 @@ INSTALLED_APPS = (
     # Django Manifest Apps
     'manifest.core',
     'manifest.accounts',
-	'manifest.profiles',
     'manifest.bootstrap',
     'manifest.facebook',
 )
