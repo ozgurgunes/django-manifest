@@ -323,16 +323,16 @@ class BaseUser(AccountActivationMixin, EmailConfirmationMixin,
     to have a fully functional user implementation on your Django website.
     """
 
+    objects = UserManager()
+
     class Meta:
         abstract = True
         
 
 class User(AbstractUser, BaseUser):
-                                    
-    objects = UserManager()
-
-    # def __unicode__(self):
-    #     return self.__str__
+    
+    class Meta:
+        swappable = 'AUTH_USER_MODEL'
 
 
 if 'social_auth' in settings.INSTALLED_APPS:

@@ -215,7 +215,6 @@ AUTHENTICATION_BACKENDS = (
 
 # Django Auth Settings
 AUTH_USER_MODEL = 'accounts.User'
-AUTH_PROFILE_MODULE = 'profiles.Profile'
 LOGIN_URL   = os.path.join(URL, 'login/')
 LOGIN_REDIRECT_URL = URL
 
