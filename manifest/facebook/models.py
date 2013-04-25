@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from social_auth.backends.facebook import FacebookBackend
 from social_auth.signals import pre_update, socialauth_registered
 from manifest.facebook.api import Graph
-from manifest.accounts.models import create_user
 from manifest.facebook.utils import iso_time
 
 class ProfileBase(models.Model):

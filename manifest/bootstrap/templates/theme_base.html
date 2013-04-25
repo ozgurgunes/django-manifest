@@ -20,7 +20,7 @@
     	{% endblock %}
 	    {% block style %}
 		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/base.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/base.css?{% now "c" %}" />
     	{% endblock %}
     	{% block head %}{% endblock %}
     </head>

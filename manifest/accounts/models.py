@@ -12,11 +12,10 @@ from django.template.loader import render_to_string
 
 from timezones.fields import TimeZoneField
 
+from manifest.accounts import defaults
 from manifest.accounts.managers import UserManager
 from manifest.accounts.utils import (get_gravatar, generate_sha1,   
                                         get_protocol, get_datetime_now)
-from manifest.accounts import defaults
-
 
 class AccountActivationMixin(models.Model):
     """
@@ -323,25 +322,25 @@ class BaseUser(AccountActivationMixin, EmailConfirmationMixin,
     to have a fully functional user implementation on your Django website.
     """
 
-    objects = UserManager()
-
     class Meta:
         abstract = True
         
 
 class User(AbstractUser, BaseUser):
     
+    objects = UserManager()
+
     class Meta:
         swappable = 'AUTH_USER_MODEL'
 
 
+def create_user(sender, user, *args, **kwargs):
+    user = User.objects.activate_user(user.username, 
+                                            user.activation_key)
+    
 if 'social_auth' in settings.INSTALLED_APPS:
     from social_auth.signals import socialauth_registered
 
-    def create_user(sender, user, *args, **kwargs):
-        user = User.objects.activate_user(user.username, 
-                                                user.activation_key)
-        
     socialauth_registered.connect(create_user, sender=None)
 
 

@@ -34,7 +34,7 @@ setup(
     name="django-manifest",
     version=version,
     description = "A kickstarter for Django Web Framework projects.",
-    long_description=open("README").read(),
+    long_description=open("README.rst").read(),
     author = "Ozgur Gunes",
     author_email = "o.gunes@gmail.com",
     url = "http://github.com/ozgurgunes/django-manifest/",

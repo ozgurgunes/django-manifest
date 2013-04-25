@@ -3,7 +3,7 @@ import re, datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AnonymousUser, UserManager as BaseManager
+from django.contrib.auth.models import UserManager as BaseManager, AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 
