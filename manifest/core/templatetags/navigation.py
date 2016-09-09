@@ -6,25 +6,37 @@ from django.core.urlresolvers import reverse
 register = template.Library()
 
 @register.simple_tag
-def active_url(request, urls):
+def active_url(request, urls, css=None):
+    """
+    Highlight menu item based on url tag.
+    
+    Returns a css class if ``request.path`` is in given ``url``.
+    
+    :param url:
+        Django url to be reversed.
+
+    :param css:
+        Css class to be returned for highlighting. Return active if none set.
+
+    """
     if request.path in (reverse(url) for url in urls.split()):
-        return 'active'
+        return css if css else 'active'
     return ''
 
 @register.simple_tag
-def active_path(request, pattern):
+def active_path(request, pattern, css=None):
+    """
+    Highlight menu item based on path.
+    
+    Returns a css class if ``request.path`` is in given ``pattern``.
+    
+    :param pattern:
+        Regex url pattern.
+
+    :param css:
+        Css class to be returned for highlighting. Return active if none set.
+
+    """
     if re.search(pattern, request.path):
-        return 'active' 
-    return ''
-
-@register.simple_tag
-def current_url(request, urls):
-    if request.path in (reverse(url) for url in urls.split()):
-        return 'current'
-    return ''
-
-@register.simple_tag
-def current_path(request, pattern):
-    if re.search(pattern, request.path):
-        return 'current' 
+        return css if css else 'active'
     return ''

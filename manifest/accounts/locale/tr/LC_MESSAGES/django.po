@@ -72,9 +72,9 @@ msgstr "E-posta"
 msgid "Either supply us with your email or username."
 msgstr "E-posta adresinizi veya kullanıcı adınızı girmelisiniz."
 
-#: forms.py:161
+#: forms.py:164
 #, python-format
-msgid "Remember me for %(days)s"
+msgid "Remember me"
 msgstr "Beni %(days)s boyunca hatırla"
 
 #: forms.py:174

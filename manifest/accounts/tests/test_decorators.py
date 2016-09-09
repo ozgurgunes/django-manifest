@@ -1,4 +1,3 @@
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from manifest.accounts import defaults
@@ -14,7 +13,7 @@ class DecoratorTests(AccountsTestCase):
 
         """
         defaults.ACCOUNTS_USE_HTTPS = True
-        response = self.client.get(reverse('login'))
+        response = self.client.get(reverse('accounts_login'))
 
         # Test for the permanent redirect
         self.assertEqual(response.status_code, 301)

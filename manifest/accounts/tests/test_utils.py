@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import hashlib
 
-from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import SiteProfileNotAvailable
 
 from manifest.accounts.utils import (get_gravatar, login_redirect,
                            get_protocol)

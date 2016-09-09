@@ -2,8 +2,8 @@
 import base64
 import hmac
 import hashlib
+import json
 from datetime import datetime
-from django.utils import simplejson
 from django.conf import settings
 from django.http import HttpResponseRedirect
 
@@ -43,7 +43,7 @@ def parse_signed_request(signed_request, secret):
         payload = l[1]
         
         sig = base64_url_decode(encoded_sig)
-        data = simplejson.loads(base64_url_decode(payload))
+        data = json.loads(base64_url_decode(payload))
         
         if data.get('algorithm').upper() != 'HMAC-SHA256':
             return None

@@ -2,7 +2,6 @@
 from django.utils import translation
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
-from django.contrib.auth.models import SiteProfileNotAvailable
 
 from manifest.accounts import defaults
 

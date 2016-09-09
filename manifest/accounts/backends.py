@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.sites.models import Site
-from django.core.validators import email_re
+from django.core import validators
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
@@ -34,12 +34,14 @@ class AuthenticationBackend(ModelBackend):
         :return: The logged in :class:`User`.
 
         """
-        if email_re.search(identification):
+        try:
+            validators.validate_email(identification)
             try: 
                 user = get_user_model().objects.get(email__iexact=identification)
             except get_user_model().DoesNotExist: 
                 return None
-        else:
+        except:
+            validators.ValidationError
             try: 
                 user = get_user_model().objects.get(username__iexact=identification)
             except get_user_model().DoesNotExist: 

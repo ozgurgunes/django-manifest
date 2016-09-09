@@ -183,7 +183,7 @@ def upload_to_picture(instance, filename):
                 'path': getattr(defaults, 
                             'ACCOUNTS_PICTURE_PATH','%s/%s' % (
                                 str(instance._meta.app_label), 
-                                str(instance._meta.module_name))),
+                                str(instance._meta.model_name))),
                 'hash': hash[:10],
                 'extension': extension}
     

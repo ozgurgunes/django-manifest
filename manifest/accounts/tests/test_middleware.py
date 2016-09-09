@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.test import TestCase
 from django.http import HttpRequest
 from django.utils.importlib import import_module
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
+from manifest.accounts.tests.base import AccountsTestCase
 from manifest.accounts.middleware import LocaleMiddleware
 from manifest.accounts import defaults
 
-class LocaleMiddlewareTests(TestCase):
+class LocaleMiddlewareTests(AccountsTestCase):
     """ Test the ``LocaleMiddleware`` """
     fixtures = ['test']
 

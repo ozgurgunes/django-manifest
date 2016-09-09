@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib
-from django.utils import simplejson
+import json
+
 
 class GraphException(Exception):
     """
@@ -45,7 +46,7 @@ class Graph(object):
                                         (path, urllib.urlencode(parameters)))
         self._handle_errors(response)        
         
-        data = simplejson.loads(response.read())
+        data = json.loads(response.read())
         return data.get('data')
         
 
@@ -69,7 +70,7 @@ class Graph(object):
                                         path, params)
         self._handle_errors(response)
         
-        data = simplejson.loads(response.read())        
+        data = json.loads(response.read())        
         return data
         
     def _handle_errors(self, response):

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase
 from django.core.management import call_command
 from django.contrib.auth import get_user_model
 
-from manifest.accounts.models import Account
 from manifest.accounts import defaults
 from manifest.accounts.tests.base import AccountsTestCase
 

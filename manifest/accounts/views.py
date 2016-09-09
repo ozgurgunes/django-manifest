@@ -121,9 +121,7 @@ class Login(FormView, ExtraContextMixin, SecureRequiredMixin):
     success_message = _(u'You have been logged in.')
     
     def form_valid(self, form):
-        user = authenticate(
-                    identification=form.cleaned_data['identification'], 
-                    password=form.cleaned_data['password'])
+        user = form.get_user()
         if user.is_active:
             auth_login(self.request, user)
             if form.cleaned_data['remember_me']:
@@ -191,6 +189,8 @@ class ProfileUpdate(UpdateView, SecureRequiredMixin, LoginRequiredMixin):
     
     model = get_user_model()
     profile_form = ProfileForm
+    fields = ['first_name', 'last_name', 'gender', 'birth_date', 'picture', 
+                    'timezone', 'locale']
     template_name = 'accounts/profile_form.html'
     success_message = _(u'Your profile has been updated.')
     
@@ -262,8 +262,8 @@ class EmailConfirm(Activate, ExtraContextMixin):
     """
     Confirm the email address with username and confirmation key.
 
-    Confirms the new email address by running ``get_user_model().objects.confirm_email``
-    method.
+    Confirms the new email address by running 
+    ``get_user_model().objects.confirm_email`` method.
     
     User will be redirected to ``accounts_email_change_complete`` view 
     if ``success_url`` is not defined. 
@@ -281,7 +281,8 @@ class EmailConfirm(Activate, ExtraContextMixin):
                         kwargs={'username': self.kwargs['username']})
 
     def get(self, request, username, confirmation_key, *args, **kwargs):
-        user = get_user_model().objects.confirm_email(username, confirmation_key)
+        user = get_user_model().objects.confirm_email(username,
+                                                         confirmation_key)
         if user:
             return redirect(self.get_success_url(**kwargs))
         return super(EmailConfirm, self).get(request, username, 

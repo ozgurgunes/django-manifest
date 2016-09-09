@@ -4,23 +4,16 @@
 {% block title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
-<form action="" method="post" class="form form-horizontal span-8">
+<form action="" method="post" class="form">
   {% csrf_token %}
   <fieldset>
     <legend>{% trans "Log in to your account" %}</legend>
-    {{ form|as_bootstrap }}
+    {{ form|bootstrap }}
   </fieldset>
   {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
- <div class="form-actions">
+ <div class="form-group">
      <input type="submit" value="{% trans "Log In" %}" class="btn btn-primary" />
      <a href="{% url 'accounts_password_reset' %}" title="{% trans "Forgot your password?" %}" class="btn">{% trans "Forgot your password?" %}</a>
  </div>
 </form>
-<aside class="span-4 pull-right">
-    <ul>
-      <li>
-        <a href="{% url 'socialauth_begin' 'facebook' %}">{% trans "Connect with Facebook" %}</a>
-      </li>
-    </ul>
-</div>
 {% endblock %}

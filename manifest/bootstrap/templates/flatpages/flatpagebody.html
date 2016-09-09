@@ -1,18 +1,14 @@
 {% extends pagebase %}
 {% load flatpages %}
-{% block about_menu_class %}menu-about current{% endblock %}
-
-
-{% block title %}
-{{ flatpage.title }}
-{% endblock %}
-
-{# maybe other stuff #}
-
+{% block title %}{{ flatpage.title }} - {{ block.super}}{% endblock title %}
 {% block content %}
-<h1 class="heading">{{ flatpage.title }}</h1>
-{# add more filters if you like #}
+<section id="breadcrumb" class="breadcrumb">
+    {{ flatpage.title|truncatewords:"5" }}
+</section>
+<header class="page-header">
+    <h1>{{ flatpage.title }}</h1>
+</header>
 <div>
-{{ flatpage.content|linebreaks }}
+    {{ flatpage.content }}
 </div>
 {% endblock %}

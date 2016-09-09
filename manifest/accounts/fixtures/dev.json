@@ -13,9 +13,10 @@
         "is_staff": true, 
         "password": "sha1$e467e$508942f1c9be858fd46dc976c2496ba133ba4122", 
         "last_login": "2012-12-31T22:00:00Z", 
-        "date_joined": "2012-12-31T22:00:00Z"
+        "date_joined": "2012-12-31T22:00:00Z",
+        "activation_key": "ALREADY_ACTIVATED"
     }
-}, 
+},
 {
     "pk": 2, 
     "model": "accounts.user", 
@@ -30,9 +31,10 @@
         "is_staff": false, 
         "password": "sha1$3cb32$046d34b6eee347cb4ce099b266f1b9b3d066553a", 
         "last_login": "2012-12-31T22:00:00Z", 
-        "date_joined": "2012-12-31T22:00:00Z"
+        "date_joined": "2012-12-31T22:00:00Z",
+        "activation_key": "ALREADY_ACTIVATED"
     }
-}, 
+},
 {
     "pk": 3, 
     "model": "accounts.user", 
@@ -47,7 +49,8 @@
         "is_staff": false, 
         "password": "sha1$1e2d3$0fd3f38117e48024ad68058252c42e9b9d69ca43", 
         "last_login": "2012-12-31T22:00:00Z", 
-        "date_joined": "2012-12-31T22:00:00Z"
+        "date_joined": "2012-12-31T22:00:00Z",
+        "activation_key": "ALREADY_ACTIVATED"
     }
 }
 ]

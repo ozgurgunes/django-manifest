@@ -5,10 +5,7 @@
   <div class="white-box">
     <div id="details">
       {% block profile_details %}
-      {% thumbnail user.avatar "128x128" as im %}
-      <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
-      {% endthumbnail %}
-      
+      <img src="{{ user.avatar }}" width="128" height="128" alt="{{ user }}" />      
         <dl>
           {% block profile_definition_list %}
             {% if user.get_full_name %}

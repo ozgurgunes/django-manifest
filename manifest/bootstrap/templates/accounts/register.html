@@ -3,14 +3,12 @@
 {% block title %}{% trans "Register" %}{% endblock %}
 
 {% block content %}
-<form action="" method="post" class="form form-horizontal">
+<form action="" method="post" class="form">
   {% csrf_token %}
   <fieldset>
     <legend>{% trans "Register" %}</legend>
-    {{ form|as_bootstrap }}
+    {{ form|bootstrap }}
   </fieldset>
-  <div class="form-actions">
-      <input type="submit" value="{% trans "Register"%}" class="btn-primary" />
-  </div>
+  <input type="submit" value="{% trans "Register"%}" class="btn btn-primary" />
 </form>
 {% endblock %}

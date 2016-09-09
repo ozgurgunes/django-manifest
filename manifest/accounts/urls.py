@@ -64,17 +64,17 @@ urlpatterns = patterns('',
     url(r'^password/reset/done/$', 
         auth_views.password_reset_done, dict(
             template_name='accounts/password_reset_done.html'),
-        name='accounts_password_reset_complete'),
+        name='password_reset_done'),
 
-    url(r'^password/reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 
+    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 
         auth_views.password_reset_confirm, dict(
             template_name='accounts/password_reset_confirm.html'),
-        name='accounts_password_reset_confirm'),
+        name='password_reset_confirm'),
 
     url(r'^password/reset/complete/$', 
         auth_views.password_reset_complete, dict(
             template_name='accounts/password_reset_complete.html'),
-        name='accounts_password_reset_complete'),
+        name='password_reset_complete'),
 
     # Change email and confirm it
     url(r'^email/change/$', 

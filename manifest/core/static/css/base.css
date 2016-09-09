@@ -1,0 +1,41 @@
+body {
+    padding-top: 60px;
+}
+
+footer {
+    margin: 2em 0;
+    border-top: 1px solid #ccc;
+}
+
+footer menu,
+footer p {
+    margin: 1.5em 0;
+}
+footer menu li {
+    display: inline !important;
+    margin-left: 1.5em;
+}
+
+footer a:hover {
+    text-decoration: none;
+    color: #;
+}
+
+.modal form {
+    margin-bottom: 0;
+}
+
+#brand {
+    margin:0;
+    font-weight: normal;
+}
+
+form .form-control {
+    width: 60%;
+    display: inline;
+}
+
+form span.help-block {
+    display: inline;
+    margin-left: 1em;
+}

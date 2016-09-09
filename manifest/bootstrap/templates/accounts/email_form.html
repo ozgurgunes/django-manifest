@@ -2,13 +2,13 @@
 {% block title %}{% trans "Change email address" %} - {{ block.super }}{% endblock %}
 
 {% block main %}
-<form action="" method="post" class="form form-horizontal">
+<form action="" method="post" class="form">
   {% csrf_token %}
   <fieldset>
     <legend>{% trans "Change email address" %}</legend>
-    {{ form|as_bootstrap }}
+    {{ form|bootstrap }}
   </fieldset>
-  <div class="form-actions">
+  <div class="form-group">
       <input type="submit" value="{% trans "Change email" %}" class="btn btn-primary" />    
   </div>
 </form>

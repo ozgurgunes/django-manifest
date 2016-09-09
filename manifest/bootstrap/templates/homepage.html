@@ -1,40 +1,19 @@
-{% extends "base_banner.html" %}
+{% extends "base.html" %}
 {% block body_class %}home{% endblock %}
-{% block banner_class %}hero-unit{% endblock %}
-{% block banner %}
-    <h1>Reuse Easily</h1>
-    <p>Lobortis nisl ut, aliquip ex ea commodo consequat duis autem vel eum. Dynamicus qui sequitur mutationem consuetudium lectorum mirum, est notare quam littera gothica quam nunc putamus parum. Nobis eleifend option, congue nihil imperdiet doming id quod mazim placerat facer possim assum typi non?</p>
-    <h2>User Accounts &amp; Profiles</h2>
-    <p>Euismod tincidunt ut laoreet dolore magna aliquam erat. Dolor sit amet consectetuer, adipiscing elit sed diam nonummy nibh volutpat ut wisi enim ad minim. Feugiat nulla facilisis at vero; eros et accumsan et iusto odio dignissim.</p>
-{% endblock %}
 {% block content %}
-    <div class="span3">
-    {% block column-1 %}
-        <h2>Heading</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    {% endblock %}
+    <div class="jumbotron">
+        <h1>Reuse Easily</h1>
+        <p>Lobortis nisl ut, aliquip ex ea commodo consequat duis autem vel eum. Dynamicus qui sequitur mutationem consuetudium lectorum mirum, est notare quam littera gothica quam nunc putamus parum. Nobis eleifend option, congue nihil imperdiet doming id quod mazim placerat facer possim assum typi non?</p>
+        <h2>User Accounts &amp; Profiles</h2>
+        <p>Euismod tincidunt ut laoreet dolore magna aliquam erat. Dolor sit amet consectetuer, adipiscing elit sed diam nonummy nibh volutpat ut wisi enim ad minim. Feugiat nulla facilisis at vero; eros et accumsan et iusto odio dignissim.</p>
     </div>
-    <div class="span3">
-    {% block column-2 %}
-        <h2>Heading</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    {% endblock %}
+    <div class="row">
+        {% for i in 'iii' %}
+        <div class="col-md-4">
+            <h2>Heading</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
+            <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        {% endfor %}
     </div>
-    <div class="span3">
-    {% block column-3 %}
-        <h2>Heading</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    {% endblock %}
-    </div>
-    <div class="span3">
-    {% block column-4 %}
-        <h2>Heading</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed viverra dui. Aenean blandit faucibus tincidunt. Phasellus fermentum elit ut erat varius cursus. Nunc posuere mauris sit amet enim congue quis elementum lectus tincidunt. Cras vel tempus metus.</p>
-        <p><a class="btn" href="#">View details &raquo;</a></p>
-    {% endblock %}
-    </div>
-</div>
 {% endblock %}

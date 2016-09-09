@@ -5,7 +5,6 @@ import datetime
 
 from django.core import mail
 from django.conf import settings
-from django.test import TestCase
 
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
@@ -92,7 +91,7 @@ class AccountModelTests(AccountsTestCase):
                             {'picture_path': getattr(defaults, 
                                 'ACCOUNTS_PICTURE_PATH','%s/%s' % (
                                     str(user._meta.app_label), 
-                                    str(user._meta.module_name)))})
+                                    str(user._meta.model_name)))})
 
         self.failUnless(PICTURE_RE.search(path))
 

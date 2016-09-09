@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import settings
+from django.conf import settings as django_settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
-from social_auth.backends.facebook import FacebookBackend
-from social_auth.signals import pre_update, socialauth_registered
 from manifest.facebook.api import Graph
 from manifest.facebook.utils import iso_time
 
@@ -94,7 +93,7 @@ class FacebookLike(models.Model):
     
     """
 
-    user = models.ForeignKey(get_user_model(), verbose_name=_(u'User'))
+    user = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_(u'User'))
 
     facebook_id     = models.BigIntegerField(_(u'Facebook id'))    
     name            = models.CharField(_(u'Name'), max_length=128, 
@@ -117,7 +116,7 @@ class FacebookFriend(models.Model):
     
     """
 
-    user = models.ForeignKey(get_user_model(), verbose_name=_(u'User'))
+    user = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_(u'User'))
 
     facebook_id = models.BigIntegerField(_(u'Facebook id'))    
     name = models.CharField(_(u'Name'), max_length=128, blank=True, null=True)
@@ -152,5 +151,3 @@ def register_profile(sender, user, response, *args, **kwargs):
     except:
         pass
     
-pre_update.connect(update_profile, sender=FacebookBackend)
-socialauth_registered.connect(register_profile, sender=FacebookBackend)

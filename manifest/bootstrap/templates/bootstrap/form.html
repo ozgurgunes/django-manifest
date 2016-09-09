@@ -1,47 +1,15 @@
 {% if form.non_field_errors %}
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
         {% for error in form.non_field_errors %}
 	    <div>{{ error }}</div>
 	    {% endfor %}
     </div>
 {% endif %}
-{% for field in form %}
-    {% if field.is_hidden %}
-        {{ field }}
-    {% else %}
-        <div class="control-group clearfix{% if field.errors %} error{% endif %}">
-            {% if field|is_checkbox %}
-                        <div class="controls">
-                            <label class="checkbox">
-                                {{ field }} {{ field.label }}
-                            </label>
 
-                            {% for error in field.errors %}
-                                <p class="help-inline">{{ error }}</p>
-                            {% endfor %}
+{% for field in form.hidden_fields %}
+    {{ field }}
+{% endfor %}
 
-                            {% if field.help_text %}
-                            <p class="help-block">
-                                {{ field.help_text }}
-                            </p>
-                            {% endif %}
-                        </div>
-                    </li>
-                </ul>
-            {% else %}
-                <label for="{{ field.auto_id }}" class="control-label{% if field.field.required %} required{% endif %}">
-                    {{ field.label|safe }}
-                </label>
-                <div class="controls">
-                    {{ field }}
-                    {% for error in field.errors %}
-                        <span class="help-inline">{{ error }}</span>
-                    {% endfor %}
-                    {% if field.help_text %}
-                        <p class="help-block">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
-    {% endif %}
+{% for field in form.visible_fields %}
+    {% include 'bootstrap/field.html' %}
 {% endfor %}

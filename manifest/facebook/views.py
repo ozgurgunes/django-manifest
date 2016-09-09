@@ -4,11 +4,13 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.clickjacking import xframe_options_exempt, xframe_options_sameorigin
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from manifest.facebook.utils import parse_signed_request
 
 
 @csrf_exempt
+@xframe_options_exempt
 def iframe(request, 
         template_name='facebook/iframe.html', 
         unliked_template_name=None,
@@ -38,23 +40,23 @@ def iframe(request,
         
     """
     liked = request.session.get('facebook_liked', False)
-    request.session['facebook_liked'] = liked
-    signed_request = parse_signed_request(request.POST.get('signed_request'), 
-                                            settings.FACEBOOK_API_SECRET)
-    if signed_request:
-        liked = signed_request.get('page', signed_request).get('liked')
-        request.session['facebook_liked'] = liked
-        # Get user object who requested this page via Facebook iframe
-        try:    
-            user = get_user_model().objects.select_related().get(is_active=True, 
-                        social_auth__provider='facebook', 
-                        social_auth__uid=signed_request.get('user_id', None))
-            if user.id is not request.user.id:
-                return redirect('socialauth_begin', backend='facebook')
-        except get_user_model().DoesNotExist:
-            if request.user.is_authenticated():
-                # Log out authenticated user who is not requested this page
-                logout(request)
+    # request.session['facebook_liked'] = liked
+    # signed_request = parse_signed_request(request.POST.get('signed_request'), 
+    #                                         settings.FACEBOOK_API_SECRET)
+    # if signed_request:
+    #     liked = signed_request.get('page', signed_request).get('liked')
+    #     request.session['facebook_liked'] = liked
+    #     # Get user object who requested this page via Facebook iframe
+    #     try:    
+    #         user = get_user_model().objects.select_related().get(is_active=True, 
+    #                     social_auth__provider='facebook', 
+    #                     social_auth__uid=signed_request.get('user_id', None))
+    #         if user.id is not request.user.id:
+    #             return redirect('socialauth_begin', backend='facebook')
+    #     except get_user_model().DoesNotExist:
+    #         if request.user.is_authenticated():
+    #             # Log out authenticated user who is not requested this page
+    #             logout(request)
     if not liked and unliked_template_name:
         template_name = unliked_template_name
     if liked and redirect_url:

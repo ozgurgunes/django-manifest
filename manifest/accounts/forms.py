@@ -3,11 +3,10 @@ import random
 import hashlib
 from datetime import datetime
 from StringIO import StringIO  
-from PIL import Image
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import Q
 
 from django.forms.extras.widgets import SelectDateWidget
@@ -171,6 +170,7 @@ class AuthenticationForm(forms.Form):
         usernames is used 
         
         """
+        self.user_cache = None
         super(AuthenticationForm, self).__init__(*args, **kwargs)
         if defaults.ACCOUNTS_WITHOUT_USERNAMES:
             self.fields['identification'] = identification_field_factory(
@@ -189,13 +189,16 @@ class AuthenticationForm(forms.Form):
         password = self.cleaned_data.get('password')
 
         if identification and password:
-            user = authenticate(identification=identification, 
+            self.user_cache = authenticate(identification=identification, 
                                 password=password)
-            if user is None:
+            if self.user_cache is None:
                 raise forms.ValidationError(_(u"Please enter a correct "
                         "username or email address and password. "
                         "Note that both fields are case-sensitive."))
         return self.cleaned_data
+    
+    def get_user(self):
+        return self.user_cache
 
 class EmailForm(forms.Form):
     email = forms.EmailField(label=_(u"New email"), required=True,

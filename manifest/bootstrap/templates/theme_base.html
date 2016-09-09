@@ -3,84 +3,96 @@
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
         <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{% block title %}Django Manifest{% endblock %}</title>
-		<meta name="keywords" content="{% block keywords %}{% endblock %}" />
-		<meta name="description" content="{% block description %}{% endblock %}" />
-		<meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0"/>
+		<meta name="keywords" content="{% block keywords %}django, manifest, framework, project{% endblock %}" />
+		<meta name="description" content="{% block description %}A kickstarter for Django Web Framework projects.{% endblock %}" />
+		<meta name="robots" content="{% block robots %}NOINDEX,NOFOLLOW{% endblock %}" />
 		<link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico">
-		<meta name="robots" content="{% block robots %}NOINDEX,NOFOLLOW"{% endblock %} />
-        <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+	    {% block stylesheet %}
+		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/bootstrap.min.css?{% now "U" %}" />
+		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/base.css?{% now "U" %}" />
+    	{% endblock %}
+        {% block headscript %}
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-        {% block script %}
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
     	{% endblock %}
-	    {% block style %}
-		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}css/base.css?{% now "c" %}" />
-    	{% endblock %}
-    	{% block head %}{% endblock %}
+        {% block head %}{% endblock %}
     </head>
     <body class="{% block body_class %}base{% endblock %}">
-    <div class="container">
     <!-- Navigation //-->
     {% block navbar_base %}
-	    <nav class="navbar navbar-fixed-top" role="navigation">
-            <div class="navbar-inner">
-                <div class="container">
+	    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
                 {% block navbar %}
-                    {% block brand %}
-        				<h1 id="brand" class="logo pull-left"><a class="brand" href="/">Django Manifest</a></h1>
+                <div class="navbar-header">
+                    {% block navbar_header %}
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#manifest-navbar-collapse">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+        			<h1 id="brand"><a class="navbar-brand" href="/">Django Manifest</a></h1>
         			{% endblock %}
-                    {% block navbar_account %}{% include "_navbar_account.html" %}{% endblock %}
-                    {% block navbar_menu_base %}
-                    <ul class="nav">
-                        {% block navbar_menu %}
+                </div>
+                <div class="collapse navbar-collapse" id="manifest-navbar-collapse">
+                    {% block navbar_collapse %}
+                    <ul class="nav navbar-nav">
+                        {% block navbar_nav %}
                         <li class="{% active_path request "^/$" %}"><a href="/">{% trans "Home" %}</a></li>
                         <li class="{% active_path request "^/about" %}"><a href="/about/">{% trans "About" %}</a></li>
                         <li class="{% active_path request "^/contact" %}"><a href="/contact/">{% trans "Contact" %}</a></li>
                         {% endblock %}
                     </ul>
+                    {% include "_navbar_search.html" %}
+                    <div class="navbar-right">
+                        {% include "_navbar_account.html" %}
+                    </div>
                     {% endblock %}
-                    {% block navbar_search %}{% include "_navbar_search.html" %}{% endblock %}
-                {% endblock %}
                 </div>
+                {% endblock %}
             </div>
         </nav>
     {% endblock %}
-    <!--// Messages -->
-    {% block messages_base %}
+    {% block messages %}
         {% if messages %}
-        <section class="messages">
+        <!--// Messages -->
+        <section id="messages" class="contianer">
             {% include "_messages.html" %}
         </section>
         {% endif %}
     {% endblock %}
-    <!--// Content -->
     {% block content_base %}
-        <div id="content">
+    <!--// Content -->
+        <section id="content" class="{% block content_class %}container{% endblock %}">
         {% block content %}{{ content }}{% endblock %}
-        </div>
+        </section>
     {% endblock %}        
-    <!--// Footer -->
     {% block footer_base %}
-        <footer role="contentinfo" class="container">
+    <!--// Footer -->
+        <footer role="contentinfo">
         {% block footer %}
-            <menu class="nav nav-pills">
+        <div class="container">
+            <menu class="pull-right">
                 <li><a href="#">{% trans "Help" %}</a></li>
                 <li><a href="#">{% trans "Contact" %}</a></li>
             </menu>
             <p class="footer">Copyright 2012 &copy; Django Manifest</p>
+        </div>
         {% endblock %}
         </footer>
     {% endblock %}        
-    </div>
     <!--// Tail -->
-    {% block tail_base %}
-        {% block tail %}{% endblock %}
-    {% endblock %}
+    {% block tail %}{% endblock %}
+    {% block tailscript %}
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js?{% now "U" %}"></script>
+	{% endblock %}
     </body>
 </html>

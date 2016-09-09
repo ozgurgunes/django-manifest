@@ -2,15 +2,13 @@
 <p class="success">{% trans 'Your comment succesfully posted' %}</p>
 {% else %}
 {% get_comment_form for object as comment_form %}
-<form class="form form-actions" action="{% comment_form_target %}" method="POST">
+<form class="form form-group" action="{% comment_form_target %}" method="POST">
     {% csrf_token %}
     <fieldset>
         <legend>{% trans "Leave your comment" %}</legend>  
         <div class="control-group">
             <p class="control-label">
-                {% thumbnail user.avatar "16x16" as im %}
-                <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" alt="{{ user }}" />
-                {% endthumbnail %}
+                <img src="{{ user.avatar }}" width="16" height="16" alt="{{ user }}" />
                 <a href="{% url 'accounts_profile_detail' user.username %}">{% firstof user.real_name user.username %}</a>
             </p>
             <div class="controls">

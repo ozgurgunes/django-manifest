@@ -3,7 +3,6 @@ import re
 import datetime
 
 from django.core import mail
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from manifest.accounts import defaults
@@ -144,7 +143,7 @@ class AccountManagerTests(AccountsTestCase):
 
     def test_delete_expired_users(self):
         """
-        Test if expired users are deleted from the database.
+        Test if expired users are deleted from the datamanifest.accounts.tests.test_base.
 
         """
         expired_user = get_user_model().objects.create_user(**self.user_info)
