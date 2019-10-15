@@ -16,7 +16,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="django-manifest",
-    version="version='0.1.0',",
+    version="version='0.2.0',",
     description="A kickstarter for Django Web Framework projects "
     "that supports both legacy frontend and javascript technolohies "
     "using REST API.",
