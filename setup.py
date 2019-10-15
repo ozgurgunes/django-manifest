@@ -16,13 +16,12 @@ from setuptools import find_packages, setup
 
 setup(
     name="django-manifest",
-    version="version='0.2.0',",
-    description="A kickstarter for Django Web Framework projects "
-    "that supports both legacy frontend and javascript technolohies "
-    "using REST API.",
+    version="0.2.0",
+    description="A kickstarter for Django Web Framework projects that supports both legacy frontend and javascript technolohies using REST API.",  # noqa # pylint: disable=line-too-long
     long_description=open(
         path.join(path.dirname(path.abspath(__file__)), "README.md")
     ).read(),
+    long_description_content_type='text/markdown',
     author="Özgür Güneş",
     author_email="o.gunes@gmail.com",
     url="http://github.com/ozgurgunes/django-manifest/",
@@ -37,7 +36,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Framework :: Django",
-        "Framework :: Django :: 3.0",
+        "Framework :: Django :: 2.2",
         "Topic :: Internet",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Browsers",
