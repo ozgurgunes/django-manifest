@@ -16,7 +16,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="django-manifest",
-    version="0.2.0",
+    version="0.2.1",
     description="A kickstarter for Django Web Framework projects that supports both legacy frontend and javascript technolohies using REST API.",  # noqa # pylint: disable=line-too-long
     long_description=open(
         path.join(path.dirname(path.abspath(__file__)), "README.md")
