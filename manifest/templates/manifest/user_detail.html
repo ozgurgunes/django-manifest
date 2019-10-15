@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }} - {% trans "Users" %} - {{ block.super}}{% endblock title %}
+
+{% block content %}
+  <div class="white-box">
+    <div id="details">
+      {% block user_details %}
+      <img src="{{ user.avatar }}" width="128" height="128" alt="{{ user }}" />      
+        <dl>
+          {% block user_definition_list %}
+            {% if user.get_full_name %}
+              <dt>{% trans "Name" %}</dt>
+              <dd>{{ user.get_full_name }}</dd>
+            {% endif %}
+            {% if user.age %}          
+              <dt>{% trans "Age" %}</dt>
+              <dd>{{ user.age }}</dd>
+            {% endif %}
+          {% endblock user_definition_list %}
+        </dl>
+      {% endblock user_details %}
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block stylesheet %}
+{{ block.super }}
+<style>
+  .form-control#id_birth_date_month,
+  .form-control#id_birth_date_day,
+  .form-control#id_birth_date_year {
+    width: auto;
+    display: inline-block;
+    margin-right: .5em;
+  }
+</style>
+{% endblock stylesheet %}
+{% block title %}{% trans "Update Profile" %} - {{ block.super }}{% endblock title %}
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url "homepage" %}">{% trans "Homepage" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "profile_settings" %}">{% trans "Profile Settings" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "Update Profile" %}</li>
+  </ol>
+</nav>
+{% endblock breadcrumb %}
+{% block content %}
+<form action="" enctype="multipart/form-data" method="post" class="form" novalidate>
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Update Profile" %}</legend>
+    {{ form|bootstrap_form }}
+  </fieldset>
+  <div class="form-group">
+    <input type="submit" value="{% trans "Save changes" %}" class="btn btn-primary" />
+  </div>
+</form>
+{% endblock content %}

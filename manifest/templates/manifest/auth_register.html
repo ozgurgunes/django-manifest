@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{% trans "Register" %} - {{ block.super }}{% endblock title %}
+
+{% block content %}
+<form action="" method="post" class="form col-6" novalidate>
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Register" %}</legend>
+    {{ form|bootstrap_form }}
+  </fieldset>
+  <input type="submit" value="{% trans "Register"%}" class="btn btn-primary" />
+</form>
+{% endblock content %}

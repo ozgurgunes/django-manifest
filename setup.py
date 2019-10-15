@@ -1,52 +1,50 @@
 # -*- coding: utf-8 -*-
-import re
-from setuptools import setup, find_packages
+""" Django Manifest
 
-# Dynamically calculate the version based on manifest.VERSION.
-version = __import__('manifest').get_version()
+Code used in project is mostly taken from
+several other open source projects, such as;
+Django: https://github.com/django/django
+django-rest-framework: https://github.com/encode/django-rest-framework
+django-rest-auth: https://github.com/Tivix/django-rest-auth
+django-userena-ce: https://github.com/django-userena-ce/django-userena-ce
+and others...
+"""
 
+from os import path
 
-def parse_requirements(file_name):
-    requirements = []
-    for line in open(file_name, 'r').read().split('\n'):
-        if re.match(r'(\s*#)|(\s*$)', line):
-            continue
-        if re.match(r'\s*-e\s+', line):
-            requirements.append(re.sub(r'\s*-e\s+.*#egg=(.*)$', r'\1', line))
-        elif re.match(r'\s*-f\s+', line):
-            pass
-        else:
-            requirements.append(line)
+from setuptools import find_packages, setup
 
-    return requirements
-
-
-def parse_dependency_links(file_name):
-    dependency_links = []
-    for line in open(file_name, 'r').read().split('\n'):
-        if re.match(r'\s*-[ef]\s+', line):
-            dependency_links.append(re.sub(r'\s*-[ef]\s+', '', line))
-
-    return dependency_links
-
-    
 setup(
     name="django-manifest",
-    version=version,
-    description = "A kickstarter for Django Web Framework projects.",
-    long_description=open("README.rst").read(),
-    author = "Ozgur Gunes",
-    author_email = "o.gunes@gmail.com",
-    url = "http://github.com/ozgurgunes/django-manifest/",
+    version="version='0.1.0',",
+    description="A kickstarter for Django Web Framework projects "
+    "that supports both legacy frontend and javascript technolohies "
+    "using REST API.",
+    long_description=open(
+        path.join(path.dirname(path.abspath(__file__)), "README.md")
+    ).read(),
+    author="Özgür Güneş",
+    author_email="o.gunes@gmail.com",
+    url="http://github.com/ozgurgunes/django-manifest/",
     packages=find_packages(),
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
         "Framework :: Django",
+        "Framework :: Django :: 3.0",
+        "Topic :: Internet",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Internet :: WWW/HTTP :: Browsers",
+        "Topic :: Internet :: WWW/HTTP :: Session",
+        "Topic :: Internet :: WWW/HTTP :: WSGI",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     include_package_data=True,
     zip_safe=False,

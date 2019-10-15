@@ -1,0 +1,63 @@
+[
+{
+    "pk": 1, 
+    "model": "sites.site", 
+    "fields": 
+    {
+        "domain": "localhost:8000", 
+        "name": "Django Manifest"
+    }
+},
+{
+    "pk": 1, 
+    "model": "manifest.user", 
+    "fields": 
+    {
+        "username": "john", 
+        "first_name": "John", 
+        "last_name": "Smith", 
+        "email": "john@example.com",
+        "birth_date": "1970-01-01",
+        "timezone": "Europe/Istanbul",
+        "locale": "tr-tr",
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "password": "pbkdf2_sha256$150000$F54vCeIiMUfP$XW9Wod6IDXfOrnaTwtLQNxsX1q+XeM4skSss4/Yfjs8=", 
+        "activation_key": "ALREADY_ACTIVATED",
+        "last_login": "2012-12-31T22:00:00Z", 
+        "date_joined": "2012-12-31T22:00:00Z"
+    }
+}, 
+{
+    "pk": 2, 
+    "model": "manifest.user", 
+    "fields": 
+    {
+        "username": "jane", 
+        "first_name": "Jane", 
+        "last_name": "Smith", 
+        "email": "jane@example.com",
+        "birth_date": "1970-01-01",
+        "timezone": "Europe/Istanbul",
+        "locale": "en-us",
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "password": "pbkdf2_sha256$150000$xYViD2bIMhcd$dzigYrpvzAWurnoDEBVUknW14CWYseUFbnWfQPDLfTw=", 
+        "last_login": "2012-12-31T22:00:00Z", 
+        "date_joined": "2012-12-31T22:00:00Z"
+    }
+},
+{
+    "pk": 1,
+    "model": "flatpages.flatpage",
+    "fields": 
+    {
+        "sites": [1],
+        "title": "Flatpage Title",
+        "url": "/flatpage-url/",
+        "content": "Flatpage content."
+    }
+}
+]

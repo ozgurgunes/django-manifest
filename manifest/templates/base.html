@@ -1,0 +1,126 @@
+{% load static flatpages %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>{% block title %}Django Manifest{% endblock title %}</title>
+		<meta name="keywords" 
+      content="{% block keywords %}django, manifest, framework, project{% endblock keywords %}" />
+		<meta name="description" 
+      content="{% block description %}A kickstarter for Django Web Framework projects.{% endblock description %}" />
+		<meta name="robots" 
+      content="{% block robots %}NOINDEX,NOFOLLOW{% endblock robots %}" />
+		<link rel="shortcut icon" href="{% static "favicon.ico" %}">
+	    {% block stylesheet %}
+    <link rel="stylesheet" 
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
+      crossorigin="anonymous" />
+		{% endblock stylesheet %}
+    {% block headscript %}
+  	{% endblock headscript %}
+    {% block head %}{% endblock head %}
+  </head>
+  <body class="{% block body_class %}base{% endblock body_class %}">
+  <!-- Navigation //-->
+  {% block navbar_base %}
+    <nav class="navbar navbar-expand-lg navbar-light container mb-3" role="navigation">
+    {% block navbar %}
+      <div class="container py-3 px-0 border-bottom">
+          <a class="navbar-brand" href="/">Django Manifest</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item {% active_nav "homepage" %}"><a class="nav-link" href="{% url "homepage" %}">{% trans "Homepage" %}</a></li>
+                {% for page in get_flatpages %}
+                <a class="nav-link {% active_nav page.url %}" href="{{ page.url }}">{{ page.title }}</a>
+                {% endfor %}
+            </ul>
+            <div class="navbar-right">
+            {% if user.is_authenticated %}
+            {% load imagekit %}
+              <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="{{ user.avatar }}" width="24" height="24" alt="{{ user.get_full_name_or_username|escape }}" />
+                    {{ user.get_short_name_or_username|escape }} <span class="caret"></span></a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="{% url "user_detail" user.username %}">{% trans "Profile" %}</a>
+                      <div class="dropdown-divider"></div>
+                      {% if user.is_staff %}<a class="dropdown-item" href="/admin/">{% trans "Admin" %}</a>{% endif %}
+                      <a class="dropdown-item" href="{% url "profile_settings" %}">{% trans "Settings" %}</a>
+                      <a class="dropdown-item" href="{% url "auth_logout" %}">{% trans "Logout" %}</a>
+                    </div>
+                </li>
+              </ul> 		    		
+              {% else %}
+              <p class="navbar-text my-1">
+                <a href="{% url "auth_login" %}">{% trans "Log In" %}</a>
+                  &nbsp;{% trans "or" %}&nbsp;
+                <a href="{% url "auth_register" %}">{% trans "Register" %}</a>
+              </p>
+            {% endif %}
+            </div>
+          </div>
+      </div>
+    {% endblock navbar %}
+    </nav>
+  {% endblock navbar_base %}
+  {% block breadcrumb %}{% endblock breadcrumb %}
+  {% if messages and MANIFEST_USE_MESSAGES %}
+  {% block messages %}
+    <!--// Messages -->
+    <section id="messages" class="container">
+    {% for message in messages %}
+        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            {{ message }}
+        </div>
+    {% endfor %}
+    </section>
+  {% endblock messages %}
+  {% endif %}
+  {% block content_base %}
+    <!--// Content -->
+    <section id="content" class="{% block content_class %}container{% endblock content_class %}">
+      {% block content %}{{ content }}{% endblock content %}
+    </section>
+  {% endblock content_base %}        
+  {% block footer_base %}
+    <!--// Footer -->
+    <footer role="contentinfo" class="container mt-5">
+    {% block footer %}
+      <div class="border-top py-3">
+        <nav class="nav float-right">
+          <a class="nav-link {% active_nav "homepage" %}" href="{% url "homepage" %}">{% trans "Homepage" %}</a>
+          {% for page in get_flatpages %}
+          <a class="nav-link {% active_nav page.url %}" href="{{ page.url }}">{{ page.title }}</a>
+          {% endfor %}
+        </nav>
+        <p class="p-2">Copyright 2019 &copy; Django Manifest</p>
+      </div>
+    {% endblock footer %}
+    </footer>
+  {% endblock footer_base %}
+  <!--// Tail -->
+  {% block tail %}{% endblock tail %}
+  {% block tailscript %}
+    <script 
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" 
+      crossorigin="anonymous"></script>
+    <script 
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" 
+      crossorigin="anonymous"></script>
+    <script 
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" 
+      crossorigin="anonymous"></script>
+	{% endblock tailscript %}
+  </body>
+</html>

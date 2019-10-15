@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body_class %}manifest{% endblock body_class %}
+{% block title %}{% trans "Profile Settings" %} - {{ block.super}}{% endblock title %}
+
+{% block content %}
+    <h2 class="border-bottom pb-2 mb-3">{% trans "Profile Settings" %}</h2>
+    <h4><a href="{% url "profile_update" %}">{% trans "Personal Information" %}</a></h4>
+    <p>{% trans "Update your personal information. Let others know more about you." %}</p>
+    <h4><a href="{% url "picture_upload" %}">{% trans "Profile Picture" %}</a></h4>
+    <p>{% trans "You can upload a profile picture." %}</p>
+    <h4><a href="{% url "region_update" %}">{% trans "Regional Settings" %}</a></h4>
+    <p>{% trans "Change your language and time zone settings." %}</p>
+    <h4><a href="{% url "email_change" %}">{% trans "Email address" %}</a></h4>
+    <p>{% trans "You can change your email adress." %} (<b>{{ user.email }}</b>)</p>
+    <h4><a href="{% url "password_change" %}">{% trans "Password" %}</a></h4>
+    <p>{% trans "Change your password here. Please do not share your password with others." %}</p>
+{% endblock content %}

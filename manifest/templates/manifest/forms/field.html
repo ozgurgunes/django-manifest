@@ -1,0 +1,43 @@
+{% load i18n %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+
+{% if field|is_checkbox_input %}
+    <div class="form-check">
+      <label>{{ field }} <span class="form-check-label">{{ field.label }}</span>
+    </label>
+    </div>
+
+{% elif field|is_radio_input or field|is_multiple_checkbox_input %}
+  {% if field.auto_id %}
+  <label class="control-label {{ classes.label }} {% if field.field.required %}{{ form.required_css_class }}{% endif %}">{{ field.label }}</label>
+  {% endif %}
+  {% for choice in field %}
+    <div class="form-check">
+      <label>{{ choice.tag }} <span class="form-check-label">{{ choice.choice_label }}</span>
+      </label>
+    </div>
+  {% endfor %}
+
+{% elif field|is_date_input %}
+  {% if field.auto_id %}
+  <label class="control-label {{ classes.label }} {% if field.field.required %}{{ form.required_css_class }}{% endif %}" for="{{ field.auto_id }}">{{ field.label }}</label>
+  {% endif %}
+  <div>
+  {{ field }}
+  </div>
+
+{% else %}
+  {% if field.auto_id %}
+  <label class="control-label {{ classes.label }} {% if field.field.required %}{{ form.required_css_class }}{% endif %}" for="{{ field.auto_id }}">{{ field.label }}</label>
+  {% endif %}
+  {{ field }}
+
+{% endif %}
+{% for error in field.errors %}
+  <div class="invalid-feedback">{{ error }}</div>
+{% endfor %}
+{% if field.help_text and not field.errors %}
+<small class="form-text">{{ field.help_text|safe }}</small>
+{% endif %}
+
+</div>

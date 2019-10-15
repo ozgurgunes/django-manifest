@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{% trans "Email confirmation failed!" %} - {{ block.super }}{% endblock %}
+{% block content %}
+<h2>{% trans "Email confirmation failed!" %}</h2>
+<p>{% trans "You could try changing it again in your account settings." %}</p>
+<p>{% trans "Feel free to contact us if you think something went wrong." %}</p>
+{% endblock content %}

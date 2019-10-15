@@ -1,0 +1,31 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "*"
+django-debug-toolbar = "*"
+django-webpack-loader = "*"
+flake8 = "*"
+isort = "*"
+pylint = "*"
+pylint-django = "*"
+
+[packages]
+Django = "*"
+django-cors-headers = "*"
+django-imagekit = "*"
+django-manifest = "*"
+djangorestframework = "*"
+djangorestframework-camel-case = "*"
+djangorestframework-jwt = "*"
+pillow = "*"
+python-dateutil = "*"
+pytz = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

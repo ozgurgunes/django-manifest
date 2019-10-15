@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{% trans "Change email address" %} - {{ block.super }}{% endblock title %}
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url "homepage" %}">{% trans "Homepage" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url "profile_settings" %}">{% trans "Profile Settings" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "Change Email Address" %}</li>
+  </ol>
+</nav>
+{% endblock breadcrumb %}
+{% block content %}
+<form action="" method="post" class="form">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Change email address" %}</legend>
+    {{ form|bootstrap_form }}
+  </fieldset>
+  <div class="form-group">
+      <input type="submit" value="{% trans "Change email" %}" class="btn btn-primary" />    
+  </div>
+</form>
+{% endblock content %}

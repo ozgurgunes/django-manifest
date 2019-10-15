@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-<h1 id="subject">{% trans 'Comment will be deleted' %}</h1>
-<p>{% trans 'Are you sure to delete this comment?' %}</p>
-<form method="post" action=".">
-	<input type="submit" value="{% trans 'Delete comment' %}" />
-</form>
-{% endblock %}

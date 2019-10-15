@@ -1,17 +1,30 @@
-.. Django Manifest documentation master file, created by
-   sphinx-quickstart on Sun Apr  8 21:05:24 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. Django Manifest documentation master file.
 
 Welcome to Django Manifest's documentation!
-===========================================
+==========================================
 
-Contents:
+A kickstarter for Django Web Framework projects that supports both legacy frontend and javascript technolohies using REST API.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
+
+   manual_project_creation
+   manual_frontend_integration
 
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules:
+
+   modules
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tests:
+
+   tests
 
 Indices and tables
 ==================
@@ -19,4 +32,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

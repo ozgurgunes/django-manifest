@@ -1,5 +1,5 @@
-include AUTHORS
-include README
+include README.md
 include LICENCE
-recursive-include docs *
+include docs/*
+include tests/*
 recursive-include manifest *

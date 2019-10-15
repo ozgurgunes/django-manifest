@@ -1,0 +1,19 @@
+{% load i18n %}
+{% if widget.is_initial %}
+<div>
+{{ widget.initial_text }}: <a href="{{ widget.value.url }}">{{ widget.value }}</a>
+{% if not widget.required %}
+<input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
+<label for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
+</div>
+{% endif %}
+<label class="control-label" for="{{ widget.attrs.id }}">{{ widget.input_text }}:</label>
+{% endif %}
+
+<div class="custom-file">
+<input type="{{ widget.type }}" name="{{ widget.name }}"
+    {% for name, value in widget.attrs.items %}{% if value is not False %}
+    {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"
+    {% endif %}{% endif %}{% endfor %}>
+<label class="custom-file-label" for="{{ widget.attrs.id }}">{% trans "Choose file" %}</label>
+</div>

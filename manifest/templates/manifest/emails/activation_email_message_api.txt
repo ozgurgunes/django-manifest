@@ -1,0 +1,13 @@
+{% autoescape off %}{% blocktrans with user.get_full_name as user %}Dear {{ user }},{% endblocktrans %}
+
+{% blocktrans with site.name as site %}Welcome to {{ site }} website.{% endblocktrans %}
+
+{% trans "Please click on the link below to activate your account." %}
+
+{{ protocol }}://{{ site.domain }}{% url "auth_activate_api" %}{{ user.username }}/{{ activation_key }}/
+
+{% trans "Thank you for registering at our website." %}
+
+{% trans "Sincerely," %}
+
+{{ protocol }}://{{ site.domain }}{% endautoescape %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{% trans "Account not activated!" %} -
+{{ block.super }}{% endblock title %}
+{% block content %}
+<h2>{% trans "Account not activated!" %}</h2>
+<p>{% blocktrans %}It seems your {{ site.name }} website account has not been
+    activated. You have to click on the link provided in the activation email
+    which we have sent you.{% endblocktrans %}</p>
+{% endblock content %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{% trans "User Profiles" %} - {{ block.super }}{% endblock title %}
+
+{% block content %}
+<ul id="user_list">
+  {% for user in user_list %}
+  <li>
+  <a href="{% url "user_detail" user.username %}"><img src="{{ user.avatar }}" /></a>
+  <a href="{% url "user_detail" user.username %}">{{ user.username }}</a>
+  </li>
+  {% endfor %}
+
+</ul>
+
+{% if is_paginated %}
+<div class="pagination">
+  <ul>
+    {% if page_obj.has_previous %}
+    <li><a href="{% url "user_list" %}?page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a></li>
+    {% endif %}
+
+    <span class="current">
+      {% blocktrans with page_obj.number as page and page_obj.paginator.num_pages as num_pages %}Page {{ page }} of {{ num_pages }}{% endblocktrans %}
+    </span>
+
+    {% if page_obj.has_next %}
+    <li><a href="{% url "user_list" %}?page={{ page_obj.next_page_number }}">{% trans "next" %}</a>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}
+{% endblock content %}

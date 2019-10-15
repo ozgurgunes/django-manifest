@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{% trans "Thank you for registering" %} -
+{{ block.super }}{% endblock title %}
+
+{% block content %}
+<h2 class="page-header">{% trans "Thank you for registering" %}</h2>
+
+{% if activation_required %}
+<p>{% trans "You have to click on the link provided in the activation email which we have sent you." %}
+</p>
+<p>{% blocktrans %}We will store your account information for
+    <strong>{{ activation_days }} days.</strong> {% endblocktrans %}</p>
+{% else %}
+<p>{% trans "You can now use the supplied credentials to sign in." %}</p>
+{% endif %}
+{% endblock content %}

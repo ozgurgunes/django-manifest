@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body_class %}flatpage{% endblock body_class %}
+{% block title %}{{ flatpage.title }} - {{ block.super}}{% endblock title %}
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">{% trans "Homepage" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ flatpage.title|truncatewords:"5" }}</li>
+  </ol>
+</nav>
+{% endblock breadcrumb %}
+{% block content %}
+<header class="page-header">
+    <h1>{{ flatpage.title }}</h1>
+</header>
+<div>
+    {{ flatpage.content }}
+</div>
+{% endblock content %}
